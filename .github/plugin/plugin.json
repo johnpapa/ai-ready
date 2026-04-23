@@ -1,0 +1,27 @@
+{
+  "name": "ai-ready-repo",
+  "description": "Analyze any repository and generate AI-ready configuration — AGENTS.md, copilot-instructions.md, skills, CI workflows, issue templates, and more. Makes repos easier to contribute to and easier to maintain.",
+  "version": "0.1.0",
+  "author": {
+    "name": "John Papa"
+  },
+  "repository": "https://github.com/johnpapa/ai-ready-repo",
+  "license": "MIT",
+  "keywords": [
+    "ai-ready",
+    "repo-setup",
+    "agents",
+    "copilot-instructions",
+    "skills",
+    "ci",
+    "templates",
+    "contributions",
+    "maintainer"
+  ],
+  "skills": [
+    "./skills/ai-ready-repo"
+  ],
+  "extensions": [
+    "./extensions/ai-ready-repo"
+  ]
+}
