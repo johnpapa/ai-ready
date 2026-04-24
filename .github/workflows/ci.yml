@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate plugin.json
+        run: python3 -c "import json; json.load(open('.github/plugin/plugin.json'))"
+
+      - name: Validate skill paths exist
+        run: |
+          python3 -c "
+          import json, os, sys
+          manifest = json.load(open('.github/plugin/plugin.json'))
+          errors = []
+          for skill_path in manifest.get('skills', []):
+              skill_dir = skill_path.lstrip('./')
+              skill_file = os.path.join(skill_dir, 'SKILL.md')
+              if not os.path.isfile(skill_file):
+                  errors.append(f'Missing: {skill_file}')
+          if errors:
+              print('\n'.join(errors))
+              sys.exit(1)
+          print('All skill paths valid')
+          "
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          python3 -c "
+          import sys, os
+          for root, dirs, files in os.walk('skills'):
+              for f in files:
+                  if f == 'SKILL.md':
+                      path = os.path.join(root, f)
+                      content = open(path).read()
+                      if not content.startswith('---'):
+                          print(f'{path}: missing YAML frontmatter')
+                          sys.exit(1)
+                      parts = content.split('---', 2)
+                      if len(parts) < 3:
+                          print(f'{path}: invalid frontmatter format')
+                          sys.exit(1)
+                      fm = parts[1]
+                      if 'name:' not in fm:
+                          print(f'{path}: frontmatter missing name')
+                          sys.exit(1)
+                      if 'description:' not in fm:
+                          print(f'{path}: frontmatter missing description')
+                          sys.exit(1)
+                      print(f'{path}: valid')
+          "
+
+      - name: Validate YAML files
+        run: |
+          python3 -c "
+          import yaml, glob, sys
+          errors = []
+          for pattern in ['.github/**/*.yml', '.github/**/*.yaml']:
+              for f in glob.glob(pattern, recursive=True):
+                  try:
+                      yaml.safe_load(open(f))
+                  except Exception as e:
+                      errors.append(f'{f}: {e}')
+          if errors:
+              print('\n'.join(errors))
+              sys.exit(1)
+          print('All YAML files valid')
+          "

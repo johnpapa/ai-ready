@@ -1,0 +1,45 @@
+name: New Skill Idea
+description: Propose a new skill for the plugin to support
+labels: ["skill-idea"]
+body:
+  - type: markdown
+    attributes:
+      value: Suggest a new skill that the plugin should be able to generate or invoke.
+  - type: input
+    id: skill-name
+    attributes:
+      label: Proposed skill name
+      description: Short, descriptive name (lowercase with hyphens)
+      placeholder: "e.g., add-api-endpoint, scaffold-component"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What should this skill do?
+      description: Describe the step-by-step procedure the skill would follow.
+    validations:
+      required: true
+  - type: input
+    id: trigger-phrases
+    attributes:
+      label: Trigger phrases
+      description: What would a user say to invoke this skill?
+      placeholder: 'e.g., "add an API endpoint", "scaffold a new component"'
+    validations:
+      required: true
+  - type: input
+    id: target-repos
+    attributes:
+      label: Target repo types
+      description: What kind of repos would benefit from this skill?
+      placeholder: "e.g., Node.js APIs, React apps, Python packages"
+    validations:
+      required: true
+  - type: textarea
+    id: generated-files
+    attributes:
+      label: Files it should generate or update
+      description: List the files this skill would create or modify.
+    validations:
+      required: false

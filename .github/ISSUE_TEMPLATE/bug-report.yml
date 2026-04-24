@@ -1,0 +1,46 @@
+name: Bug Report
+description: Report a problem with the plugin
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting a bug. Please fill out the details below.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe what went wrong when using the plugin.
+      placeholder: "When I ran 'make this repo ai-ready' on my Python project, it..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: input
+    id: repo-type
+    attributes:
+      label: Target repo type
+      description: What kind of repo were you running the plugin on?
+      placeholder: "e.g., Node.js + React, Python + Django, Go microservice"
+    validations:
+      required: true
+  - type: input
+    id: cli-version
+    attributes:
+      label: Copilot CLI version
+      description: Output of `copilot --version`
+      placeholder: "1.0.35"
+    validations:
+      required: false
+  - type: textarea
+    id: analysis-output
+    attributes:
+      label: Analysis output (if any)
+      description: Paste the Step 1 analysis table if the skill produced one before failing.
+      render: markdown
+    validations:
+      required: false

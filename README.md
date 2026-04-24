@@ -101,6 +101,33 @@ One click analyzes the repo and opens a PR with all 9 assets, customized to the 
 
 The plugin builds conviction and proves the approach works across different repos. The native feature is where it becomes truly impactful.
 
+## Contributing
+
+### Quick Start
+
+1. Fork this repo and create a branch
+2. Make your changes (skills, docs, or plugin config)
+3. Verify `plugin.json` references are valid — every path in the `skills` array must point to a directory containing `SKILL.md`
+4. Test locally: `copilot --plugin-dir /path/to/your/fork` then say *"make this repo ai-ready"*
+5. Open a PR
+
+### Smoke Testing
+
+Since this is a markdown-only plugin, the real test is running it:
+
+```bash
+# Load your local changes
+cd /path/to/some-other-repo
+copilot --plugin-dir /path/to/ai-ready-repo
+
+# Then invoke the skill
+> make this repo ai-ready
+```
+
+Verify the analysis is correct and the generated files match the target repo's actual conventions.
+
+See [AGENTS.md](AGENTS.md) for the full contributor guide.
+
 ## License
 
 MIT

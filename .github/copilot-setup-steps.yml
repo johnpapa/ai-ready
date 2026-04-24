@@ -1,0 +1,10 @@
+name: "Copilot Setup Steps"
+on: workflow_dispatch
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # No runtime, dependencies, or build steps required.
+      # This is a markdown-only plugin — checkout is the only setup needed.
