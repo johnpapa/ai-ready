@@ -10,6 +10,7 @@ ai-ready-repo/
 │   ├── plugin/plugin.json          # Plugin manifest (name, version, skill references)
 │   ├── copilot-instructions.md     # Conventions for contributing to THIS repo
 │   ├── copilot-setup-steps.yml     # Cloud agent setup (checkout only — no build)
+│   ├── dependabot.yml              # GitHub Actions dependency updates
 │   ├── workflows/ci.yml            # PR validation (plugin integrity checks)
 │   ├── ISSUE_TEMPLATE/             # Bug reports, feature requests, new skill ideas
 │   ├── PULL_REQUEST_TEMPLATE.md    # PR checklist (integrity checks, test evidence)
@@ -18,8 +19,10 @@ ai-ready-repo/
 │   └── ai-ready-repo/SKILL.md      # The 9-step skill procedure
 ├── docs/
 │   └── how-it-works.md             # Detailed explanation of the 3 mechanisms + 9 assets
-├── README.md                       # Project overview, quick start, what gets generated
 ├── AGENTS.md                       # This file
+├── CHANGELOG.md                    # Version history
+├── README.md                       # Project overview, quick start, what gets generated
+├── SECURITY.md                     # Vulnerability reporting policy
 └── LICENSE                         # MIT
 ```
 
