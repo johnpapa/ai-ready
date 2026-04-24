@@ -127,7 +127,7 @@ For projects with creative assets (images, sounds, fonts, etc.), the plugin gene
 
 Before generating any assets, the plugin performs a comprehensive analysis of your repository. This is what makes the output customized rather than generic.
 
-The `analyze_repo_for_ai_readiness` tool scans your repository for:
+The skill instructs Copilot to scan your repository for:
 
 ### Languages
 

@@ -56,13 +56,13 @@ These aren't separate problems. They're the same gap: the contributor doesn't kn
 
 ## How It Works
 
-The plugin is built on two Copilot CLI primitives:
+The plugin is a Copilot CLI **skill** — a step-by-step procedure that tells Copilot CLI _what_ to analyze and generate, and in what order. When invoked, the skill:
 
-**Skill** (`.github/skills/ai-ready-repo.md`) — A step-by-step procedure that tells Copilot CLI _what_ to generate and in what order. It orchestrates the full analysis-and-generation flow: scan the repo, identify patterns, produce each asset, and wire them together.
+1. **Analyzes** your repo using built-in tools — scanning manifest files, CI workflows, test configs, directory structure, and existing AI configuration
+2. **Identifies gaps** — which of the 9 assets are missing or incomplete
+3. **Generates** each missing asset, customized to your project's actual language, framework, and patterns
 
-**Extension** (`.github/extensions/analyze-repo.md`) — A repo analysis tool that Copilot CLI can invoke during the skill. It inspects code patterns, build toolchain, test framework, CI config, file structure, and existing contributions to extract the conventions that drive generation.
-
-The skill is the procedure. The extension is the lens. Together, they produce assets that reflect your actual repo — not boilerplate.
+Every generated file is based on evidence from your repo — not boilerplate.
 
 ## What Gets Generated
 

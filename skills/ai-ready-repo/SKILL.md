@@ -11,15 +11,80 @@ When invoked, follow these steps in order to analyze the current repository and 
 
 ## Step 1 — Analyze the repo
 
-Call the `analyze_repo_for_ai_readiness` tool to scan the current repository. This returns a structured analysis of:
+Scan the repository using built-in tools (glob, grep, view) to build a structured analysis. **Do not proceed to Step 2 until the analysis is complete and confirmed.**
 
-- Languages and frameworks detected
-- Test framework and test commands
-- Build commands and CI/CD setup
-- Existing AI config (what's already there)
-- What's missing (which assets need to be created)
+### 1a. Detect languages and frameworks
 
-Review the analysis results before proceeding. **Do NOT overwrite existing files** — only create assets that don't exist yet.
+Use glob to find manifest files. Read each one with view to extract details:
+
+| Manifest | Language | What to extract |
+|----------|----------|-----------------|
+| `package.json` | JavaScript/TypeScript | dependencies, devDependencies, scripts (build, test, lint, typecheck), engines.node |
+| `Cargo.toml` | Rust | workspace members, dependencies, build/test profile |
+| `go.mod` | Go | module name, Go version |
+| `pyproject.toml` or `requirements.txt` | Python | dependencies, build system, scripts, python version |
+| `*.csproj` or `*.sln` | C# / .NET | target framework, package references, test SDK |
+| `Gemfile` | Ruby | dependencies, ruby version |
+| `pom.xml` or `build.gradle` | Java | dependencies, plugins, build tasks |
+
+Also check for:
+- **Lockfiles** — `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `bun.lockb`, `Cargo.lock`, `go.sum`, `poetry.lock`, `Pipfile.lock`
+- **Runtime version files** — `.nvmrc`, `.node-version`, `.python-version`, `.tool-versions`, `.ruby-version`, `rust-toolchain.toml`
+- **Monorepo markers** — `pnpm-workspace.yaml`, `lerna.json`, `nx.json`, `turbo.json`, Cargo workspace, Go workspace
+
+### 1b. Detect test setup
+
+- Identify test runner from dependencies (Jest, Vitest, Playwright, pytest, go test, cargo test, xUnit, NUnit, RSpec, etc.)
+- Find test directories: `tests/`, `test/`, `__tests__/`, `spec/`, `e2e/`, `*_test.go`, `**/*.test.*`
+- Extract test commands from scripts (npm test, pytest, cargo test, dotnet test, etc.)
+
+### 1c. Detect CI/CD
+
+- Check `.github/workflows/` — read each YAML file to determine triggers (`pull_request`, `push`), jobs, and steps
+- Note whether PR checks already exist
+- Check for other CI systems: `.gitlab-ci.yml`, `Jenkinsfile`, `.circleci/`, `azure-pipelines.yml`
+
+### 1d. Check existing AI configuration
+
+Check whether each of these exists:
+- `AGENTS.md`
+- `.github/copilot-instructions.md`
+- `.github/copilot-setup-steps.yml`
+- `.github/skills/` (any skill files)
+- `.github/extensions/` (any extension files)
+
+### 1e. Check repo configuration
+
+Check whether each of these exists:
+- `.github/CODEOWNERS` or `CODEOWNERS`
+- `.github/dependabot.yml`
+- `.github/ISSUE_TEMPLATE/` (any templates)
+- `.github/PULL_REQUEST_TEMPLATE.md`
+- `LICENSE` or `LICENSE.md`
+- `README.md` with a `## Contributing` section (grep for it)
+
+### 1f. Scan directory structure
+
+List the top-level directories and their immediate children (skip `node_modules`, `.git`, `dist`, `build`, `target`, `vendor`, `__pycache__`, `.venv`).
+
+### 1g. Compile findings
+
+Before proceeding, produce a structured summary with file-path evidence for each finding:
+
+| Category | Finding | Evidence (file path) |
+|----------|---------|---------------------|
+| Language | e.g., TypeScript | `package.json` (typescript in devDependencies) |
+| Framework | e.g., React, Phaser | `package.json` (react in dependencies) |
+| Test runner | e.g., Vitest | `package.json` (vitest in devDependencies) |
+| Test command | e.g., `npm test` | `package.json` scripts.test |
+| Build command | e.g., `npm run build` | `package.json` scripts.build |
+| Runtime version | e.g., Node 22 | `.nvmrc` or `package.json` engines |
+| Package manager | e.g., pnpm | `pnpm-lock.yaml` exists |
+| PR CI exists | yes/no | `.github/workflows/ci.yml` |
+| AGENTS.md | missing | not found at repo root |
+| ... | ... | ... |
+
+**List which of the 9 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
 
 ---
 
@@ -156,4 +221,4 @@ After generating all assets, provide a clear summary:
 - **If the repo already has some AI config, respect it and fill in the gaps** — treat existing config as authoritative.
 - **Generate asset/content rules only if the project has assets** (images, sounds, fonts, models, etc.).
 - **Use the `create` tool to write files** — never use `edit` to create a new file from scratch.
-- **Run the analysis tool first** — do not guess at the repo's structure or toolchain.
+- **Run the full analysis first (Step 1)** — do not guess at the repo's structure or toolchain. Every generated asset must be based on evidence from the analysis.

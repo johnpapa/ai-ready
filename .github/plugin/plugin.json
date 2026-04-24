@@ -1,7 +1,7 @@
 {
   "name": "ai-ready-repo",
   "description": "Analyze any repository and generate AI-ready configuration — AGENTS.md, copilot-instructions.md, skills, CI workflows, issue templates, and more. Makes repos easier to contribute to and easier to maintain.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "John Papa"
   },
@@ -20,8 +20,5 @@
   ],
   "skills": [
     "./skills/ai-ready-repo"
-  ],
-  "extensions": [
-    "./extensions/ai-ready-repo"
   ]
 }
