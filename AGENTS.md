@@ -11,7 +11,9 @@ ai-ready-repo/
 │   ├── copilot-instructions.md     # Conventions for contributing to THIS repo
 │   ├── copilot-setup-steps.yml     # Cloud agent setup (checkout only — no build)
 │   ├── workflows/ci.yml            # PR validation (plugin integrity checks)
-│   └── ISSUE_TEMPLATE/             # Bug reports, feature requests, new skill ideas
+│   ├── ISSUE_TEMPLATE/             # Bug reports, feature requests, new skill ideas
+│   ├── PULL_REQUEST_TEMPLATE.md    # PR checklist (integrity checks, test evidence)
+│   └── CODEOWNERS                  # @johnpapa owns all paths
 ├── skills/
 │   └── ai-ready-repo/SKILL.md      # The 9-step skill procedure
 ├── docs/
