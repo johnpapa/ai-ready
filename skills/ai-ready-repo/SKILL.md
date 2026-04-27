@@ -351,3 +351,4 @@ Rules for filling in the template:
 - **Use the `create` tool to write files** — never use `edit` to create a new file from scratch.
 - **Run the full analysis first (Step 1)** — do not guess at the repo's structure or toolchain. Every generated asset must be based on evidence from the analysis.
 - **ALWAYS display the AI-Readiness Report at the end** — use the exact format from Step 11. This is the user-facing output. Do not skip it, abbreviate it, or use a different layout.
+- **NEVER use markdown headings (`#`, `##`, `###`) in your output to the user** — headings render in red/colored text in most terminals. Use **bold text** with emojis instead (e.g., `✅ **Nailed It (9)**`). This applies to the AI-Readiness Report and all other user-facing output during the skill execution.
