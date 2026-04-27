@@ -11,10 +11,16 @@ All notable changes to this project will be documented in this file.
 - CODEOWNERS (`@johnpapa`)
 - Alpha banner in README
 - GitHub repo topics and description
+- CHANGELOG.md, SECURITY.md, dependabot.yml
+- **Changelog evaluation** (Step 1f/9) — detects changelog location (root, docs, releases), follows pointer files, checks freshness against git tags, assesses format
+- **Documentation evaluation** (Step 1g/10) — detects docs framework (Docsify, Docusaurus, MkDocs, etc.), checks nav/TOC, deploy pipeline, README linkage, assesses whether docs are needed
+- Expanded analysis findings table with changelog and docs rows
 
 ### Changed
 
+- Skill now has 11 steps (was 9)
 - Bumped version to 0.3.0-alpha
+- Updated docs/how-it-works.md with steps 10-11
 
 ## [0.2.0] — 2026-04-24
 
