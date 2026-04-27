@@ -305,27 +305,34 @@ Let's see where you stand.
 
 ✅ **Nailed It ({count})**
 
-  {asset-name} ··· {one-line detail}
-  {asset-name} ··· {one-line detail}
-  ...
+| Asset | Detail |
+|-------|--------|
+| {asset-name} | {one-line detail} |
+| ... | ... |
 
 💡 **Could Be Better ({count})**
 
-  {asset-name} ··· {suggestion}
-  ...
+| Asset | Suggestion |
+|-------|-----------|
+| {asset-name} | {suggestion} |
+| ... | ... |
 
 ⭕ **Missing ({count})**
 
-  {asset-name} ··· {why it matters}
-  ...
+| Asset | Why it matters |
+|-------|---------------|
+| {asset-name} | {why it matters} |
+| ... | ... |
 
 ---
 
 🛠️ **What I'll Do**
 
-  ➕ Create   {filename} — {what it will contain}
-  💬 Suggest  {suggestion}
-  ✅ Skip     {count} files already in great shape
+| Action | Detail |
+|--------|--------|
+| ➕ Create | `{filename}` — {what it will contain} |
+| 💬 Suggest | {suggestion} |
+| ✅ Skip | {count} files already in great shape |
 ```
 
 Rules for filling in the template:
@@ -334,7 +341,6 @@ Rules for filling in the template:
 - **Could Be Better** = asset exists but has gaps or could be enhanced
 - **Missing** = asset does not exist and should be created
 - If a section has 0 items (e.g., nothing missing), omit that section entirely
-- Use dot-leaders (`···`) between asset name and detail for visual alignment
 - The tech profile table should only include rows that apply (e.g., skip "Frameworks" if none detected)
 - Keep each detail to one short line — no multi-line descriptions
 - The "What I'll Do" section should list every file that was created, suggested, or skipped
