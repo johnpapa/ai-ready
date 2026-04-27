@@ -276,20 +276,68 @@ Based on the documentation analysis from Step 1g:
 
 ---
 
-## Step 11 — Summary
+## Step 11 — Display the AI-Readiness Report
 
-After generating all assets, provide a clear summary:
+After completing all steps, you MUST display the AI-Readiness Report using the **exact format** below. Fill in the placeholders from your analysis. Do not skip, abbreviate, or restructure this report.
 
-1. **Created** — list every file that was generated, with a one-line description of each.
-2. **Skipped** — list every file that was skipped because it already existed.
-3. **Changelog status** — where the changelog lives, whether it's current or stale, any recommendations.
-4. **Documentation status** — where docs live, framework used, whether docs are healthy, any recommendations.
-5. **Next Steps** — suggest what the user should do:
-   - Review each generated file and customize to their preferences
-   - Pay special attention to AGENTS.md and the maintenance matrix
-   - Address any changelog or documentation issues flagged above
-   - Commit the new files to the repo
-   - Consider adding project-specific skills if the repo has complex workflows
+Calculate the score: count how many of the 11 assets are in "Nailed It" status. Build the progress bar using 🟩 for nailed, 🟨 for could-be-better, and ⬜ for missing — always 11 squares total.
+
+Display this report:
+
+```
+🎯 **AI-Readiness Report**
+
+Your repo is about to get a whole lot easier to contribute to — and
+a whole lot faster to review. AI agents will know your conventions,
+follow your patterns, and deliver PRs that are ready to merge.
+Let's see where you stand.
+
+**{repo-name}** · Score: **{nailed}/{total}** · {progress-bar} {percent}%
+
+| Category | Detail |
+|----------|--------|
+| Languages | {languages} |
+| Frameworks | {frameworks} |
+| Tests | {test-runner} ({test-count}) |
+| Build | `{build-command}` |
+
+---
+
+✅ **Nailed It ({count})**
+
+  {asset-name} ··· {one-line detail}
+  {asset-name} ··· {one-line detail}
+  ...
+
+💡 **Could Be Better ({count})**
+
+  {asset-name} ··· {suggestion}
+  ...
+
+⭕ **Missing ({count})**
+
+  {asset-name} ··· {why it matters}
+  ...
+
+---
+
+🛠️ **What I'll Do**
+
+  ➕ Create   {filename} — {what it will contain}
+  💬 Suggest  {suggestion}
+  ✅ Skip     {count} files already in great shape
+```
+
+Rules for filling in the template:
+
+- **Nailed It** = asset exists and is well-customized to the repo
+- **Could Be Better** = asset exists but has gaps or could be enhanced
+- **Missing** = asset does not exist and should be created
+- If a section has 0 items (e.g., nothing missing), omit that section entirely
+- Use dot-leaders (`···`) between asset name and detail for visual alignment
+- The tech profile table should only include rows that apply (e.g., skip "Frameworks" if none detected)
+- Keep each detail to one short line — no multi-line descriptions
+- The "What I'll Do" section should list every file that was created, suggested, or skipped
 
 ---
 
@@ -302,3 +350,4 @@ After generating all assets, provide a clear summary:
 - **Generate asset/content rules only if the project has assets** (images, sounds, fonts, models, etc.).
 - **Use the `create` tool to write files** — never use `edit` to create a new file from scratch.
 - **Run the full analysis first (Step 1)** — do not guess at the repo's structure or toolchain. Every generated asset must be based on evidence from the analysis.
+- **ALWAYS display the AI-Readiness Report at the end** — use the exact format from Step 11. This is the user-facing output. Do not skip it, abbreviate it, or use a different layout.
