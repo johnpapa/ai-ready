@@ -18,7 +18,7 @@ Run it:
 copilot "make this repo ai-ready"
 ```
 
-The plugin analyzes your code, CI, tests, and structure, then generates 9 assets customized to your project — not generic templates.
+The plugin analyzes your code, CI, tests, docs, and structure, then generates assets customized to your project — not generic templates.
 
 ## What It Does
 

@@ -63,11 +63,32 @@ Check whether each of these exists:
 - `LICENSE` or `LICENSE.md`
 - `README.md` with a `## Contributing` section (grep for it)
 
-### 1f. Scan directory structure
+### 1f. Evaluate changelog
+
+Check for a changelog and assess its health:
+
+1. **Find the changelog** — look for `CHANGELOG.md` at the repo root. If it exists, read it. If it's a pointer file (e.g., "See the changelog in our docs"), follow the pointer and read the actual changelog content.
+2. **Check alternative locations** — if no root changelog, check `docs/changelog/`, `docs/CHANGELOG.md`, GitHub Releases (via the GitHub MCP tools if available), or a docs site changelog page.
+3. **Assess format** — is it Keep a Changelog format, a flat list, GitHub Releases only, or a docs-site page? Note the format.
+4. **Assess freshness** — compare the most recent changelog entry against the latest git tag (`git tag --sort=-v:refname | head -1`). If the changelog is significantly behind the latest release, flag it as stale.
+5. **Note non-standard locations** — if the changelog lives somewhere other than `CHANGELOG.md` at the root, this is acceptable but should be noted. The root file should at minimum link to the real location.
+
+### 1g. Evaluate documentation
+
+Check if the repo has documentation and assess its health:
+
+1. **Find documentation** — check for `docs/`, `documentation/`, a docs config file (`docusaurus.config.js`, `mkdocs.yml`, `docs/index.html`, `.vitepress/`, `_config.yml`), or a wiki link.
+2. **Detect framework** — if docs exist, identify the framework: Docsify, Docusaurus, MkDocs, VitePress, Jekyll, Hugo, or plain markdown.
+3. **Check navigation** — does the docs site have a sidebar, table of contents, or nav config? (e.g., `_sidebar.md`, `sidebars.js`, `mkdocs.yml nav:`, `_config.yml`)
+4. **Check deploy pipeline** — is there a GitHub Actions workflow that builds/deploys docs? (look in `.github/workflows/` for docs-related workflows)
+5. **Check README linkage** — does the README link to the docs site or docs directory?
+6. **Assess whether docs are needed** — if no docs exist, consider the project type. Libraries with public APIs, frameworks, and tools with complex configuration generally need documentation. Simple utilities or single-file projects may not.
+
+### 1h. Scan directory structure
 
 List the top-level directories and their immediate children (skip `node_modules`, `.git`, `dist`, `build`, `target`, `vendor`, `__pycache__`, `.venv`).
 
-### 1g. Compile findings
+### 1i. Compile findings
 
 Before proceeding, produce a structured summary with file-path evidence for each finding:
 
@@ -82,6 +103,14 @@ Before proceeding, produce a structured summary with file-path evidence for each
 | Package manager | e.g., pnpm | `pnpm-lock.yaml` exists |
 | PR CI exists | yes/no | `.github/workflows/ci.yml` |
 | AGENTS.md | missing | not found at repo root |
+| Changelog | exists / pointer / missing | `CHANGELOG.md`, `docs/changelog/`, Releases |
+| Changelog location | root / docs / releases | path to actual content |
+| Changelog freshness | current / stale | latest entry vs latest git tag |
+| Docs exist | yes / no | `docs/`, config file, README-only |
+| Docs framework | Docsify / Docusaurus / etc. | config file path |
+| Docs deploy pipeline | yes / no | workflow file path |
+| Docs nav/TOC | present / missing | sidebar or nav config |
+| README links to docs | yes / no | README.md link |
 | ... | ... | ... |
 
 **List which of the 9 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
@@ -199,15 +228,66 @@ If the matrix is missing or incomplete, update `copilot-instructions.md` to incl
 
 ---
 
-## Step 9 — Summary
+## Step 9 — Evaluate and improve changelog
+
+Based on the changelog analysis from Step 1f:
+
+### If no changelog exists at all:
+- Create `CHANGELOG.md` at the repo root with a Keep a Changelog format header and an initial `[Unreleased]` section
+- If the project has git tags or GitHub Releases, populate it with entries from the most recent releases
+
+### If a changelog exists but is a pointer file:
+- This is acceptable — some projects maintain their changelog in a docs site. **Do not overwrite the pointer file.**
+- Verify the pointer target actually exists and contains real changelog content
+- If the pointer target is missing or empty, flag this in the summary as needing attention
+- If the root `CHANGELOG.md` doesn't clearly link to the real location, suggest adding a direct link
+
+### If a changelog exists but is stale:
+- Flag this in the summary with the date of the last entry vs. the latest release/tag
+- Suggest the maintainer update it, but **do not auto-generate changelog entries** — the maintainer knows what changed
+
+### Changelog in AGENTS.md:
+- If the project maintains a changelog in a non-standard location, document this in `AGENTS.md` so AI agents know where to find and update it
+
+---
+
+## Step 10 — Evaluate and improve documentation
+
+Based on the documentation analysis from Step 1g:
+
+### If documentation exists:
+- **Include in AGENTS.md** — add a "Documentation" section noting the framework, location, and how to build/preview docs locally
+- **Include in copilot-instructions.md** — add docs conventions (where docs live, naming, how to update them when code changes)
+- **Add to maintenance matrix** — ensure the matrix includes rules like "when a feature is added, update the docs"
+- **Check for docs CI** — if docs have a deploy pipeline but no validation (link checking, build verification), suggest adding one to CI
+
+### If no documentation exists:
+- **Assess whether docs are needed** based on the project type:
+  - Libraries, frameworks, CLIs, and plugins → docs recommended
+  - Simple utilities, scripts, or single-purpose tools → README may be sufficient
+- If docs are recommended, note this in the summary as a suggestion — **do not generate a docs site**. Docs frameworks are a preference decision for the maintainer.
+
+### Documentation in AGENTS.md:
+- Always include a "Documentation" section in `AGENTS.md` that describes:
+  - Where docs live (if they exist)
+  - What framework is used (if any)
+  - How to preview docs locally
+  - Or explicitly state "This project does not have a docs site — documentation is in README.md"
+
+---
+
+## Step 11 — Summary
 
 After generating all assets, provide a clear summary:
 
 1. **Created** — list every file that was generated, with a one-line description of each.
 2. **Skipped** — list every file that was skipped because it already existed.
-3. **Next Steps** — suggest what the user should do:
+3. **Changelog status** — where the changelog lives, whether it's current or stale, any recommendations.
+4. **Documentation status** — where docs live, framework used, whether docs are healthy, any recommendations.
+5. **Next Steps** — suggest what the user should do:
    - Review each generated file and customize to their preferences
    - Pay special attention to AGENTS.md and the maintenance matrix
+   - Address any changelog or documentation issues flagged above
    - Commit the new files to the repo
    - Consider adding project-specific skills if the repo has complex workflows
 

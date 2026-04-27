@@ -81,9 +81,9 @@ Together, they form a layered system:
 
 ---
 
-## The 9 Assets
+## The 11 Steps
 
-The plugin generates up to 9 assets, each serving a specific purpose:
+The plugin performs up to 11 steps, each serving a specific purpose:
 
 ### 1. AGENTS.md
 
@@ -120,6 +120,14 @@ A cross-reference table embedded in `copilot-instructions.md` that maps "when X 
 ### 9. License and Content Rules
 
 For projects with creative assets (images, sounds, fonts, etc.), the plugin generates rules about content licensing and attribution. This prevents the AI from generating or suggesting content that violates licensing terms, and ensures proper attribution in generated code.
+
+### 10. Changelog Evaluation
+
+The plugin checks whether the repo has a changelog and whether it's healthy. It handles non-standard locations — some projects maintain changelogs in their docs site rather than a root `CHANGELOG.md`. The plugin follows pointer files, checks freshness against git tags, and flags stale changelogs. If no changelog exists, it creates one in Keep a Changelog format.
+
+### 11. Documentation Evaluation
+
+The plugin checks whether the repo has documentation, identifies the framework (Docsify, Docusaurus, MkDocs, VitePress, etc.), verifies the docs deploy pipeline, and checks that the README links to the docs. If docs exist, their location and conventions are documented in AGENTS.md and the maintenance matrix. If docs don't exist, the plugin assesses whether they're needed based on the project type.
 
 ---
 
