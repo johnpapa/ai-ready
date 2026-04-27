@@ -333,6 +333,15 @@ Let's see where you stand.
 | ➕ Create | `{filename}` — {what it will contain} |
 | 💬 Suggest | {suggestion} |
 | ✅ Skip | {count} files already in great shape |
+
+---
+
+🚀 **What To Do Next**
+
+- Review each generated file and customize to your preferences
+- Pay special attention to `AGENTS.md` and the maintenance matrix in `copilot-instructions.md`
+- Commit the new files and open a PR
+- Try asking Copilot to make a change to your repo — it will now follow your conventions automatically
 ```
 
 Rules for filling in the template:
@@ -344,6 +353,7 @@ Rules for filling in the template:
 - The tech profile table should only include rows that apply (e.g., skip "Frameworks" if none detected)
 - Keep each detail to one short line — no multi-line descriptions
 - The "What I'll Do" section should list every file that was created, suggested, or skipped
+- The "What To Do Next" section should include only the bullet points that are relevant — e.g., if no files were created, skip "review generated files" and instead say something like "Your repo is already AI-ready — nice work!"
 
 ---
 
