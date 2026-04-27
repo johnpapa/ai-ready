@@ -58,13 +58,24 @@ These aren't separate problems. They're the same gap: the contributor doesn't kn
 
 ## How It Works
 
-The plugin is a Copilot CLI **skill** — a step-by-step procedure that tells Copilot CLI _what_ to analyze and generate, and in what order. When invoked, the skill:
+The core of this project is a **skill** — a step-by-step procedure that tells Copilot CLI _what_ to analyze and generate. When invoked, the skill:
 
-1. **Analyzes** your repo using built-in tools — scanning manifest files, CI workflows, test configs, directory structure, and existing AI configuration
-2. **Identifies gaps** — which of the 9 assets are missing or incomplete
+1. **Analyzes** your repo using built-in tools — scanning manifest files, CI workflows, test configs, docs, changelog, directory structure, and existing AI configuration
+2. **Identifies gaps** — what's missing or incomplete
 3. **Generates** each missing asset, customized to your project's actual language, framework, and patterns
 
 Every generated file is based on evidence from your repo — not boilerplate.
+
+### Why is it a plugin and not just a skill file?
+
+The skill is the recipe. The plugin is how you get it. Without the plugin wrapper, you'd have to manually find the `SKILL.md` file, copy it into your repo's `.github/skills/` directory, and keep it updated yourself. The plugin system handles all of that:
+
+- **One-command install** — `copilot plugin install johnpapa/ai-ready-repo`
+- **Marketplace discovery** — listed and browsable so people can find it
+- **Versioning and updates** — `copilot plugin update ai-ready-repo`
+- **Works on any repo** — install once, use everywhere
+
+Think of it like npm: you don't _need_ npm to use a JavaScript file, but npm is how people discover, install, and update it.
 
 ## What Gets Generated
 
