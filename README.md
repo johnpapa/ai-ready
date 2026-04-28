@@ -129,21 +129,6 @@ To enable Copilot code review: go to your repo's **Settings → Copilot → Code
 4. Test locally: `copilot --plugin-dir /path/to/your/fork` then say *"make this repo ai-ready"*
 5. Open a PR
 
-### Smoke Testing
-
-Since this is a markdown-only plugin, the real test is running it:
-
-```bash
-# Load your local changes
-cd /path/to/some-other-repo
-copilot --plugin-dir /path/to/ai-ready
-
-# Then invoke the skill
-> make this repo ai-ready
-```
-
-Verify the analysis is correct and the generated files match the target repo's actual conventions.
-
 See [AGENTS.md](AGENTS.md) for the full contributor guide.
 
 ## License
