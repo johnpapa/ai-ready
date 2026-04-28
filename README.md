@@ -46,6 +46,10 @@ Contributors (human and AI) show up to your repo and don't know the conventions.
 
 It's the same gap from both sides: **contributors don't know what maintainers expect, and maintainers keep re-teaching it.** This plugin closes that gap by generating repo-level configuration that teaches everyone — human and AI — how to work in the repo correctly. It even mines your PR review comments for repeated feedback and turns them into automated conventions. The result: a 45-minute review becomes a 5-minute review.
 
+### Built from Real Maintainer Experience
+
+This plugin isn't theoretical — it's shaped by [John Papa](https://github.com/johnpapa)'s experience maintaining popular open source projects and repos at large enterprises. The skill is tuned to prioritize what actually reduces review burden: maintenance matrices that catch the files contributors always forget, conventions mined from the PR feedback you're tired of repeating, and CI that catches problems before you have to.
+
 ## How It Works — GitHub-Native by Default
 
 You shouldn't have to explain to an AI tool that you're in a GitHub repo. This plugin assumes it, and leverages everything GitHub already knows about your project.
