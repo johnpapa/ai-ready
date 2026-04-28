@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Monorepo area support** (Step 1j/3) — detects workspace areas and generates per-area .instructions.md files with applyTo glob patterns for scoped AI instructions
 - **AI-Ready badge** (Step 12) — opt-in Shields.io badge and `ai-ready` GitHub topic offered after the report, linking back to this plugin for discoverability
 - **Self-consistency rule** — generated files must follow the conventions established in the same PR's `copilot-instructions.md`, so Copilot code review finds zero issues
 - **Explicit asset list** — the 11 tracked assets are now enumerated with a scoring rubric (Nailed It = 1, Could Be Better = 0.5, Missing = 0)

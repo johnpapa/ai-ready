@@ -219,6 +219,8 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | Push access | yes / no | `gh api repos/{owner}/{repo} --jq '.permissions.push'` |
 | Custom agents | e.g., 2 agents: migration guide, orchestrator | `.github/agents/` |
 | Custom skills | e.g., 6 skills: bunit-test, component-dev, ... | `.github/skills/` |
+| Monorepo | yes/no | workspace config file |
+| Areas | e.g., frontend (React), backend (Express), shared (TypeScript) | workspace config paths |
 
 **List which of the 11 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
 
@@ -234,6 +236,23 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | README Contributing | Links still valid? Commands still correct? |
 
 For each existing asset where you find drift, classify it as **"Could Be Better"** in the report with a specific suggestion (e.g., "AGENTS.md lists Node 18 but `.nvmrc` now says Node 22"). Do not silently skip existing files — always evaluate them.
+
+### 1j. Detect monorepo areas
+
+*Why?*: In a monorepo, the frontend and backend are different worlds. A single `copilot-instructions.md` can't cover React conventions and Express conventions without becoming a wall of text. Area-scoped instructions give each part of the codebase its own context.
+
+If monorepo markers were found in Step 1a (`pnpm-workspace.yaml`, `lerna.json`, `nx.json`, `turbo.json`, Cargo workspace in `Cargo.toml`, Go workspace in `go.work`), identify the logical areas:
+
+1. **Read the workspace config** to find package/project paths (e.g., `packages/*`, `apps/*`)
+2. **List each area** — name, path, primary language/framework
+3. **Decide what needs its own instructions.** Split when the conventions actually differ. Same stack, same patterns? One file is enough.
+
+Record detected areas in the findings table:
+
+| Category | Finding | Evidence (source) |
+|----------|---------|-------------------|
+| Monorepo | yes/no | workspace config file |
+| Areas | e.g., frontend (React), backend (Express), shared (TypeScript) | workspace config paths |
 
 ---
 
@@ -283,6 +302,25 @@ Content to include (or verify):
   | Project structure changed | List AGENTS.md, README, import paths, CI paths to update |
 
   Populate the matrix with **real file paths and real patterns** from the repo. **Trace import chains and registration patterns** — don't stop at the obvious top-level files. Follow imports to find enum definitions, type interfaces, index re-exports, config declarations, and other files in the dependency chain. For example, if a new command requires updating both `commands.ts` and an enum in `models/enums.ts`, include both. If a feature has a registration step in an index file, include that too. **If the analysis found pointer files or non-standard locations** (e.g., a changelog that lives in `docs/changelog/` instead of the root), use the real path in the matrix — never reference the pointer file.
+
+### Monorepo: Area-scoped instructions
+
+If the repo is a monorepo with distinct areas (detected in Step 1j), generate per-area instruction files in `.github/instructions/`.
+
+For each area whose stack or conventions differ from the root:
+
+1. Create `.github/instructions/{area-name}.instructions.md` with YAML frontmatter:
+   ```yaml
+   ---
+   applyTo: "{area-path}/**"
+   ---
+   ```
+2. Include area-specific conventions — framework patterns, test setup, build commands, anything that diverges from root.
+3. **Don't duplicate root conventions.** *Why?*: Duplicated instructions drift apart. Keep shared conventions in the root file and only put what's different in area files.
+
+Skip areas that share the same stack as the root. *Why?*: More files isn't better. If two areas use the same framework with the same patterns, one instructions file covers both. Only split when the conventions actually differ.
+
+VS Code automatically applies these scoped instructions when working on files matching the `applyTo` pattern. See [File-based instructions in VS Code](https://code.visualstudio.com/docs/copilot/customization/custom-instructions#_use-instructionsmd-files).
 
 ---
 
@@ -537,6 +575,8 @@ _Include this section only if the repo already has AI configuration (copilot-ins
 | ⏭️ Skip | `{filename}` — skipped (user requested) |
 | 💬 Suggest | {suggestion} |
 | ✅ Skip | {count} files already in great shape |
+
+_For monorepos: list each `.github/instructions/{area}.instructions.md` file created as a separate ➕ Create row._
 
 **Updated Score: {new-nailed}/{total}** · {updated-progress-bar} {new-percent}%
 
