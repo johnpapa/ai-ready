@@ -172,7 +172,3 @@ See [AGENTS.md](AGENTS.md) for the full contributor guide.
 ## License
 
 MIT
-
-## Credits
-
-Built and validated on [Agent Arcade](https://github.com/johnpapa/agent-arcade) — a Tauri + Phaser retro arcade game that served as the proof of concept for this pattern. The [PR implementing the full asset set](https://github.com/DanWahlin/agent-arcade/pull/7) is a working example.
