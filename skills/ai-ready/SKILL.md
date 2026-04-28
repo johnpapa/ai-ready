@@ -282,20 +282,7 @@ For each existing asset where you find drift, classify it as **"Could Be Better"
 
 ### 1j. Detect monorepo areas
 
-*Why?*: In a monorepo, the frontend and backend are different worlds. A single `copilot-instructions.md` can't cover React conventions and Express conventions without becoming a wall of text. Area-scoped instructions give each part of the codebase its own context.
-
-If monorepo markers were found in Step 1a (`pnpm-workspace.yaml`, `lerna.json`, `nx.json`, `turbo.json`, Cargo workspace in `Cargo.toml`, Go workspace in `go.work`), identify the logical areas:
-
-1. **Read the workspace config** to find package/project paths (e.g., `packages/*`, `apps/*`)
-2. **List each area** — name, path, primary language/framework
-3. **Decide what needs its own instructions.** Split when the conventions actually differ. Same stack, same patterns? One file is enough.
-
-Record detected areas in the findings table:
-
-| Category | Finding | Evidence (source) |
-|----------|---------|-------------------|
-| Monorepo | yes/no | workspace config file |
-| Areas | e.g., frontend (React), backend (Express), shared (TypeScript) | workspace config paths |
+If a workspace config was found in Step 1a, read it to find package/project paths (e.g., `packages/*`, `apps/*`). List each area — name, path glob, and primary stack — and note which areas have conventions that differ from root.
 
 ---
 
@@ -348,22 +335,15 @@ Content to include (or verify):
 
 ### Monorepo: Area-scoped instructions
 
-If the repo is a monorepo with distinct areas (detected in Step 1j), generate per-area instruction files in `.github/instructions/`.
+If the repo is a monorepo with areas that have different stacks or conventions (detected in Step 1j), create `.github/instructions/{area-name}.instructions.md` for each distinct area:
 
-For each area whose stack or conventions differ from the root:
+```yaml
+---
+applyTo: "{area-path}/**"
+---
+```
 
-1. Create `.github/instructions/{area-name}.instructions.md` with YAML frontmatter:
-   ```yaml
-   ---
-   applyTo: "{area-path}/**"
-   ---
-   ```
-2. Include area-specific conventions — framework patterns, test setup, build commands, anything that diverges from root.
-3. **Don't duplicate root conventions.** *Why?*: Duplicated instructions drift apart. Keep shared conventions in the root file and only put what's different in area files.
-
-Skip areas that share the same stack as the root. *Why?*: More files isn't better. If two areas use the same framework with the same patterns, one instructions file covers both. Only split when the conventions actually differ.
-
-VS Code automatically applies these scoped instructions when working on files matching the `applyTo` pattern. See [File-based instructions in VS Code](https://code.visualstudio.com/docs/copilot/customization/custom-instructions#_use-instructionsmd-files).
+Include only what differs from root conventions — framework patterns, test setup, or build commands specific to that area. Skip areas that share the same stack as the root.
 
 ---
 
