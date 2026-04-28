@@ -262,6 +262,8 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | Push access | yes / no | `gh api repos/{owner}/{repo} --jq '.permissions.push'` |
 | Custom agents | e.g., 2 agents: migration guide, orchestrator | `.github/agents/` |
 | Custom skills | e.g., 6 skills: bunit-test, component-dev, ... | `.github/skills/` |
+| Monorepo | yes/no | workspace config file |
+| Areas | e.g., frontend (React), backend (Express), shared (TypeScript) | workspace config paths |
 
 **List which of the 12 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
 
@@ -277,6 +279,10 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | README Contributing | Links still valid? Commands still correct? |
 
 For each existing asset where you find drift, classify it as **"Could Be Better"** in the report with a specific suggestion (e.g., "AGENTS.md lists Node 18 but `.nvmrc` now says Node 22"). Do not silently skip existing files — always evaluate them.
+
+### 1j. Detect monorepo areas
+
+If a workspace config was found in Step 1a, read it to find package/project paths (e.g., `packages/*`, `apps/*`). List each area — name, path glob, and primary stack — and note which areas have conventions that differ from root.
 
 ---
 
@@ -326,6 +332,18 @@ Content to include (or verify):
   | Project structure changed | List AGENTS.md, README, import paths, CI paths to update |
 
   Populate the matrix with **real file paths and real patterns** from the repo. **Trace import chains and registration patterns** — don't stop at the obvious top-level files. Follow imports to find enum definitions, type interfaces, index re-exports, config declarations, and other files in the dependency chain. For example, if a new command requires updating both `commands.ts` and an enum in `models/enums.ts`, include both. If a feature has a registration step in an index file, include that too. **If the analysis found pointer files or non-standard locations** (e.g., a changelog that lives in `docs/changelog/` instead of the root), use the real path in the matrix — never reference the pointer file.
+
+### Monorepo: Area-scoped instructions
+
+If the repo is a monorepo with areas that have different stacks or conventions (detected in Step 1j), create `.github/instructions/{area-name}.instructions.md` for each distinct area:
+
+```yaml
+---
+applyTo: "{area-path}/**"
+---
+```
+
+Include only what differs from root conventions — framework patterns, test setup, or build commands specific to that area. Skip areas that share the same stack as the root.
 
 ---
 
@@ -644,6 +662,8 @@ _Show this section when consistency issues are found — skip it when everything
 | ⏭️ Skip | `{filename}` — skipped (user requested) |
 | 💬 Suggest | {suggestion} |
 | ✅ Skip | {count} files already in great shape |
+
+_For monorepos: list each `.github/instructions/{area}.instructions.md` file created as a separate ➕ Create row._
 
 **Updated Score:** {new-level-emoji} **{new-level-name}** · {updated-progress-bar} {new-percent}%
 

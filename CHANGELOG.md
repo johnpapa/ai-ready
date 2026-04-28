@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Monorepo area support** (Step 1j/3) — detects workspace areas and generates per-area .instructions.md files with applyTo glob patterns for scoped AI instructions
 - **MCP server config generation** (Step 4b) — generates `.vscode/mcp.json` based on detected database, API, and tool dependencies
 - **HTML readiness reports** (Step 11) — optional self-contained HTML report for sharing with stakeholders, triggered by user request
 - **Instruction consistency checking** (Step 1d) — detects contradictions, duplicates, and stale references across AGENTS.md, copilot-instructions.md, CLAUDE.md, and .instructions.md files
