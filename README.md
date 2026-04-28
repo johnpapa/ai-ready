@@ -1,4 +1,4 @@
-# AI-Ready Repo
+# AI Ready (a Copilot CLI Plugin)
 
 > ⚠️ **Alpha** — This plugin is a work in progress. It works, but expect rough edges. Feedback and contributions welcome.
 
