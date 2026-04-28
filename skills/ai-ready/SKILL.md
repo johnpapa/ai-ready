@@ -401,6 +401,7 @@ Let's see where you stand.
 
 - Review each generated file and customize to your preferences
 - Pay special attention to `AGENTS.md` and the maintenance matrix in `copilot-instructions.md`
+- **Enable Copilot code review** — go to your repo's Settings → Copilot → Code review and turn it on. Copilot will automatically review every PR against the conventions in `copilot-instructions.md`
 - When you're ready, ask me to create a PR with these changes:
 
   > Create a PR with all the AI-ready config files. Title it "Add AI-ready configuration" and describe what was added and why.
