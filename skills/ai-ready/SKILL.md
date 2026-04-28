@@ -454,7 +454,31 @@ Let's see where you stand.
 Want me to create a branch and open a draft PR with these changes? You can review and edit before merging.
 ```
 
-After displaying the report, **ask the user** if they want a draft PR created. If they say yes, create a feature branch (e.g., `feat/ai-ready-config`), commit all new files with a descriptive message, push, and open a draft PR with a summary of what was added and the before/after score.
+After displaying the report, handle the badge, topic, and PR in this order:
+
+### 11a. Offer AI-Ready badge
+
+Check if the README already contains an `AI--Ready` badge. If not, ask the user if they'd like one added. If yes, insert this badge at the top of the README, after any existing title or badge row:
+
+```markdown
+[![AI Ready](https://img.shields.io/badge/AI--Ready-yes-brightgreen?style=flat)](https://github.com/johnpapa/ai-ready)
+```
+
+The badge is a static Shields.io image with zero dependencies. It links back to the ai-ready plugin repo so others can discover it.
+
+### 11b. Offer GitHub topic
+
+Check the topics fetched in Step 0b. If the repo does not already have the `ai-ready` topic, ask the user if they'd like it added:
+
+```bash
+gh repo edit --add-topic ai-ready
+```
+
+This makes the repo discoverable at `github.com/topics/ai-ready` alongside other AI-ready repos. Add the topic immediately if the user agrees (this is repo metadata, not a file change — it doesn't need to be in the PR).
+
+### 11c. Offer draft PR
+
+**Ask the user** if they want a draft PR created. If they say yes, create a feature branch (e.g., `feat/ai-ready-config`), commit all new/modified files (including the badge if they accepted it), push, and open a draft PR with a summary of what was added and the before/after score.
 
 Rules for filling in the template:
 
@@ -467,34 +491,6 @@ Rules for filling in the template:
 - The "What I Did" section should list every file that was created, suggested, or skipped
 - **Show an updated progress bar** after the "What I Did" section — recalculate the score counting all created files as now "Nailed It." This shows the user the improvement visually (e.g., going from 🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜ 45% → 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 100%)
 - The "What To Do Next" section should include only the bullet points that are relevant — e.g., if no files were created, skip "review generated files" and instead say something like "Your repo is already AI-ready — nice work!"
-
----
-
-## Step 12 — Offer AI-Ready badge and topic
-
-After the report (and any draft PR), offer two optional promotional items. These are **opt-in only** — ask the user, never add them silently.
-
-### 12a. AI-Ready badge
-
-Ask the user if they'd like an AI-Ready badge added to their `README.md`. If yes, insert this badge at the top of the README, after any existing title or badge row:
-
-```markdown
-[![AI Ready](https://img.shields.io/badge/AI--Ready-yes-brightgreen?style=flat)](https://github.com/johnpapa/ai-ready)
-```
-
-Before inserting, check if the README already contains an `AI--Ready` badge — if so, skip it.
-
-The badge is a static Shields.io image with zero dependencies. It links back to the ai-ready plugin repo so others can discover it.
-
-### 12b. GitHub topic
-
-Ask the user if they'd like the `ai-ready` topic added to their repository:
-
-```bash
-gh repo edit --add-topic ai-ready
-```
-
-This makes the repo discoverable at `github.com/topics/ai-ready` alongside other AI-ready repos. Only offer this if the repo does not already have the `ai-ready` topic (check the topics fetched in Step 0b).
 
 ---
 
