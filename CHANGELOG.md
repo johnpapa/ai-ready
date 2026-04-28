@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **AI-Ready badge** (Step 12) — opt-in Shields.io badge and `ai-ready` GitHub topic offered after the report, linking back to this plugin for discoverability
+
+### Changed
+
+- Contributors row rationale changed from "who to put in CODEOWNERS" to "contribution patterns" — CODEOWNERS is a human reviewer workflow, not an AI-readiness concern
+- Skill now has 12 steps (was 11)
+
 ## [0.3.0-alpha] — 2026-04-24
 
 ### Added
