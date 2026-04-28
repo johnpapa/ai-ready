@@ -24,15 +24,21 @@ The plugin analyzes your code, CI, tests, docs, and structure, then generates as
 
 After you run the skill, here's what happens:
 
-1. **Analysis** — the skill scans your repo using GitHub's APIs and your local codebase (languages, frameworks, CI, tests, PR review history, community health). No questions asked.
+**1. Analysis** — the skill scans your repo using GitHub's APIs and your local codebase. You get a score, tech profile, and progress bar — no questions asked.
 
-![AI-Readiness Report](images/ai-readiness-report.png)
+![Score and tech profile](images/report-score.png)
 
-2. **Generation** — it creates any missing config files (AGENTS.md, copilot-instructions.md, CI workflow, issue templates, etc.), customized to your repo's actual patterns. You'll see a full report of what was nailed, what could be better, and what was missing — then what it created.
+**2. Assessment** — every asset is categorized as nailed, could be better, or missing. You see exactly where you stand.
 
-3. **Next steps** — the skill prompts you to review, enable Copilot code review, and create a PR.
+![Nailed It, Could Be Better, Missing](images/report-assessment.png)
 
-![What To Do Next](images/ai-readiness-whats-next.png)
+**3. Generation** — the skill creates every missing file, customized to your repo's actual patterns. The progress bar updates to show the improvement.
+
+![What I Did and updated score](images/report-actions.png)
+
+**4. Next steps** — clear actions: review, enable Copilot code review, and a ready-to-use prompt to create the PR.
+
+![What To Do Next](images/report-next-steps.png)
 
 ## What It Does
 
