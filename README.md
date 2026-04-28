@@ -31,6 +31,8 @@ After you run the skill, here's what happens:
 
 ![AI-Readiness Report](images/ai-readiness-report.png)
 
+![What To Do Next](images/ai-readiness-whats-next.png)
+
 ## What It Does
 
 Contributors (human and AI) show up to your repo and don't know the conventions. They submit PRs that miss tests, break patterns, skip docs. You leave the same review comments on every PR. AI agents make this more challenging — they generate PRs faster, but without context, those PRs are low-quality and create _more_ review burden.
