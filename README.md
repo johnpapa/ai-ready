@@ -29,8 +29,7 @@ After you run the skill, here's what happens:
 3. **Report** — you'll see an AI-Readiness Report showing your score, what's in place, and what was created or suggested.
 4. **Next steps** — the skill will prompt you to review the generated files, enable Copilot code review, and create a PR.
 
-<!-- TODO: Add screenshot of the AI-Readiness Report output here -->
-<!-- ![AI-Readiness Report](images/ai-readiness-report.png) -->
+![AI-Readiness Report](images/ai-readiness-report.png)
 
 ## What It Does
 
