@@ -278,7 +278,28 @@ Base every step on the analysis results from Step 1. Use the exact commands and 
 
 Check `.github/workflows/` for any existing workflow that triggers on `pull_request`. If none exists, create `.github/workflows/ci.yml` with:
 
-- **Triggers:** `pull_request` (all branches) and `push` to `main`
+- **Triggers:** `pull_request` (all branches) and `push` to `main`, with **path filters** so CI only runs when code actually changes. Use `paths-ignore` to skip documentation-only and config-only changes:
+  ```yaml
+  on:
+    pull_request:
+      paths-ignore:
+        - '**.md'
+        - 'docs/**'
+        - '.github/ISSUE_TEMPLATE/**'
+        - 'images/**'
+        - 'LICENSE'
+        - '.gitignore'
+    push:
+      branches: [main]
+      paths-ignore:
+        - '**.md'
+        - 'docs/**'
+        - '.github/ISSUE_TEMPLATE/**'
+        - 'images/**'
+        - 'LICENSE'
+        - '.gitignore'
+  ```
+  Customize the `paths-ignore` list based on the repo's actual structure. If the project has other non-code directories (e.g., `assets/`, `design/`, `samples/`), add those too. If the project has code in markdown (e.g., a docs site with executable code blocks), **do not** ignore markdown files.
 - **Jobs:** A build-and-test job that:
   - Checks out the code
   - Sets up the correct language runtime
