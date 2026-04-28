@@ -26,9 +26,9 @@ When invoked, follow these steps in order to analyze the current repository and 
 
 **Skipping assets:** If the user's prompt mentions skipping specific assets (e.g., "make this repo ai-ready but skip CI and issue templates"), respect those exclusions. Still run the full analysis, but skip generation for the excluded assets and note them as "⏭️ Skipped (user requested)" in the report. The analysis is always complete — only generation is skipped.
 
-### The 11 tracked assets
+### The 12 tracked assets
 
-The score is calculated against these 11 assets. Each one is scored as **Nailed It** (🟩 = 1 point), **Could Be Better** (🟨 = 0.5 points), or **Missing** (⬜ = 0 points). The percentage is `total points / 11 × 100`, rounded to the nearest whole number.
+The score is calculated against these 12 assets. Each one is scored as **Nailed It** (🟩 = 1 point), **Could Be Better** (🟨 = 0.5 points), or **Missing** (⬜ = 0 points). The percentage is `total points / 12 × 100`, rounded to the nearest whole number.
 
 | # | Asset | Generated in |
 |---|-------|-------------|
@@ -43,6 +43,7 @@ The score is calculated against these 11 assets. Each one is scored as **Nailed 
 | 9 | Changelog (`CHANGELOG.md`) | Step 9 |
 | 10 | Documentation (or explicit "not needed" note) | Step 10 |
 | 11 | `.github/dependabot.yml` | (checked, not generated) |
+| 12 | `.vscode/mcp.json` | Step 4b |
 
 ---
 
@@ -220,7 +221,7 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | Custom agents | e.g., 2 agents: migration guide, orchestrator | `.github/agents/` |
 | Custom skills | e.g., 6 skills: bunit-test, component-dev, ... | `.github/skills/` |
 
-**List which of the 11 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
+**List which of the 12 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
 
 **For existing AI-ready assets**, read their current contents and compare against your analysis. Flag drift in any of these dimensions:
 
@@ -305,6 +306,58 @@ Base every step on the analysis results from Step 1. Use the exact commands and 
 **Derive from existing CI when possible.** If the repo already has a CI workflow (`.github/workflows/`), use it as the source of truth for SDK versions, restore commands, and build steps. The setup steps should mirror CI — not invent new commands.
 
 **Multi-target frameworks (.NET):** If `.csproj` files use `<TargetFrameworks>` (plural) with multiple targets (e.g., `net8.0;net9.0;net10.0`), the setup steps must install **all** required SDK versions. Check every `.csproj` for `TargetFramework` and `TargetFrameworks` properties and collect the full set of versions needed.
+
+---
+
+## Step 4b — Generate .vscode/mcp.json
+
+*Why?*: MCP servers give AI agents access to your project's tools and data — databases, APIs, file systems. Without this config, the agent can read your code but can't talk to the services your code depends on.
+
+If `.vscode/mcp.json` does not already exist, generate it based on the dependencies and tools detected in Step 1.
+
+If it already exists, read it and verify the servers still match the project's current dependencies. Flag mismatches as "Could Be Better" suggestions.
+
+### Detection and mapping
+
+Scan the project's dependencies (from manifest files read in Step 1a) and map them to known MCP servers:
+
+| Dependency pattern | MCP server | Package |
+|-------------------|------------|---------|
+| `pg`, `postgres`, `postgresql`, `prisma` (with PostgreSQL) | PostgreSQL | `@modelcontextprotocol/server-postgres` |
+| `sqlite3`, `better-sqlite3`, `prisma` (with SQLite) | SQLite | `@modelcontextprotocol/server-sqlite` |
+| `mongodb`, `mongoose` | MongoDB | `@modelcontextprotocol/server-mongodb` |
+| `redis`, `ioredis` | Redis | `@modelcontextprotocol/server-redis` |
+| `puppeteer`, `playwright` | Browser automation | `@modelcontextprotocol/server-puppeteer` |
+| GitHub API usage (`@octokit`, `gh` CLI) | GitHub | `@modelcontextprotocol/server-github` |
+| File system heavy (CLI tools, build tools) | Filesystem | `@modelcontextprotocol/server-filesystem` |
+
+Only include servers for dependencies the project actually uses. Do not speculatively add servers.
+
+*Why?*: Speculative MCP servers add noise and may prompt for credentials the user doesn't have. Only connect what the project actually needs.
+
+### Output format
+
+Generate `.vscode/mcp.json` with the `servers` object:
+
+```json
+{
+  "servers": {
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
+    }
+  }
+}
+```
+
+Use environment variable references (`${VAR}`) for connection strings and secrets. Never hardcode values.
+
+*Why?*: Hardcoded connection strings are a security risk and break across environments. Environment variable references let each developer use their own credentials.
+
+Note which servers were added and why in the "What I Did" report section. If no relevant dependencies are detected, skip this step and mark the asset as "N/A — no MCP-compatible dependencies detected" in the report.
 
 ---
 
@@ -470,7 +523,7 @@ Based on the documentation analysis from Step 1g:
 
 After completing all steps, you MUST display the AI-Readiness Report using the **exact format** below. Fill in the placeholders from your analysis. Do not skip, abbreviate, or restructure this report.
 
-Calculate the score using the point system defined in "The 11 tracked assets" section: Nailed It = 1 point (🟩), Could Be Better = 0.5 points (🟨), Missing = 0 points (⬜). The percentage is `total points / 11 × 100`, rounded to the nearest whole number. Always show 11 squares in the progress bar.
+Calculate the score using the point system defined in "The 12 tracked assets" section: Nailed It = 1 point (🟩), Could Be Better = 0.5 points (🟨), Missing = 0 points (⬜). The percentage is `total points / 12 × 100`, rounded to the nearest whole number. Always show 12 squares in the progress bar.
 
 Display this report:
 
@@ -597,7 +650,7 @@ Rules for filling in the template:
 - The tech profile table should only include rows that apply (e.g., skip "Frameworks" if none detected)
 - Keep each detail to one short line — no multi-line descriptions
 - The "What I Did" section should list every file that was created, suggested, or skipped
-- **Show an updated progress bar** after the "What I Did" section — recalculate the score counting all created files as now "Nailed It." This shows the user the improvement visually (e.g., going from 🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜ 45% → 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 100%)
+- **Show an updated progress bar** after the "What I Did" section — recalculate the score counting all created files as now "Nailed It." This shows the user the improvement visually (e.g., going from 🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜⬜ 42% → 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 100%)
 - The "What To Do Next" section should include only the bullet points that are relevant — e.g., if no files were created, skip "review generated files" and instead say something like "Your repo is already AI-ready — nice work!"
 
 ---
