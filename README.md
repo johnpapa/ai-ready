@@ -22,7 +22,7 @@ The plugin analyzes your code, CI, tests, docs, and structure, then generates as
 
 ## What It Does
 
-Contributors (human and AI) show up to your repo and don't know the conventions. They submit PRs that miss tests, break patterns, skip docs. You leave the same review comments on every PR. AI agents are making this worse — they generate PRs faster, but without context, those PRs are low-quality and create _more_ review burden.
+Contributors (human and AI) show up to your repo and don't know the conventions. They submit PRs that miss tests, break patterns, skip docs. You leave the same review comments on every PR. AI agents make this more challenging — they generate PRs faster, but without context, those PRs are low-quality and create _more_ review burden.
 
 This plugin fixes both sides by generating repo-level configuration files that teach AI how to contribute correctly. The AI reads these files automatically, follows your conventions, and produces PRs that are already close to merge-ready. Your job shrinks from "teach and review" to just "review the logic."
 
