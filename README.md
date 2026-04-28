@@ -8,17 +8,13 @@ A Copilot CLI plugin that analyzes your repository and generates the configurati
 
 ## Quick Start
 
-Install the plugin from the [awesome-copilot](https://github.com/github/awesome-copilot) marketplace:
-
-```bash
-copilot plugin install ai-ready@awesome-copilot
-```
-
-Or install directly from GitHub:
+Install the plugin:
 
 ```bash
 copilot plugin install johnpapa/ai-ready
 ```
+
+> 📦 Once [awesome-copilot marketplace](https://github.com/github/awesome-copilot) listing is live, install with `copilot plugin install ai-ready@awesome-copilot`
 
 Run it:
 
