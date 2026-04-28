@@ -387,13 +387,15 @@ Let's see where you stand.
 
 ---
 
-🛠️ **What I'll Do**
+🛠️ **What I Did**
 
 | Action | Detail |
 |--------|--------|
 | ➕ Create | `{filename}` — {what it will contain} |
 | 💬 Suggest | {suggestion} |
 | ✅ Skip | {count} files already in great shape |
+
+**Updated Score: {new-nailed}/{total}** · {updated-progress-bar} {new-percent}%
 
 ---
 
@@ -418,7 +420,8 @@ Rules for filling in the template:
 - If a section has 0 items (e.g., nothing missing), omit that section entirely
 - The tech profile table should only include rows that apply (e.g., skip "Frameworks" if none detected)
 - Keep each detail to one short line — no multi-line descriptions
-- The "What I'll Do" section should list every file that was created, suggested, or skipped
+- The "What I Did" section should list every file that was created, suggested, or skipped
+- **Show an updated progress bar** after the "What I Did" section — recalculate the score counting all created files as now "Nailed It." This shows the user the improvement visually (e.g., going from 🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜ 45% → 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 100%)
 - The "What To Do Next" section should include only the bullet points that are relevant — e.g., if no files were created, skip "review generated files" and instead say something like "Your repo is already AI-ready — nice work!"
 
 ---
