@@ -72,7 +72,7 @@ GitHub's community health API tells you exactly what's missing. Map it to the as
 | GitHub says missing | Skill generates |
 |-------------------|-----------------|
 | No issue templates | `.github/ISSUE_TEMPLATE/` (Step 6) |
-| No pull request template | Can suggest adding one |
+| No pull request template | `.github/PULL_REQUEST_TEMPLATE.md` (Step 6) |
 | No CONTRIBUTING guide | README Contributing section (Step 7) |
 | No CODE_OF_CONDUCT | Can suggest adding one |
 | No license | Flag in the report |
@@ -322,6 +322,17 @@ If `.github/ISSUE_TEMPLATE/` does not already exist, create:
 - **Project-Specific Templates** — if the project type warrants it, add a third template (e.g., "New Game Proposal" for a game project, "New Integration" for a platform with plugins, "API Change" for an API-heavy project).
 
 Use the YAML issue form format (not the older markdown template format).
+
+### PR template
+
+If `.github/PULL_REQUEST_TEMPLATE.md` does not already exist, create it with:
+
+- **Description** — a prompt asking what the PR does (one or two sentences)
+- **Changes** — a bulleted list of files changed and why
+- **How to Test** — steps a reviewer can follow to verify the changes work, customized to the project's test commands from the analysis
+- **Checklist** — items relevant to the project (e.g., "Tests pass", "Docs updated", "Lint clean"). Derive checklist items from the maintenance matrix — if the matrix says "update X when Y changes", add a checklist item for it.
+
+Keep it short and useful — a PR template that's too long gets ignored.
 
 ---
 
