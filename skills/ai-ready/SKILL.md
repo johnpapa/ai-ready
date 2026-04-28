@@ -20,7 +20,9 @@ Every decision you make should pass this test: **"Would an experienced maintaine
 
 ---
 
-When invoked, follow these steps in order to analyze the current repository and generate all missing AI-ready configuration assets. Each step checks whether the target file already exists — **never overwrite existing files**.
+When invoked, follow these steps in order to analyze the current repository and generate all missing AI-ready configuration assets.
+
+**First run vs. re-run:** The skill runs the same analysis every time. On the first run, most assets will be missing and the skill creates them. On re-runs, the skill **audits** existing assets against the current state of the codebase — checking for drift, stale content, and new conventions from recent PR reviews. It reports what's drifted in "Could Be Better" with specific suggestions, but **never overwrites existing files without user approval**. Only truly missing assets are created automatically.
 
 ---
 
@@ -190,11 +192,28 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 
 **List which of the 9 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
 
+**For existing AI-ready assets**, read their current contents and compare against your analysis. Flag drift in any of these dimensions:
+
+| Asset | What to compare |
+|-------|----------------|
+| `AGENTS.md` | Repo structure still accurate? Build/test commands still correct? Tech stack changed? |
+| `copilot-instructions.md` | New conventions from recent PR reviews? Maintenance matrix still covers current file relationships? |
+| `copilot-setup-steps.yml` | Runtime versions match? Install/build commands still correct? New dependencies? |
+| CI workflow | Build/test/lint commands still match the project? New tools added? |
+| Issue templates | Still relevant to the project type? |
+| README Contributing | Links still valid? Commands still correct? |
+
+For each existing asset where you find drift, classify it as **"Could Be Better"** in the report with a specific suggestion (e.g., "AGENTS.md lists Node 18 but `.nvmrc` now says Node 22"). Do not silently skip existing files — always evaluate them.
+
 ---
 
 ## Step 2 — Generate AGENTS.md
 
-If `AGENTS.md` does not already exist at the repository root, create it with the following sections (all content must be derived from the analysis in Step 1 and from inspecting the actual repo):
+If `AGENTS.md` does not already exist at the repository root, create it with the following sections (all content must be derived from the analysis in Step 1 and from inspecting the actual repo).
+
+If `AGENTS.md` already exists, read it and compare against the current analysis. Flag any drift (e.g., outdated repo structure, stale build commands, missing sections) as a "Could Be Better" suggestion in the report. **Do not overwrite** — suggest specific updates and let the user decide.
+
+Sections to include (or verify):
 
 - **Project Overview** — derived from README, package.json, pyproject.toml, Cargo.toml, or similar manifest files. **Never hardcode the project/package version** — reference the manifest file for it (e.g., "See `package.json` for the current version") so the file doesn't go stale. Runtime/tool versions may be included when they are derived from the repo (e.g., `.nvmrc`, `engines`, `.python-version`, CI/workflow files, or other manifests/config).
 - **Repository Structure** — a directory tree showing the key folders and what they contain.
@@ -212,6 +231,10 @@ If `AGENTS.md` does not already exist at the repository root, create it with the
 ## Step 3 — Generate .github/copilot-instructions.md
 
 If `.github/copilot-instructions.md` does not already exist, create it with:
+
+If it already exists, read it and compare against the current analysis — especially new PR review patterns from Step 0c that aren't yet captured as conventions, and maintenance matrix entries that no longer reflect the current file structure. Flag drift as "Could Be Better" suggestions.
+
+Content to include (or verify):
 
 - **Language-Specific Conventions** — coding style, idioms, and patterns for the project's primary language(s) (TypeScript, Python, Go, Rust, etc.), derived from the analysis.
 - **Framework Patterns** — how the project uses its framework(s) (React component patterns, Express middleware conventions, Django app structure, etc.).
@@ -236,6 +259,10 @@ If `.github/copilot-instructions.md` does not already exist, create it with:
 ## Step 4 — Generate .github/copilot-setup-steps.yml
 
 If `.github/copilot-setup-steps.yml` does not already exist, create it with steps to:
+
+If it already exists, read it and verify that runtime versions, install commands, and build steps still match the current project. Flag any mismatches as "Could Be Better" suggestions.
+
+Steps to include (or verify):
 
 - Check out the repository
 - Set up the language runtime (Node.js, Python, Go, Rust, .NET, etc.) at the correct version
@@ -303,7 +330,7 @@ The maintenance matrix should already be part of `copilot-instructions.md` (gene
 - What must be updated when different parts of the codebase change
 - Cross-cutting concerns (e.g., version numbers in multiple files, route registrations, module re-exports)
 
-If the matrix is missing or incomplete, update `copilot-instructions.md` to include it.
+If the matrix is missing or incomplete, suggest specific additions in the report. If `copilot-instructions.md` was just created in Step 3, add the matrix directly. If it already existed before this run, report the gaps as "Could Be Better" and let the user decide.
 
 ---
 
@@ -410,6 +437,7 @@ Let's see where you stand.
 | Action | Detail |
 |--------|--------|
 | ➕ Create | `{filename}` — {what it will contain} |
+| 🔍 Audit | `{filename}` — {what drifted and suggested fix} |
 | 💬 Suggest | {suggestion} |
 | ✅ Skip | {count} files already in great shape |
 
