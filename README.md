@@ -97,18 +97,20 @@ These mined conventions go directly into `copilot-instructions.md`. The next AI-
 
 ### What Gets Generated
 
-| Asset | What It Does |
+Every file is customized to your repo's actual language, framework, and patterns — not generic boilerplate. The skill only creates files that don't already exist.
+
+| File | What It Does |
 | --- | --- |
-| **`AGENTS.md`** | Project context for the coding agent — repo structure, build/test commands, architectural decisions |
-| **`.github/copilot-instructions.md`** | Coding conventions for all Copilot interactions — Chat, completions, PR reviews, CLI |
-| **`.github/copilot-setup-steps.yml`** | Cloud agent environment setup — dependencies, tools, build steps |
-| **CI workflow** | PR validation pipeline — build, test, typecheck |
-| **Issue templates** | Structured proposals, bug reports, feature requests |
-| **README contributing section** | Onramp for new contributors with links to AGENTS.md |
-| **Maintenance matrix** | What to update when code changes — cross-referenced file dependencies |
-| **CODEOWNERS** | Code ownership for automatic PR review routing |
-| **Dependabot** | Automated dependency updates |
-| **SECURITY.md** | Vulnerability reporting policy |
+| **`AGENTS.md`** | Project context for the coding agent — repo structure, build/test commands, architectural decisions, how to add features |
+| **`.github/copilot-instructions.md`** | Coding conventions for all Copilot interactions — Chat, completions, PR reviews, CLI. Includes a maintenance matrix of what to update when code changes |
+| **`.github/copilot-setup-steps.yml`** | Cloud agent environment setup — runtime versions, dependencies, build steps |
+| **`.github/workflows/ci.yml`** | PR validation pipeline — build, test, lint, typecheck. Skips non-code changes (docs, images, etc.) |
+| **`.github/ISSUE_TEMPLATE/bug-report.yml`** | Structured bug report form with fields relevant to your project type |
+| **`.github/ISSUE_TEMPLATE/feature-request.yml`** | Structured feature request form |
+| **`.github/PULL_REQUEST_TEMPLATE.md`** | PR description template with checklist items derived from the maintenance matrix |
+| **`CHANGELOG.md`** | Keep a Changelog format, populated from releases/tags if available |
+| **README `## Contributing` section** | Onramp for new contributors — how to fork, build, test, and submit a PR |
+| **AI-Ready badge in README** | Shields.io badge linking back to this plugin — added automatically |
 
 ### Why a Plugin?
 
