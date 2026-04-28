@@ -6,13 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **MCP server config generation** (Step 4b) — generates `.vscode/mcp.json` based on detected database, API, and tool dependencies
 - **HTML readiness reports** (Step 11) — optional self-contained HTML report for sharing with stakeholders, triggered by user request
 - **Instruction consistency checking** (Step 1d) — detects contradictions, duplicates, and stale references across AGENTS.md, copilot-instructions.md, CLAUDE.md, and .instructions.md files
 - **4-level maturity model** — repos earn a medal from 🥉 Getting Started to 🏆 AI-Ready based on weighted AI-readiness percentage
 - **Weighted impact scoring** — assets use a 3-tier weight system (High=3, Medium=2, Low=1), so copilot-instructions.md matters more than dependabot.yml
 - **AI-Ready badge** (Step 12) — opt-in Shields.io badge and `ai-ready` GitHub topic offered after the report, linking back to this plugin for discoverability
 - **Self-consistency rule** — generated files must follow the conventions established in the same PR's `copilot-instructions.md`, so Copilot code review finds zero issues
-- **Explicit asset list** — the 11 tracked assets are now enumerated with a scoring rubric (Nailed It = 1, Could Be Better = 0.5, Missing = 0)
+- **Explicit asset list** — the 12 tracked assets are now enumerated with a scoring rubric (Nailed It = 1, Could Be Better = 0.5, Missing = 0)
 - **Pre-existing AI Config section** in the report — repos with existing copilot-instructions.md, custom agents, or custom skills get a dedicated section acknowledging what's already there
 - **Push permissions check** (Step 0b) — detects whether the user can push directly or needs a fork
 - **Fork-based PR workflow** — when the user lacks push access, the skill automatically forks, pushes to the fork, and opens a cross-fork PR
