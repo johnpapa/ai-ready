@@ -56,6 +56,28 @@ make this repo ai-ready but skip CI and issue templates
 just generate AGENTS.md and copilot-instructions
 ```
 
+### Use without installing
+
+If your organization restricts external plugins, you can use the skill directly — no plugin install needed.
+
+**Add to a single repo** — copy the skill into your repo's `.github/skills/` directory:
+
+```bash
+mkdir -p .github/skills/ai-ready
+curl -fsSL https://raw.githubusercontent.com/johnpapa/ai-ready/main/skills/ai-ready/SKILL.md \
+  -o .github/skills/ai-ready/SKILL.md
+```
+
+**Add for all your repos** — copy it to your personal skills directory:
+
+```bash
+mkdir -p ~/.copilot/skills/ai-ready
+curl -fsSL https://raw.githubusercontent.com/johnpapa/ai-ready/main/skills/ai-ready/SKILL.md \
+  -o ~/.copilot/skills/ai-ready/SKILL.md
+```
+
+Then start `copilot` and say `make this repo ai-ready` — it works the same way. The tradeoff: you won't get automatic updates when the skill improves. Re-run the `curl` command to pull the latest version.
+
 ## What to Expect
 
 After you run the skill, here's what happens:
@@ -136,7 +158,7 @@ Every file is customized to your repo's actual language, framework, and patterns
 
 ### Why a Plugin?
 
-The skill is the recipe. The plugin is how you get it. Without the plugin wrapper, you'd have to manually copy a `SKILL.md` file and keep it updated yourself. The plugin system handles that:
+The skill is the recipe. The plugin is how you keep it fresh. You can [use the skill without a plugin](#use-without-installing), but the plugin system adds convenience:
 
 - **One-command install** — `copilot plugin install ai-ready@awesome-copilot`
 - **Versioning and updates** — `copilot plugin update ai-ready`
