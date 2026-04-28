@@ -150,6 +150,26 @@ Check whether each of these exists:
 
 **If `.github/agents/` or `.github/skills/` contain files, enumerate them.** List each agent/skill by name and note its description (from the file's frontmatter or first comment). These represent significant AI configuration that should be credited in the report. Include a count in the findings table (e.g., "6 custom Copilot skills, 2 custom agents").
 
+**If multiple instruction files exist** (e.g., `AGENTS.md`, `.github/copilot-instructions.md`, `CLAUDE.md`, `.github/instructions/*.instructions.md`), read all of them and check for consistency:
+
+1. **Duplicate content** — flag sections that appear in multiple files.
+
+   *Why?*: Copy-pasted instructions drift apart over time. One authoritative source with references keeps everything in sync.
+
+2. **Contradictory conventions** — flag conflicting guidance with the specific files and lines. Tabs vs. spaces, different test commands, mismatched naming rules — call out every conflict.
+
+   *Why?*: An agent that reads "use tabs" in one file and "use spaces" in another will pick one at random. You want deterministic behavior.
+
+3. **Stale references** — flag file paths, commands, or patterns that no longer exist in the repo. Cross-reference against the directory scan from Step 1h.
+
+   *Why?*: An instruction file that references `src/utils/helpers.ts` when that file was deleted three months ago sends agents on a wild goose chase.
+
+4. **Scope clarity** — every instruction file should declare what it covers. No `applyTo` pattern and no explicit scope statement? Flag it.
+
+   *Why?*: Without clear scoping, agents don't know which file governs which part of the codebase. They guess — and they guess wrong.
+
+Record consistency findings in the findings table with evidence showing which files conflict.
+
 ### 1e. Check repo configuration
 
 Check whether each of these exists:
@@ -502,6 +522,16 @@ _Include this section only if the repo already has AI configuration (copilot-ins
 | {asset-name} | {detail — e.g., "542 lines — components, testing, shims, docs"} |
 | {.github/agents/} | {count} agents: {names} |
 | {.github/skills/} | {count} skills: {names} |
+
+---
+
+⚠️ **Instruction Consistency**
+
+_Show this section when consistency issues are found — skip it when everything lines up._
+
+| Issue | Files | Detail |
+|-------|-------|--------|
+| {issue-type} | {file1} ↔ {file2} | {specific contradiction or duplication} |
 
 ---
 

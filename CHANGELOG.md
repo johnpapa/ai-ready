@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Instruction consistency checking** (Step 1d) — detects contradictions, duplicates, and stale references across AGENTS.md, copilot-instructions.md, CLAUDE.md, and .instructions.md files
 - **AI-Ready badge** (Step 12) — opt-in Shields.io badge and `ai-ready` GitHub topic offered after the report, linking back to this plugin for discoverability
 - **Self-consistency rule** — generated files must follow the conventions established in the same PR's `copilot-instructions.md`, so Copilot code review finds zero issues
 - **Explicit asset list** — the 11 tracked assets are now enumerated with a scoring rubric (Nailed It = 1, Could Be Better = 0.5, Missing = 0)
