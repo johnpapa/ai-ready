@@ -32,7 +32,7 @@ The skill **never overwrites existing files without user approval**.
 
 **Skipping assets:** If the user's prompt mentions skipping specific assets (e.g., "make this repo ai-ready but skip CI and issue templates"), respect those exclusions. Still run the full analysis, but skip generation for the excluded assets and note them as "⏭️ Skipped (user requested)" in the report. The analysis is always complete — only generation is skipped.
 
-### The 11 tracked assets
+### The 12 tracked assets
 
 *Why?*: Not all assets matter equally. Getting `copilot-instructions.md` right (weight 3) has more impact on AI agent quality than having a `dependabot.yml` (weight 1). The weights reflect what actually reduces review burden.
 
@@ -51,13 +51,14 @@ Each asset is scored by status and weighted by impact:
 | 9 | Changelog (`CHANGELOG.md`) | Step 9 | Low | 1 |
 | 10 | Documentation (or explicit "not needed" note) | Step 10 | Medium | 2 |
 | 11 | `.github/dependabot.yml` | (checked, not generated) | Low | 1 |
+| 12 | `.vscode/mcp.json` | Step 4b | Medium | 2 |
 
-**Scoring formula:** `Score = Σ(status × weight) / 25 × 100`, rounded to the nearest whole number.
+**Scoring formula:** `Score = Σ(status × weight) / 27 × 100`, rounded to the nearest whole number.
 - **Nailed It** 🟩 = 1.0 × weight
 - **Could Be Better** 🟨 = 0.5 × weight
 - **Missing** ⬜ = 0.0 × weight
 
-Maximum possible score: 25 points (sum of all weights).
+Maximum possible score: 27 points (sum of all weights).
 
 ### Maturity levels
 
@@ -275,8 +276,10 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | Push access | yes / no | `gh api repos/{owner}/{repo} --jq '.permissions.push'` |
 | Custom agents | e.g., 2 agents: migration guide, orchestrator | `.github/agents/` |
 | Custom skills | e.g., 6 skills: bunit-test, component-dev, ... | `.github/skills/` |
+| Monorepo | yes/no | workspace config file |
+| Areas | e.g., frontend (React), backend (Express), shared (TypeScript) | workspace config paths |
 
-**List which of the 11 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
+**List which of the 12 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
 
 **For existing AI-ready assets**, read their current contents and compare against your analysis. Flag drift in any of these dimensions:
 
@@ -290,6 +293,10 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | README Contributing | Links still valid? Commands still correct? |
 
 For each existing asset where you find drift, classify it as **"Could Be Better"** in the report with a specific suggestion (e.g., "AGENTS.md lists Node 18 but `.nvmrc` now says Node 22"). Do not silently skip existing files — always evaluate them.
+
+### 1j. Detect monorepo areas
+
+If a workspace config was found in Step 1a, read it to find package/project paths (e.g., `packages/*`, `apps/*`). List each area — name, path glob, and primary stack — and note which areas have conventions that differ from root.
 
 ---
 
@@ -354,6 +361,18 @@ Content to include (or verify):
 
   **If the analysis found pointer files or non-standard locations** (e.g., a changelog that lives in `docs/changelog/` instead of the root), use the real path in the matrix — never reference the pointer file.
 
+### Monorepo: Area-scoped instructions
+
+If the repo is a monorepo with areas that have different stacks or conventions (detected in Step 1j), create `.github/instructions/{area-name}.instructions.md` for each distinct area:
+
+```yaml
+---
+applyTo: "{area-path}/**"
+---
+```
+
+Include only what differs from root conventions — framework patterns, test setup, or build commands specific to that area. Skip areas that share the same stack as the root.
+
 ---
 
 ## Step 4 — Generate .github/copilot-setup-steps.yml
@@ -377,6 +396,60 @@ Base every step on the analysis results from Step 1. Use the exact commands and 
 *Why?*: The CI workflow already has the correct SDK versions, restore commands, and build steps. Don't reinvent them — mirror them.
 
 **Multi-target frameworks (.NET):** If `.csproj` files use `<TargetFrameworks>` (plural) with multiple targets (e.g., `net8.0;net9.0;net10.0`), the setup steps must install **all** required SDK versions. Check every `.csproj` for `TargetFramework` and `TargetFrameworks` properties and collect the full set of versions needed.
+
+---
+
+## Step 4b — Generate .vscode/mcp.json
+
+*Why?*: MCP servers give AI agents access to your project's tools and data — databases, APIs, file systems. Without this config, the agent can read your code but can't talk to the services your code depends on.
+
+If `.vscode/mcp.json` does not already exist, generate it based on the dependencies and tools detected in Step 1.
+
+If it already exists, read it and verify the servers still match the project's current dependencies. Flag mismatches as "Could Be Better" suggestions.
+
+### What to include
+
+Analyze the repo's tech stack from Step 1 — languages, frameworks, databases, APIs, cloud services, and tools — and recommend **any MCP server that would give AI agents useful context** for this project.
+
+*Why?*: The MCP ecosystem is growing fast. Don't limit recommendations to a fixed list. If the project uses Stripe, recommend a Stripe MCP server. If it uses Kubernetes, recommend a K8s MCP server. Match the repo's actual stack to what's available.
+
+Common patterns to look for:
+- **Databases** — PostgreSQL, MySQL, SQLite, MongoDB, Redis, DynamoDB, etc.
+- **APIs and services** — GitHub, Stripe, Slack, Twilio, SendGrid, etc.
+- **Cloud platforms** — AWS, Azure, GCP SDKs and CLIs
+- **Browser automation** — Puppeteer, Playwright, Selenium
+- **File and search** — filesystem access, Elasticsearch, Algolia
+- **DevOps tools** — Docker, Kubernetes, Terraform
+
+For each detected dependency, search for a matching MCP server package (typically `@modelcontextprotocol/server-*` or community packages). If no MCP server exists for a dependency, skip it — don't invent one.
+
+Only include servers the project actually needs. Do not speculatively add servers.
+
+*Why?*: Speculative MCP servers add noise and may prompt for credentials the user doesn't have. Only connect what the project actually needs.
+
+### Output format
+
+Generate `.vscode/mcp.json` with the `servers` object:
+
+```json
+{
+  "servers": {
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
+    }
+  }
+}
+```
+
+Use environment variable references (`${VAR}`) for connection strings and secrets. Never hardcode values.
+
+*Why?*: Hardcoded connection strings are a security risk and break across environments. Environment variable references let each developer use their own credentials.
+
+Note which servers were added and why in the "What I Did" report section. If no relevant dependencies are detected, skip this step and mark the asset as "N/A — no MCP-compatible dependencies detected" in the report.
 
 ---
 
@@ -554,7 +627,7 @@ Based on the documentation analysis from Step 1g:
 
 After completing all steps, you MUST display the AI-Readiness Report using the **exact format** below. Fill in the placeholders from your analysis. Do not skip, abbreviate, or restructure this report.
 
-Calculate the score using the weighted formula defined in "The 11 tracked assets" section. Sum `status × weight` for each asset (Nailed It = 1.0, Could Be Better = 0.5, Missing = 0.0), divide by 25 (total weight), and multiply by 100. Determine the maturity level from the percentage. Always show 11 squares in the progress bar.
+Calculate the score using the weighted formula defined in "The 12 tracked assets" section. Sum `status × weight` for each asset (Nailed It = 1.0, Could Be Better = 0.5, Missing = 0.0), divide by 27 (total weight), and multiply by 100. Determine the maturity level from the percentage. Always show 12 squares in the progress bar.
 
 Display this report:
 
@@ -632,6 +705,8 @@ _Show this section when consistency issues are found — skip it when everything
 | 💬 Suggest | {suggestion} |
 | ✅ Skip | {count} files already in great shape |
 
+_For monorepos: list each `.github/instructions/{area}.instructions.md` file created as a separate ➕ Create row._
+
 **Updated Score:** {new-level-emoji} **{new-level-name}** · {updated-progress-bar} {new-percent}%
 
 ---
@@ -641,6 +716,27 @@ _Show this section when consistency issues are found — skip it when everything
 1. Review the generated files and tweak anything you'd like
 2. Enable Copilot code review: **Settings → Copilot → Code review**
 ```
+
+### HTML report (optional)
+
+*Why?*: Terminal reports are great for the developer running the skill. But when you need to share results with a manager, post to a wiki, or attach to an email — you need something visual.
+
+If the user asks for an HTML report (e.g., "generate a report I can share", "make an HTML report"), generate a self-contained `ai-ready-report.html` in the repo root.
+
+The HTML report mirrors the terminal summary — same sections, same data, same structure:
+
+1. **Header** — repo name, maturity level with emoji medal (🥉🥈🥇🏆), weighted score percentage, progress bar, generation date
+2. **Tech profile** — languages, frameworks, test runner, build command
+3. **Existing AI config** — if detected (copilot-instructions.md, custom agents/skills)
+4. **Instruction consistency** — if issues found
+5. **Asset status** — three groups: ✅ Nailed It, 💡 Could Be Better, ⭕ Missing — with one-line details per asset
+6. **What was generated** — action table (➕ Create, 🔍 Audit, ⏭️ Skip, 💬 Suggest)
+7. **Updated score** — before/after with maturity level change
+8. **What to do next** — remaining recommendations
+
+The file must be self-contained (inline CSS, no external dependencies) and shareable — one file you can open in any browser or drop into an email. Use green/amber/gray status colors, system fonts, and a responsive layout. Keep it simple — this is a summary, not a dashboard.
+
+Generate the HTML report only when the user asks for it. The terminal output is always the default.
 
 After displaying the report, handle the badge, topic, and PR in this order:
 
@@ -691,7 +787,7 @@ Rules for filling in the template:
 - The tech profile table should only include rows that apply (e.g., skip "Frameworks" if none detected)
 - Keep each detail to one short line — no multi-line descriptions
 - The "What I Did" section should list every file that was created, suggested, or skipped
-- **Show an updated progress bar** after the "What I Did" section — recalculate the weighted score counting all created files as now "Nailed It," determine the new maturity level, and display both. This shows the user the improvement visually (e.g., going from 🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜ 🥈 On Track 48% → 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 🏆 AI-Ready 100%)
+- **Show an updated progress bar** after the "What I Did" section — recalculate the weighted score counting all created files as now "Nailed It," determine the new maturity level, and display both. This shows the user the improvement visually (e.g., going from 🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜⬜ 🥈 On Track 42% → 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 🏆 AI-Ready 100%)
 - The "What To Do Next" section should include only the bullet points that are relevant — e.g., if no files were created, skip "review generated files" and instead say something like "Your repo is already AI-ready — nice work!"
 
 ---
