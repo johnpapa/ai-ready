@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **Writing style pass** — added *Why?* explanations throughout SKILL.md for key decisions and rules, matching John Papa's Angular Style Guide voice
+
 ### Added
 
 - **AI-Ready badge** (Step 12) — opt-in Shields.io badge and `ai-ready` GitHub topic offered after the report, linking back to this plugin for discoverability
