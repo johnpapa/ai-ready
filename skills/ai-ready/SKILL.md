@@ -9,9 +9,63 @@ When invoked, follow these steps in order to analyze the current repository and 
 
 ---
 
-## Step 1 — Analyze the repo
+## Step 0 — Detect GitHub context automatically
 
-Scan the repository using built-in tools (glob, grep, view) to build a structured analysis. **Do not proceed to Step 2 until the analysis is complete and confirmed.**
+**This step requires zero user input.** The skill is GitHub-native — it automatically discovers everything about the repo from GitHub's own tools and services.
+
+### 0a. Identify the repo
+
+Run `git remote -v` or `git config --get remote.origin.url` to extract the GitHub `owner/repo`. This is your identity — everything else flows from it. If the remote is not GitHub, fall back to local-only analysis in Step 1.
+
+### 0b. Fetch repo metadata from GitHub
+
+Use the GitHub MCP tools (if available) or `gh` CLI to pull rich context the user should never have to explain:
+
+| What to fetch | Tool / Command | What you learn |
+|---------------|---------------|----------------|
+| Repo description, topics, visibility | `github-mcp-server-get_file_contents` on `/` or `gh repo view --json description,topics,isPrivate,primaryLanguage` | What this project is about, how it's categorized |
+| Language breakdown | `gh api repos/{owner}/{repo}/languages` (bash) | Accurate language percentages (better than guessing from files) |
+| Community health | `gh api repos/{owner}/{repo}/community/profile` (bash) | Which community files exist (CONTRIBUTING, CODE_OF_CONDUCT, license, issue templates) — GitHub already knows this |
+| Contributors | `gh api repos/{owner}/{repo}/contributors --jq '.[].login'` (bash) | Team size, who to put in CODEOWNERS |
+| Open issues | `github-mcp-server-list_issues` or `gh issue list` | Active problems, what the project cares about |
+| Recent merged PRs | `gh pr list --state merged --limit 10 --json title,body,files` (bash) | Contribution patterns — what files get touched together, what a typical PR looks like |
+| PR review comments | `github-mcp-server-pull_request_read` on recent PRs | **Repeated review feedback = conventions that should be in copilot-instructions.md** |
+| Releases | `gh release list --limit 5` (bash) | Release cadence, versioning scheme |
+| GitHub Actions workflows | `github-mcp-server-actions_list` or read `.github/workflows/` | CI/CD setup, what runs on PRs |
+| Branch protection | `github-mcp-server-list_branches` | Default branch, protection rules |
+
+### 0c. Mine PR review comments for conventions
+
+This is the highest-value GitHub-native insight. Look at the 5-10 most recent merged PRs:
+
+1. Use `github-mcp-server-list_pull_requests` (state: closed, sort: updated) to find recent merged PRs
+2. For each, use `github-mcp-server-pull_request_read` (method: get_review_comments) to read review threads
+3. Look for **repeated patterns** — the same feedback given across multiple PRs becomes a convention:
+   - "Please add tests for this" → add to test conventions
+   - "Use X pattern instead of Y" → add to coding conventions
+   - "Update the docs when you change this" → add to maintenance matrix
+   - "Don't forget to update the changelog" → add to maintenance matrix
+
+These mined conventions go directly into `copilot-instructions.md` — turning repeated human review feedback into automated AI guidance.
+
+### 0d. Check community health gaps
+
+GitHub's community health API tells you exactly what's missing. Map it to the assets this skill generates:
+
+| GitHub says missing | Skill generates |
+|-------------------|-----------------|
+| No issue templates | `.github/ISSUE_TEMPLATE/` (Step 6) |
+| No pull request template | Can suggest adding one |
+| No CONTRIBUTING guide | README Contributing section (Step 7) |
+| No CODE_OF_CONDUCT | Can suggest adding one |
+| No license | Flag in the report |
+| No README | Flag in the report |
+
+---
+
+## Step 1 — Analyze the codebase
+
+With GitHub context from Step 0, now scan the local codebase for deeper technical details. Use built-in tools (glob, grep, view) and the GitHub context together.
 
 ### 1a. Detect languages and frameworks
 
@@ -90,28 +144,34 @@ List the top-level directories and their immediate children (skip `node_modules`
 
 ### 1i. Compile findings
 
-Before proceeding, produce a structured summary with file-path evidence for each finding:
+Before proceeding, produce a structured summary combining GitHub context (Step 0) and codebase analysis (Step 1). Include file-path evidence for each finding:
 
-| Category | Finding | Evidence (file path) |
-|----------|---------|---------------------|
-| Language | e.g., TypeScript | `package.json` (typescript in devDependencies) |
-| Framework | e.g., React, Phaser | `package.json` (react in dependencies) |
-| Test runner | e.g., Vitest | `package.json` (vitest in devDependencies) |
+| Category | Finding | Evidence (source) |
+|----------|---------|-------------------|
+| Repo | e.g., johnpapa/ai-ready | `git remote -v` |
+| Description | e.g., "Copilot CLI plugin..." | GitHub API / repo metadata |
+| Topics | e.g., copilot, skills, ai-ready | GitHub API |
+| Language | e.g., TypeScript (65%), Rust (30%) | GitHub API language breakdown |
+| Framework | e.g., React, Phaser | `package.json` dependencies |
+| Test runner | e.g., Vitest | `package.json` devDependencies |
 | Test command | e.g., `npm test` | `package.json` scripts.test |
 | Build command | e.g., `npm run build` | `package.json` scripts.build |
 | Runtime version | e.g., Node 22 | `.nvmrc` or `package.json` engines |
 | Package manager | e.g., pnpm | `pnpm-lock.yaml` exists |
-| PR CI exists | yes/no | `.github/workflows/ci.yml` |
-| AGENTS.md | missing | not found at repo root |
-| Changelog | exists / pointer / missing | `CHANGELOG.md`, `docs/changelog/`, Releases |
-| Changelog location | root / docs / releases | path to actual content |
+| Contributors | e.g., 3 contributors | GitHub API |
+| Team size | e.g., solo / small / large | Contributor count |
+| PR CI exists | yes/no | `.github/workflows/` or GitHub Actions API |
+| Community health | e.g., 71% | GitHub API community/profile |
+| PR review patterns | e.g., "maintainer often asks for tests" | Mined from recent PR review comments |
+| Release cadence | e.g., monthly, tagged releases | GitHub Releases API |
+| AGENTS.md | exists / missing | repo root |
+| copilot-instructions.md | exists / missing | `.github/` |
+| Changelog | exists / pointer / missing | `CHANGELOG.md`, Releases |
 | Changelog freshness | current / stale | latest entry vs latest git tag |
-| Docs exist | yes / no | `docs/`, config file, README-only |
+| Docs exist | yes / no | `docs/`, config file |
 | Docs framework | Docsify / Docusaurus / etc. | config file path |
 | Docs deploy pipeline | yes / no | workflow file path |
-| Docs nav/TOC | present / missing | sidebar or nav config |
 | README links to docs | yes / no | README.md link |
-| ... | ... | ... |
 
 **List which of the 9 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
 
@@ -140,6 +200,7 @@ If `.github/copilot-instructions.md` does not already exist, create it with:
 
 - **Language-Specific Conventions** — coding style, idioms, and patterns for the project's primary language(s) (TypeScript, Python, Go, Rust, etc.), derived from the analysis.
 - **Framework Patterns** — how the project uses its framework(s) (React component patterns, Express middleware conventions, Django app structure, etc.).
+- **Conventions Mined from PR Reviews** — if Step 0c found repeated review feedback, include those as explicit conventions. For example, if the maintainer frequently asks "add tests for new features," make that a rule. This is the highest-value section — it turns human review fatigue into automated AI guidance.
 - **Test Conventions** — which test runner to use, naming patterns for test files, what to test (unit, integration, e2e), how to run tests.
 - **Code Style Notes** — inferred from linter/formatter configs if present (ESLint, Prettier, Black, Ruff, rustfmt, etc.). Reference the config files rather than duplicating rules.
 - **Asset and Content Rules** — include only if the project has static assets (images, sounds, fonts, etc.). Cover naming conventions, file formats, and where assets live.
@@ -364,10 +425,12 @@ Rules for filling in the template:
 
 - **NEVER overwrite existing files** — only create assets that are missing.
 - **ALWAYS customize to the repo's actual language, framework, and patterns** — do not produce generic boilerplate.
+- **GitHub-native by default** — you are almost certainly in a GitHub repo. Use GitHub MCP tools and `gh` CLI to auto-discover repo metadata, community health, PR patterns, and contribution history. Never ask the user to explain what their repo is or what tools they use — discover it automatically. If GitHub tools are unavailable, fall back to local git + filesystem analysis.
+- **Mine PR reviews for conventions** — the maintainer's repeated review feedback is the most valuable source of conventions. Turn it into `copilot-instructions.md` rules so the AI stops making the same mistakes.
 - **Prefer specific, actionable instructions over generic advice** — include real file paths, real commands, and real patterns from the repo.
 - **If the repo already has some AI config, respect it and fill in the gaps** — treat existing config as authoritative.
 - **Generate asset/content rules only if the project has assets** (images, sounds, fonts, models, etc.).
 - **Use the `create` tool to write files** — never use `edit` to create a new file from scratch.
-- **Run the full analysis first (Step 1)** — do not guess at the repo's structure or toolchain. Every generated asset must be based on evidence from the analysis.
-- **ALWAYS display the AI-Readiness Report at the end** — use the exact format from Step 11. This is the user-facing output. Do not skip it, abbreviate it, or use a different layout.
+- **Run the full analysis first (Steps 0 and 1)** — do not guess at the repo's structure or toolchain. Every generated asset must be based on evidence from the analysis.
+- **ALWAYS display the AI-Readiness Report at the end** — use the exact format from the summary step. This is the user-facing output. Do not skip it, abbreviate it, or use a different layout.
 - **NEVER use markdown headings (`#`, `##`, `###`) in your output to the user** — headings render in red/colored text in most terminals. Use **bold text** with emojis instead (e.g., `✅ **Nailed It (9)**`). This applies to the AI-Readiness Report and all other user-facing output during the skill execution.
