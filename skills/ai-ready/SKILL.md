@@ -359,21 +359,23 @@ If `.vscode/mcp.json` does not already exist, generate it based on the dependenc
 
 If it already exists, read it and verify the servers still match the project's current dependencies. Flag mismatches as "Could Be Better" suggestions.
 
-### Detection and mapping
+### What to include
 
-Scan the project's dependencies (from manifest files read in Step 1a) and map them to known MCP servers:
+Analyze the repo's tech stack from Step 1 — languages, frameworks, databases, APIs, cloud services, and tools — and recommend **any MCP server that would give AI agents useful context** for this project.
 
-| Dependency pattern | MCP server | Package |
-|-------------------|------------|---------|
-| `pg`, `postgres`, `postgresql`, `prisma` (with PostgreSQL) | PostgreSQL | `@modelcontextprotocol/server-postgres` |
-| `sqlite3`, `better-sqlite3`, `prisma` (with SQLite) | SQLite | `@modelcontextprotocol/server-sqlite` |
-| `mongodb`, `mongoose` | MongoDB | `@modelcontextprotocol/server-mongodb` |
-| `redis`, `ioredis` | Redis | `@modelcontextprotocol/server-redis` |
-| `puppeteer`, `playwright` | Browser automation | `@modelcontextprotocol/server-puppeteer` |
-| GitHub API usage (`@octokit`, `gh` CLI) | GitHub | `@modelcontextprotocol/server-github` |
-| File system heavy (CLI tools, build tools) | Filesystem | `@modelcontextprotocol/server-filesystem` |
+*Why?*: The MCP ecosystem is growing fast. Don't limit recommendations to a fixed list. If the project uses Stripe, recommend a Stripe MCP server. If it uses Kubernetes, recommend a K8s MCP server. Match the repo's actual stack to what's available.
 
-Only include servers for dependencies the project actually uses. Do not speculatively add servers.
+Common patterns to look for:
+- **Databases** — PostgreSQL, MySQL, SQLite, MongoDB, Redis, DynamoDB, etc.
+- **APIs and services** — GitHub, Stripe, Slack, Twilio, SendGrid, etc.
+- **Cloud platforms** — AWS, Azure, GCP SDKs and CLIs
+- **Browser automation** — Puppeteer, Playwright, Selenium
+- **File and search** — filesystem access, Elasticsearch, Algolia
+- **DevOps tools** — Docker, Kubernetes, Terraform
+
+For each detected dependency, search for a matching MCP server package (typically `@modelcontextprotocol/server-*` or community packages). If no MCP server exists for a dependency, skip it — don't invent one.
+
+Only include servers the project actually needs. Do not speculatively add servers.
 
 *Why?*: Speculative MCP servers add noise and may prompt for credentials the user doesn't have. Only connect what the project actually needs.
 
@@ -652,6 +654,27 @@ _Show this section when consistency issues are found — skip it when everything
 1. Review the generated files and tweak anything you'd like
 2. Enable Copilot code review: **Settings → Copilot → Code review**
 ```
+
+### HTML report (optional)
+
+*Why?*: Terminal reports are great for the developer running the skill. But when you need to share results with a manager, post to a wiki, or attach to an email — you need something visual.
+
+If the user asks for an HTML report (e.g., "generate a report I can share", "make an HTML report"), generate a self-contained `ai-ready-report.html` in the repo root.
+
+The HTML report mirrors the terminal summary — same sections, same data, same structure:
+
+1. **Header** — repo name, maturity level with emoji medal (🥉🥈🥇🏆), weighted score percentage, progress bar, generation date
+2. **Tech profile** — languages, frameworks, test runner, build command
+3. **Existing AI config** — if detected (copilot-instructions.md, custom agents/skills)
+4. **Instruction consistency** — if issues found
+5. **Asset status** — three groups: ✅ Nailed It, 💡 Could Be Better, ⭕ Missing — with one-line details per asset
+6. **What was generated** — action table (➕ Create, 🔍 Audit, ⏭️ Skip, 💬 Suggest)
+7. **Updated score** — before/after with maturity level change
+8. **What to do next** — remaining recommendations
+
+The file must be self-contained (inline CSS, no external dependencies) and shareable — one file you can open in any browser or drop into an email. Use green/amber/gray status colors, system fonts, and a responsive layout. Keep it simple — this is a summary, not a dashboard.
+
+Generate the HTML report only when the user asks for it. The terminal output is always the default.
 
 After displaying the report, handle the badge, topic, and PR in this order:
 

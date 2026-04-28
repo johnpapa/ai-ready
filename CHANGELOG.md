@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - **MCP server config generation** (Step 4b) — generates `.vscode/mcp.json` based on detected database, API, and tool dependencies
+- **HTML readiness reports** (Step 11) — optional self-contained HTML report for sharing with stakeholders, triggered by user request
 - **Instruction consistency checking** (Step 1d) — detects contradictions, duplicates, and stale references across AGENTS.md, copilot-instructions.md, CLAUDE.md, and .instructions.md files
 - **4-level maturity model** — repos earn a medal from 🥉 Getting Started to 🏆 AI-Ready based on weighted AI-readiness percentage
 - **Weighted impact scoring** — assets use a 3-tier weight system (High=3, Medium=2, Low=1), so copilot-instructions.md matters more than dependabot.yml
