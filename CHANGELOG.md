@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - **AI-Ready badge** (Step 12) — opt-in Shields.io badge and `ai-ready` GitHub topic offered after the report, linking back to this plugin for discoverability
+- **Self-consistency rule** — generated files must follow the conventions established in the same PR's `copilot-instructions.md`, so Copilot code review finds zero issues
 
 ### Changed
 
