@@ -24,6 +24,8 @@ When invoked, follow these steps in order to analyze the current repository and 
 
 **First run vs. re-run:** The skill runs the same analysis every time. On the first run, most assets will be missing and the skill creates them. On re-runs, the skill **audits** existing assets against the current state of the codebase — checking for drift, stale content, and new conventions from recent PR reviews. It reports what's drifted in "Could Be Better" with specific suggestions, but **never overwrites existing files without user approval**. Only truly missing assets are created automatically.
 
+**Skipping assets:** If the user's prompt mentions skipping specific assets (e.g., "make this repo ai-ready but skip CI and issue templates"), respect those exclusions. Still run the full analysis, but skip generation for the excluded assets and note them as "⏭️ Skipped (user requested)" in the report. The analysis is always complete — only generation is skipped.
+
 ---
 
 ## Step 0 — Detect GitHub context automatically
@@ -470,6 +472,7 @@ Let's see where you stand.
 |--------|--------|
 | ➕ Create | `{filename}` — {what it will contain} |
 | 🔍 Audit | `{filename}` — {what drifted and suggested fix} |
+| ⏭️ Skip | `{filename}` — skipped (user requested) |
 | 💬 Suggest | {suggestion} |
 | ✅ Skip | {count} files already in great shape |
 
