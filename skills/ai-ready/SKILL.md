@@ -41,7 +41,7 @@ Use the GitHub MCP tools (if available) or `gh` CLI to pull rich context the use
 | Repo description, topics, visibility | `github-mcp-server-get_file_contents` on `/` or `gh repo view --json description,topics,isPrivate,primaryLanguage` | What this project is about, how it's categorized |
 | Language breakdown | `gh api repos/{owner}/{repo}/languages` (bash) | Accurate language percentages (better than guessing from files) |
 | Community health | `gh api repos/{owner}/{repo}/community/profile` (bash) | Which community files exist (CONTRIBUTING, CODE_OF_CONDUCT, license, issue templates) — GitHub already knows this |
-| Contributors | `gh api repos/{owner}/{repo}/contributors --jq '.[].login'` (bash) | Team size, who to put in CODEOWNERS |
+| Contributors | `gh api repos/{owner}/{repo}/contributors --jq '.[].login'` (bash) | Team size, contribution patterns |
 | Open issues | `github-mcp-server-list_issues` or `gh issue list` | Active problems, what the project cares about |
 | Recent merged PRs | `gh pr list --state merged --limit 10 --json title,body,files` (bash) | Contribution patterns — what files get touched together, what a typical PR looks like |
 | PR review comments | `github-mcp-server-pull_request_read` on recent PRs | **Repeated review feedback = conventions that should be in copilot-instructions.md** |
@@ -421,6 +421,7 @@ Let's see where you stand.
 
 1. Review the generated files and tweak anything you'd like
 2. Enable Copilot code review: **Settings → Copilot → Code review**
+3. Add an **AI-Ready badge** to your README — show the world your repo is AI-ready!
 
 Want me to create a branch and open a draft PR with these changes? You can review and edit before merging.
 ```
@@ -438,6 +439,34 @@ Rules for filling in the template:
 - The "What I Did" section should list every file that was created, suggested, or skipped
 - **Show an updated progress bar** after the "What I Did" section — recalculate the score counting all created files as now "Nailed It." This shows the user the improvement visually (e.g., going from 🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜ 45% → 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 100%)
 - The "What To Do Next" section should include only the bullet points that are relevant — e.g., if no files were created, skip "review generated files" and instead say something like "Your repo is already AI-ready — nice work!"
+
+---
+
+## Step 12 — Offer AI-Ready badge and topic
+
+After the report (and any draft PR), offer two optional promotional items. These are **opt-in only** — ask the user, never add them silently.
+
+### 12a. AI-Ready badge
+
+Ask the user if they'd like an AI-Ready badge added to their `README.md`. If yes, insert this badge at the top of the README, after any existing title or badge row:
+
+```markdown
+[![AI Ready](https://img.shields.io/badge/AI--Ready-yes-brightgreen?style=flat)](https://github.com/johnpapa/ai-ready)
+```
+
+Before inserting, check if the README already contains an `AI--Ready` badge — if so, skip it.
+
+The badge is a static Shields.io image with zero dependencies. It links back to the ai-ready plugin repo so others can discover it.
+
+### 12b. GitHub topic
+
+Ask the user if they'd like the `ai-ready` topic added to their repository:
+
+```bash
+gh repo edit --add-topic ai-ready
+```
+
+This makes the repo discoverable at `github.com/topics/ai-ready` alongside other AI-ready repos. Only offer this if the repo does not already have the `ai-ready` topic (check the topics fetched in Step 0b).
 
 ---
 

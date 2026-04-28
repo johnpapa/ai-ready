@@ -36,7 +36,7 @@ After you run the skill, here's what happens:
 
 ![What I Did and updated score](images/report-actions.png)
 
-**4. Next steps** — clear actions: review, enable Copilot code review, and a ready-to-use prompt to create the PR.
+**4. Next steps** — clear actions: review, enable Copilot code review, add an AI-Ready badge, and a ready-to-use prompt to create the PR.
 
 ![What To Do Next](images/report-next-steps.png)
 
@@ -62,7 +62,7 @@ The skill starts by pulling context directly from GitHub — no questions asked:
 |------------------|-----|----------------|
 | Repo description, topics, languages | GitHub API | Knows what your project is without reading every file |
 | Community health score | GitHub API | Instantly knows which config files are missing |
-| Contributors | GitHub API | Populates CODEOWNERS automatically |
+| Contributors | GitHub API | Team size, contribution patterns |
 | Recent merged PRs | GitHub API | Understands what typical contributions look like |
 | **PR review comments** | GitHub API | **Turns your repeated review feedback into automated conventions** |
 | CI/CD workflows | GitHub Actions API | Knows your build/test pipeline |
