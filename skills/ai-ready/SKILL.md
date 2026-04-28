@@ -26,6 +26,24 @@ When invoked, follow these steps in order to analyze the current repository and 
 
 **Skipping assets:** If the user's prompt mentions skipping specific assets (e.g., "make this repo ai-ready but skip CI and issue templates"), respect those exclusions. Still run the full analysis, but skip generation for the excluded assets and note them as "⏭️ Skipped (user requested)" in the report. The analysis is always complete — only generation is skipped.
 
+### The 11 tracked assets
+
+The score is calculated against these 11 assets. Each one is scored as **Nailed It** (🟩 = 1 point), **Could Be Better** (🟨 = 0.5 points), or **Missing** (⬜ = 0 points). The percentage is `total points / 11 × 100`, rounded to the nearest whole number.
+
+| # | Asset | Generated in |
+|---|-------|-------------|
+| 1 | `AGENTS.md` | Step 2 |
+| 2 | `.github/copilot-instructions.md` | Step 3 |
+| 3 | `.github/copilot-setup-steps.yml` | Step 4 |
+| 4 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
+| 5 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
+| 6 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
+| 7 | README Contributing section | Step 7 |
+| 8 | Maintenance matrix (in `copilot-instructions.md`) | Step 8 |
+| 9 | Changelog (`CHANGELOG.md`) | Step 9 |
+| 10 | Documentation (or explicit "not needed" note) | Step 10 |
+| 11 | `.github/dependabot.yml` | (checked, not generated) |
+
 ---
 
 ## Step 0 — Detect GitHub context automatically
@@ -42,16 +60,17 @@ Use the GitHub MCP tools (if available) or `gh` CLI to pull rich context the use
 
 | What to fetch | Tool / Command | What you learn |
 |---------------|---------------|----------------|
-| Repo description, topics, visibility | `github-mcp-server-get_file_contents` on `/` or `gh repo view --json description,topics,isPrivate,primaryLanguage` | What this project is about, how it's categorized |
-| Language breakdown | `gh api repos/{owner}/{repo}/languages` (bash) | Accurate language percentages (better than guessing from files) |
-| Community health | `gh api repos/{owner}/{repo}/community/profile` (bash) | Which community files exist (CONTRIBUTING, CODE_OF_CONDUCT, license, issue templates) — GitHub already knows this |
-| Contributors | `gh api repos/{owner}/{repo}/contributors --jq '.[].login'` (bash) | Team size, contribution patterns |
-| Open issues | `github-mcp-server-list_issues` or `gh issue list` | Active problems, what the project cares about |
-| Recent merged PRs | `gh pr list --state merged --limit 10 --json title,body,files` (bash) | Contribution patterns — what files get touched together, what a typical PR looks like |
+| Repo description, topics, visibility, default branch | `github-mcp-server-get_file_contents` on `/` or `gh repo view --json description,topics,isPrivate,primaryLanguage,defaultBranchRef --jq '.' | cat` | What this project is about, how it's categorized, default branch name |
+| Language breakdown | `gh api repos/{owner}/{repo}/languages | cat` (bash) | Accurate language percentages (better than guessing from files) |
+| Community health | `gh api repos/{owner}/{repo}/community/profile | cat` (bash) | Which community files exist (CONTRIBUTING, CODE_OF_CONDUCT, license, issue templates) — GitHub already knows this |
+| Contributors | `gh api repos/{owner}/{repo}/contributors --jq '.[].login' | cat` (bash) | Team size, contribution patterns |
+| Open issues | `github-mcp-server-list_issues` or `gh issue list | cat` | Active problems, what the project cares about |
+| Recent merged PRs | `gh pr list --state merged --limit 10 --json title,body,files | cat` (bash) | Contribution patterns — what files get touched together, what a typical PR looks like |
 | PR review comments | `github-mcp-server-pull_request_read` on recent PRs | **Repeated review feedback = conventions that should be in copilot-instructions.md** |
-| Releases | `gh release list --limit 5` (bash) | Release cadence, versioning scheme |
+| Releases | `gh release list --limit 5 | cat` (bash) | Release cadence, versioning scheme |
 | GitHub Actions workflows | `github-mcp-server-actions_list` or read `.github/workflows/` | CI/CD setup, what runs on PRs |
 | Branch protection | `github-mcp-server-list_branches` | Default branch, protection rules |
+| Push permissions | `gh api repos/{owner}/{repo} --jq '.permissions.push' | cat` (bash) | Whether the user can push directly or needs to fork |
 
 ### 0c. Mine PR review comments for conventions
 
@@ -64,6 +83,8 @@ This is the highest-value GitHub-native insight. Look at the 5-10 most recent me
    - "Use X pattern instead of Y" → add to coding conventions
    - "Update the docs when you change this" → add to maintenance matrix
    - "Don't forget to update the changelog" → add to maintenance matrix
+
+**If few or no review comments are found** (e.g., PRs are self-merged or auto-merged), expand the search to up to 20 merged PRs. If there are still no review patterns, note this in the findings: _"No PR review patterns found — consider adding conventions as the team grows."_ Do not silently skip this section.
 
 These mined conventions go directly into `copilot-instructions.md` — turning repeated human review feedback into automated AI guidance.
 
@@ -124,7 +145,10 @@ Check whether each of these exists:
 - `.github/copilot-instructions.md`
 - `.github/copilot-setup-steps.yml`
 - `.github/skills/` (any skill files)
+- `.github/agents/` (any agent files)
 - `.github/extensions/` (any extension files)
+
+**If `.github/agents/` or `.github/skills/` contain files, enumerate them.** List each agent/skill by name and note its description (from the file's frontmatter or first comment). These represent significant AI configuration that should be credited in the report. Include a count in the findings table (e.g., "6 custom Copilot skills, 2 custom agents").
 
 ### 1e. Check repo configuration
 
@@ -191,8 +215,12 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | Docs framework | Docsify / Docusaurus / etc. | config file path |
 | Docs deploy pipeline | yes / no | workflow file path |
 | README links to docs | yes / no | README.md link |
+| Default branch | e.g., `main`, `dev`, `master` | `gh repo view --json defaultBranchRef` |
+| Push access | yes / no | `gh api repos/{owner}/{repo} --jq '.permissions.push'` |
+| Custom agents | e.g., 2 agents: migration guide, orchestrator | `.github/agents/` |
+| Custom skills | e.g., 6 skills: bunit-test, component-dev, ... | `.github/skills/` |
 
-**List which of the 9 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
+**List which of the 11 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
 
 **For existing AI-ready assets**, read their current contents and compare against your analysis. Flag drift in any of these dimensions:
 
@@ -274,13 +302,17 @@ Steps to include (or verify):
 
 Base every step on the analysis results from Step 1. Use the exact commands and versions the project actually uses.
 
+**Derive from existing CI when possible.** If the repo already has a CI workflow (`.github/workflows/`), use it as the source of truth for SDK versions, restore commands, and build steps. The setup steps should mirror CI — not invent new commands.
+
+**Multi-target frameworks (.NET):** If `.csproj` files use `<TargetFrameworks>` (plural) with multiple targets (e.g., `net8.0;net9.0;net10.0`), the setup steps must install **all** required SDK versions. Check every `.csproj` for `TargetFramework` and `TargetFrameworks` properties and collect the full set of versions needed.
+
 ---
 
 ## Step 5 — Generate CI workflow
 
 Check `.github/workflows/` for any existing workflow that triggers on `pull_request`. If none exists, create `.github/workflows/ci.yml` with:
 
-- **Triggers:** `pull_request` (all branches) and `push` to `main`, with **path filters** so CI only runs when code actually changes. Use `paths-ignore` to skip documentation-only and config-only changes:
+- **Triggers:** `pull_request` (all branches) and `push` to the **default branch** (detected in Step 0b — do not hardcode `main`), with **path filters** so CI only runs when code actually changes. Use `paths-ignore` to skip documentation-only and config-only changes:
   ```yaml
   on:
     pull_request:
@@ -325,6 +357,8 @@ If `.github/ISSUE_TEMPLATE/` does not already exist, create:
 
 Use the YAML issue form format (not the older markdown template format).
 
+**If old-format markdown templates exist** (`.md` files in `.github/ISSUE_TEMPLATE/` that are not `config.yml`), note them in the report as a "Could Be Better" suggestion: _"Consider converting `{filename}` from the old markdown template format to the newer YAML form format for consistency and better user experience."_ Do not delete or overwrite the old templates.
+
 ### PR template
 
 If `.github/PULL_REQUEST_TEMPLATE.md` does not already exist, create it with:
@@ -342,7 +376,13 @@ Keep it short and useful — a PR template that's too long gets ignored.
 
 If `README.md` exists at the repo root but does not contain a "Contributing" section (search for `## Contributing` or `# Contributing`):
 
-- Add a `## Contributing` section near the end of the README with:
+- **If a standalone `CONTRIBUTING.md` exists**, add a short `## Contributing` section in the README that summarizes the key points and links to it:
+  ```
+  ## Contributing
+  See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute, including setup, testing, and PR conventions.
+  ```
+  Do not duplicate the content — link to it.
+- **If no `CONTRIBUTING.md` exists**, add a `## Contributing` section near the end of the README with:
   - A suggestion to use Copilot CLI for contributions, with an example prompt in a code block:
     ```
     Add a new [feature/command/endpoint] called X that does Y
@@ -363,6 +403,16 @@ The maintenance matrix should already be part of `copilot-instructions.md` (gene
 - What files reference each other (e.g., a game registry that must be updated when a new scene is added)
 - What must be updated when different parts of the codebase change
 - Cross-cutting concerns (e.g., version numbers in multiple files, route registrations, module re-exports)
+
+**Trace actual dependency graphs**, not just top-level files. Language-specific techniques:
+
+| Language | How to trace |
+|----------|-------------|
+| .NET | Grep for `<ProjectReference>` in `.csproj` files; check `ServiceCollectionExtensions` or `Program.cs` for DI registration |
+| Node.js/TS | Follow `import`/`require` chains; check index re-export files (`index.ts`) |
+| Go | Follow `import` statements; check `main.go` and wire/DI setup |
+| Python | Follow `import` statements; check `__init__.py` re-exports and entry points |
+| Rust | Follow `mod` and `use` declarations; check `lib.rs` and `main.rs` |
 
 If the matrix is missing or incomplete, suggest specific additions in the report. If `copilot-instructions.md` was just created in Step 3, add the matrix directly. If it already existed before this run, report the gaps as "Could Be Better" and let the user decide.
 
@@ -420,7 +470,7 @@ Based on the documentation analysis from Step 1g:
 
 After completing all steps, you MUST display the AI-Readiness Report using the **exact format** below. Fill in the placeholders from your analysis. Do not skip, abbreviate, or restructure this report.
 
-Calculate the score: count how many of the 11 assets are in "Nailed It" status. Build the progress bar using 🟩 for nailed, 🟨 for could-be-better, and ⬜ for missing — always 11 squares total.
+Calculate the score using the point system defined in "The 11 tracked assets" section: Nailed It = 1 point (🟩), Could Be Better = 0.5 points (🟨), Missing = 0 points (⬜). The percentage is `total points / 11 × 100`, rounded to the nearest whole number. Always show 11 squares in the progress bar.
 
 Display this report:
 
@@ -440,6 +490,18 @@ Let's see where you stand.
 | Frameworks | {frameworks} |
 | Tests | {test-runner} ({test-count}) |
 | Build | `{build-command}` |
+
+---
+
+🤖 **Existing AI Config (detected)**
+
+_Include this section only if the repo already has AI configuration (copilot-instructions.md, custom agents, custom skills). Omit it entirely if there is no pre-existing AI config._
+
+| Asset | Detail |
+|-------|--------|
+| {asset-name} | {detail — e.g., "542 lines — components, testing, shims, docs"} |
+| {.github/agents/} | {count} agents: {names} |
+| {.github/skills/} | {count} skills: {names} |
 
 ---
 
@@ -484,12 +546,6 @@ Let's see where you stand.
 
 1. Review the generated files and tweak anything you'd like
 2. Enable Copilot code review: **Settings → Copilot → Code review**
-
-👉 **Ready to commit? Just type:**
-
-```
-create a branch and open a draft PR with these changes
-```
 ```
 
 After displaying the report, handle the badge, topic, and PR in this order:
@@ -506,17 +562,31 @@ The badge is a static Shields.io image with zero dependencies. It links back to 
 
 ### 11b. Add GitHub topic
 
-Check the topics fetched in Step 0b. If the repo does not already have the `ai-ready` topic, **automatically** add it:
+Check the topics fetched in Step 0b. If the repo does not already have the `ai-ready` topic:
 
-```bash
-gh repo edit --add-topic ai-ready
-```
+1. **Check push permissions** — use the push access result from Step 0b. If the user does not have push access, skip the topic and move on silently (the topic is a nice-to-have, not a blocker).
+2. **If the user has push access**, automatically add it:
+   ```bash
+   gh repo edit --add-topic ai-ready | cat
+   ```
 
 This makes the repo discoverable at `github.com/topics/ai-ready` alongside other AI-ready repos. This is repo metadata, not a file change — apply it immediately regardless of whether a PR is created.
 
-### 11c. Wait for PR prompt
+**If the command fails unexpectedly**, ask the user: _"I couldn't add the `ai-ready` topic — would you like me to try again, or should we skip it?"_ Do **not** dump a raw command for the user to copy-paste. If the user wants to skip, move on silently.
 
-Do **not** automatically create a PR. The report ends with a prominent prompt telling the user to type `create a branch and open a draft PR with these changes`. When the user sends that message, create a feature branch (e.g., `feat/ai-ready-config`), commit all new/modified files (including the badge), push, and open a draft PR with a summary of what was added and the before/after score.
+### 11c. Offer to create the PR
+
+After displaying the report and handling the badge and topic, **ask the user** if they want to create a branch and open a PR. Do not tell them to type a command — ask them directly:
+
+_"Would you like me to create a branch and open a PR with these changes?"_
+
+If the user agrees:
+
+1. **Check push permissions** from Step 0b.
+2. **If the user has push access**: create a feature branch (e.g., `feat/ai-ready-config`), commit all new/modified files (including the badge), push, and open a PR targeting the **default branch** (detected in Step 0b — do not assume `main`).
+3. **If the user does NOT have push access**: use a fork-based flow automatically — fork the repo (`gh repo fork --clone=false`), add the fork as a remote, push the branch to the fork, then open a cross-fork PR (`gh pr create --head {user}:feat/ai-ready-config`). Do not ask the user to figure out the fork workflow — handle it end-to-end.
+
+Include a summary of what was added and the before/after score in the PR body. If the user declines, end the session gracefully.
 
 Rules for filling in the template:
 
@@ -533,6 +603,8 @@ Rules for filling in the template:
 ---
 
 ## Important Rules
+
+- **NEVER open a pager** — append `| cat` to every `gh api`, `gh pr list`, `gh release list`, `gh issue list`, `git log`, `git diff`, and any other `gh` or `git` command that might paginate. Use `git --no-pager` for git commands. A pager will hang the session.
 
 - **NEVER overwrite existing files** — only create assets that are missing.
 - **ALWAYS customize to the repo's actual language, framework, and patterns** — do not produce generic boilerplate.
