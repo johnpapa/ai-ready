@@ -600,6 +600,27 @@ _Show this section when consistency issues are found — skip it when everything
 2. Enable Copilot code review: **Settings → Copilot → Code review**
 ```
 
+### HTML report (optional)
+
+*Why?*: Terminal reports are great for the developer running the skill. But when you need to share results with a manager, post to a wiki, or attach to an email — you need something visual.
+
+If the user asks for an HTML report (e.g., "generate a report I can share", "make an HTML report"), generate a self-contained `ai-ready-report.html` in the repo root.
+
+The HTML report mirrors the terminal summary — same sections, same data, same structure:
+
+1. **Header** — repo name, maturity level with emoji medal (🥉🥈🥇🏆), weighted score percentage, progress bar, generation date
+2. **Tech profile** — languages, frameworks, test runner, build command
+3. **Existing AI config** — if detected (copilot-instructions.md, custom agents/skills)
+4. **Instruction consistency** — if issues found
+5. **Asset status** — three groups: ✅ Nailed It, 💡 Could Be Better, ⭕ Missing — with one-line details per asset
+6. **What was generated** — action table (➕ Create, 🔍 Audit, ⏭️ Skip, 💬 Suggest)
+7. **Updated score** — before/after with maturity level change
+8. **What to do next** — remaining recommendations
+
+The file must be self-contained (inline CSS, no external dependencies) and shareable — one file you can open in any browser or drop into an email. Use green/amber/gray status colors, system fonts, and a responsive layout. Keep it simple — this is a summary, not a dashboard.
+
+Generate the HTML report only when the user asks for it. The terminal output is always the default.
+
 After displaying the report, handle the badge, topic, and PR in this order:
 
 ### 11a. Add AI-Ready badge
