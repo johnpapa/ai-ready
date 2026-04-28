@@ -6,9 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- **AI-Ready badge** (Step 12) — opt-in Shields.io badge and `ai-ready` GitHub topic offered after the report, linking back to this plugin for discoverability
+- **Convention tests** (Step 11) — generates `.github/ai-ready-conventions.json` with test scenarios derived from the maintenance matrix to verify AI agents and contributors follow documented change patterns
+- **AI-Ready badge** (Step 13) — opt-in Shields.io badge and `ai-ready` GitHub topic offered after the report, linking back to this plugin for discoverability
 - **Self-consistency rule** — generated files must follow the conventions established in the same PR's `copilot-instructions.md`, so Copilot code review finds zero issues
-- **Explicit asset list** — the 11 tracked assets are now enumerated with a scoring rubric (Nailed It = 1, Could Be Better = 0.5, Missing = 0)
+- **Explicit asset list** — the 12 tracked assets are now enumerated with a scoring rubric (Nailed It = 1, Could Be Better = 0.5, Missing = 0)
 - **Pre-existing AI Config section** in the report — repos with existing copilot-instructions.md, custom agents, or custom skills get a dedicated section acknowledging what's already there
 - **Push permissions check** (Step 0b) — detects whether the user can push directly or needs a fork
 - **Fork-based PR workflow** — when the user lacks push access, the skill automatically forks, pushes to the fork, and opens a cross-fork PR
@@ -23,13 +24,13 @@ All notable changes to this project will be documented in this file.
 - PR creation changed from draft PR to regular PR
 - **Pager prevention** — all `gh` and `git` commands now mandate `| cat` or `--no-pager` to prevent hanging sessions
 - **PR review mining** (Step 0c) — expands search to 20 PRs if initial batch has no review comments, and notes when no patterns are found
-- **Topic addition** (Step 11b) — checks push permissions before attempting `gh repo edit`; skips silently if no access
+- **Topic addition** (Step 12b) — checks push permissions before attempting `gh repo edit`; skips silently if no access
 - **Setup steps** (Step 4) — now derives from existing CI workflow as source of truth for SDK versions and build commands
 - **README Contributing** (Step 7) — if standalone CONTRIBUTING.md exists, links to it instead of duplicating content
 - **Issue templates** (Step 6) — flags old-format markdown templates as "Could Be Better" with migration suggestion
 - **CI workflow** (Step 5) — uses detected default branch instead of hardcoding `main`
 - Contributors row rationale changed from "who to put in CODEOWNERS" to "contribution patterns" — CODEOWNERS is a human reviewer workflow, not an AI-readiness concern
-- Skill now has 12 steps (was 11)
+- Skill now has 13 steps (was 12)
 
 ## [0.3.0-alpha] — 2026-04-24
 

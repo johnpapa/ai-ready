@@ -26,9 +26,9 @@ When invoked, follow these steps in order to analyze the current repository and 
 
 **Skipping assets:** If the user's prompt mentions skipping specific assets (e.g., "make this repo ai-ready but skip CI and issue templates"), respect those exclusions. Still run the full analysis, but skip generation for the excluded assets and note them as "⏭️ Skipped (user requested)" in the report. The analysis is always complete — only generation is skipped.
 
-### The 11 tracked assets
+### The 12 tracked assets
 
-The score is calculated against these 11 assets. Each one is scored as **Nailed It** (🟩 = 1 point), **Could Be Better** (🟨 = 0.5 points), or **Missing** (⬜ = 0 points). The percentage is `total points / 11 × 100`, rounded to the nearest whole number.
+The score is calculated against these 12 assets. Each one is scored as **Nailed It** (🟩 = 1 point), **Could Be Better** (🟨 = 0.5 points), or **Missing** (⬜ = 0 points). The percentage is `total points / 12 × 100`, rounded to the nearest whole number.
 
 | # | Asset | Generated in |
 |---|-------|-------------|
@@ -43,6 +43,7 @@ The score is calculated against these 11 assets. Each one is scored as **Nailed 
 | 9 | Changelog (`CHANGELOG.md`) | Step 9 |
 | 10 | Documentation (or explicit "not needed" note) | Step 10 |
 | 11 | `.github/dependabot.yml` | (checked, not generated) |
+| 12 | `.github/ai-ready-conventions.json` | Step 11 |
 
 ---
 
@@ -220,7 +221,7 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | Custom agents | e.g., 2 agents: migration guide, orchestrator | `.github/agents/` |
 | Custom skills | e.g., 6 skills: bunit-test, component-dev, ... | `.github/skills/` |
 
-**List which of the 11 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
+**List which of the 12 assets are missing and need to be created.** Do NOT overwrite existing files — only create assets that don't exist yet.
 
 **For existing AI-ready assets**, read their current contents and compare against your analysis. Flag drift in any of these dimensions:
 
@@ -466,11 +467,66 @@ Based on the documentation analysis from Step 1g:
 
 ---
 
-## Step 11 — Display the AI-Readiness Report
+## Step 11 — Generate Convention Tests
+
+*Why?*: You just generated a bunch of convention files — but how do you know they actually help? Convention tests let you verify that AI agents follow your maintenance matrix. Think of them as smoke tests for your repo's onboarding.
+
+Generate `.github/ai-ready-conventions.json`. If it already exists, read it and check whether the tests still match the current maintenance matrix and conventions. Flag stale tests as "Could Be Better" suggestions.
+
+### How to generate tests
+
+Walk the maintenance matrix from Step 8. Each row is a test waiting to happen:
+
+1. **One matrix row → one test.** The trigger becomes the `scenario`, the dependent files become `should_touch`, the relevant conventions become `should_follow`.
+2. **Mine `should_follow` from `copilot-instructions.md`** — pull the coding conventions, naming rules, and patterns that apply to the scenario.
+3. **Be specific.** Real file paths. Real directory patterns. Real convention language. No generic placeholders.
+
+Create 3-5 tests. Prioritize rows that involve multiple files or cross-cutting concerns — those are where contributors (and AI agents) actually forget things.
+
+Each test has:
+- **`id`** — kebab-case identifier (e.g., `add-new-route`)
+- **`scenario`** — what a contributor does, written as a concrete action
+- **`should_touch`** — file paths or directory patterns from the maintenance matrix that must be updated alongside the trigger
+- **`should_follow`** — conventions from `copilot-instructions.md` that apply to this scenario
+
+*Why `should_touch`?*: The maintenance matrix says "when X changes, update Y and Z." `should_touch` turns that into a concrete checklist. If a PR touches the trigger files but misses the `should_touch` files, something slipped through.
+
+### Output format
+
+```json
+{
+  "version": 1,
+  "description": "Convention tests for {repo-name} — verify AI agents follow your maintenance matrix",
+  "tests": [
+    {
+      "id": "add-new-route",
+      "scenario": "A contributor adds a new Express route in src/routes/",
+      "should_touch": ["src/routes/index.ts", "tests/routes/", "README.md"],
+      "should_follow": [
+        "Use the router pattern from existing routes",
+        "Add integration tests using supertest",
+        "Update the API reference in README"
+      ]
+    }
+  ]
+}
+```
+
+All values must be specific to the repo. Use real file paths, real patterns, and real conventions from the analysis.
+
+### How to use these tests
+
+When reviewing a PR, check it against the relevant scenario. Did the contributor touch the `should_touch` files? Did they follow the `should_follow` conventions? If not, your instructions have a gap.
+
+These tests also double as onboarding material — new contributors can read them to understand how changes ripple through the codebase.
+
+---
+
+## Step 12 — Display the AI-Readiness Report
 
 After completing all steps, you MUST display the AI-Readiness Report using the **exact format** below. Fill in the placeholders from your analysis. Do not skip, abbreviate, or restructure this report.
 
-Calculate the score using the point system defined in "The 11 tracked assets" section: Nailed It = 1 point (🟩), Could Be Better = 0.5 points (🟨), Missing = 0 points (⬜). The percentage is `total points / 11 × 100`, rounded to the nearest whole number. Always show 11 squares in the progress bar.
+Calculate the score using the point system defined in "The 12 tracked assets" section: Nailed It = 1 point (🟩), Could Be Better = 0.5 points (🟨), Missing = 0 points (⬜). The percentage is `total points / 12 × 100`, rounded to the nearest whole number. Always show 12 squares in the progress bar.
 
 Display this report:
 
@@ -550,7 +606,7 @@ _Include this section only if the repo already has AI configuration (copilot-ins
 
 After displaying the report, handle the badge, topic, and PR in this order:
 
-### 11a. Add AI-Ready badge
+### 12a. Add AI-Ready badge
 
 Check if the README already contains an `AI--Ready` badge. If it does not, **automatically** insert this badge at the top of the README, after any existing title or badge row — do not ask, just add it:
 
@@ -560,7 +616,7 @@ Check if the README already contains an `AI--Ready` badge. If it does not, **aut
 
 The badge is a static Shields.io image with zero dependencies. It links back to the ai-ready plugin repo so others can discover it. Include this in the "What I Did" section of the report as a `➕ Create` action.
 
-### 11b. Add GitHub topic
+### 12b. Add GitHub topic
 
 Check the topics fetched in Step 0b. If the repo does not already have the `ai-ready` topic:
 
@@ -574,7 +630,7 @@ This makes the repo discoverable at `github.com/topics/ai-ready` alongside other
 
 **If the command fails unexpectedly**, ask the user: _"I couldn't add the `ai-ready` topic — would you like me to try again, or should we skip it?"_ Do **not** dump a raw command for the user to copy-paste. If the user wants to skip, move on silently.
 
-### 11c. Offer to create the PR
+### 12c. Offer to create the PR
 
 After displaying the report and handling the badge and topic, **ask the user** if they want to create a branch and open a PR. Do not tell them to type a command — ask them directly:
 
@@ -597,7 +653,7 @@ Rules for filling in the template:
 - The tech profile table should only include rows that apply (e.g., skip "Frameworks" if none detected)
 - Keep each detail to one short line — no multi-line descriptions
 - The "What I Did" section should list every file that was created, suggested, or skipped
-- **Show an updated progress bar** after the "What I Did" section — recalculate the score counting all created files as now "Nailed It." This shows the user the improvement visually (e.g., going from 🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜ 45% → 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 100%)
+- **Show an updated progress bar** after the "What I Did" section — recalculate the score counting all created files as now "Nailed It." This shows the user the improvement visually (e.g., going from 🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜⬜ 42% → 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 100%)
 - The "What To Do Next" section should include only the bullet points that are relevant — e.g., if no files were created, skip "review generated files" and instead say something like "Your repo is already AI-ready — nice work!"
 
 ---
