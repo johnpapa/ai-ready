@@ -1,5 +1,5 @@
 ---
-name: ai-ready-repo
+name: ai-ready
 description: Analyze any repository and generate AI-ready configuration — AGENTS.md, copilot-instructions.md, skills, CI workflows, issue templates, and more. USE THIS SKILL when the user asks to "make this repo ai-ready", "set up AI config", "add copilot instructions", "prepare this repo for AI contributions", or similar. This skill analyzes the repo's code, tests, CI, and structure, then generates customized assets that teach AI agents and human contributors how to work in the repo correctly.
 ---
 
@@ -340,8 +340,11 @@ Let's see where you stand.
 
 - Review each generated file and customize to your preferences
 - Pay special attention to `AGENTS.md` and the maintenance matrix in `copilot-instructions.md`
-- Commit the new files and open a PR
-- Try asking Copilot to make a change to your repo — it will now follow your conventions automatically
+- When you're ready, ask me to create a PR with these changes:
+
+  > Create a PR with all the AI-ready config files. Title it "Add AI-ready configuration" and describe what was added and why.
+
+- Once merged, try asking Copilot to make a change to your repo — it will now follow your conventions automatically
 ```
 
 Rules for filling in the template:

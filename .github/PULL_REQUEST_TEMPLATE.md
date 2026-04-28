@@ -13,7 +13,7 @@
 <!-- How can a reviewer verify this works? For skill changes, include the command to invoke it. -->
 
 ```bash
-copilot --plugin-dir /path/to/ai-ready-repo
+copilot --plugin-dir /path/to/ai-ready
 # Then: "make this repo ai-ready"
 ```
 

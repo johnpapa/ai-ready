@@ -5,7 +5,7 @@ This is a **Copilot CLI plugin** — not a traditional application. It contains 
 ## Repository Structure
 
 ```
-ai-ready-repo/
+ai-ready/
 ├── .github/
 │   ├── plugin/plugin.json          # Plugin manifest (name, version, skill references)
 │   ├── copilot-instructions.md     # Conventions for contributing to THIS repo
@@ -16,7 +16,7 @@ ai-ready-repo/
 │   ├── PULL_REQUEST_TEMPLATE.md    # PR checklist (integrity checks, test evidence)
 │   └── CODEOWNERS                  # @johnpapa owns all paths
 ├── skills/
-│   └── ai-ready-repo/SKILL.md      # The 9-step skill procedure
+│   └── ai-ready/SKILL.md      # The 9-step skill procedure
 ├── docs/
 │   └── how-it-works.md             # Detailed explanation of the 3 mechanisms + 9 assets
 ├── AGENTS.md                       # This file
@@ -40,10 +40,10 @@ There is no build step. This repo ships markdown and JSON files that Copilot CLI
 
 ```bash
 # Load from local directory (no install needed)
-copilot --plugin-dir /path/to/ai-ready-repo
+copilot --plugin-dir /path/to/ai-ready
 
 # Or install from GitHub
-copilot plugin install johnpapa/ai-ready-repo
+copilot plugin install johnpapa/ai-ready
 
 # Then invoke the skill
 copilot "make this repo ai-ready"

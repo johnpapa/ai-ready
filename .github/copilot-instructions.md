@@ -1,4 +1,4 @@
-# Copilot Instructions — ai-ready-repo
+# Copilot Instructions — ai-ready
 
 ## Project Type
 
@@ -40,7 +40,7 @@ This is a **Copilot CLI plugin** containing only markdown, YAML, and JSON files.
 
 | When this changes... | Also update... |
 |---|---|
-| `skills/ai-ready-repo/SKILL.md` | `README.md` (if skill behavior changed), `docs/how-it-works.md`, `AGENTS.md`, `CHANGELOG.md` |
+| `skills/ai-ready/SKILL.md` | `README.md` (if skill behavior changed), `docs/how-it-works.md`, `AGENTS.md`, `CHANGELOG.md` |
 | New skill added to `skills/` | `.github/plugin/plugin.json` (register in `skills` array), `README.md`, `AGENTS.md` (structure section), `CHANGELOG.md` |
 | `.github/plugin/plugin.json` metadata | `README.md` (version, description), `AGENTS.md`, `CHANGELOG.md` |
 | `docs/how-it-works.md` | Verify consistency with `SKILL.md` steps and `README.md` |

@@ -9,7 +9,7 @@ A Copilot CLI plugin that analyzes your repository and generates the configurati
 Install the plugin:
 
 ```bash
-copilot plugin install johnpapa/ai-ready-repo
+copilot plugin install johnpapa/ai-ready
 ```
 
 Run it:
@@ -70,9 +70,9 @@ Every generated file is based on evidence from your repo — not boilerplate.
 
 The skill is the recipe. The plugin is how you get it. Without the plugin wrapper, you'd have to manually find the `SKILL.md` file, copy it into your repo's `.github/skills/` directory, and keep it updated yourself. The plugin system handles all of that:
 
-- **One-command install** — `copilot plugin install johnpapa/ai-ready-repo`
+- **One-command install** — `copilot plugin install johnpapa/ai-ready`
 - **Marketplace discovery** — listed and browsable so people can find it
-- **Versioning and updates** — `copilot plugin update ai-ready-repo`
+- **Versioning and updates** — `copilot plugin update ai-ready`
 - **Works on any repo** — install once, use everywhere
 
 Think of it like npm: you don't _need_ npm to use a JavaScript file, but npm is how people discover, install, and update it.
@@ -131,7 +131,7 @@ Since this is a markdown-only plugin, the real test is running it:
 ```bash
 # Load your local changes
 cd /path/to/some-other-repo
-copilot --plugin-dir /path/to/ai-ready-repo
+copilot --plugin-dir /path/to/ai-ready
 
 # Then invoke the skill
 > make this repo ai-ready
