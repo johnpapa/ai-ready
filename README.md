@@ -20,6 +20,18 @@ copilot "make this repo ai-ready"
 
 The plugin analyzes your code, CI, tests, docs, and structure, then generates assets customized to your project — not generic templates.
 
+## What to Expect
+
+After you run the skill, here's what happens:
+
+1. **Analysis** — the skill scans your repo using GitHub's APIs and your local codebase (languages, frameworks, CI, tests, PR review history, community health). No questions asked.
+2. **Generation** — it creates any missing config files (AGENTS.md, copilot-instructions.md, CI workflow, issue templates, etc.), customized to your repo's actual patterns.
+3. **Report** — you'll see an AI-Readiness Report showing your score, what's in place, and what was created or suggested.
+4. **Next steps** — the skill will prompt you to review the generated files, enable Copilot code review, and create a PR.
+
+<!-- TODO: Add screenshot of the AI-Readiness Report output here -->
+<!-- ![AI-Readiness Report](images/ai-readiness-report.png) -->
+
 ## What It Does
 
 Contributors (human and AI) show up to your repo and don't know the conventions. They submit PRs that miss tests, break patterns, skip docs. You leave the same review comments on every PR. AI agents make this more challenging — they generate PRs faster, but without context, those PRs are low-quality and create _more_ review burden.
