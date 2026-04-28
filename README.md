@@ -18,8 +18,14 @@ copilot plugin install johnpapa/ai-ready
 
 Run it:
 
+```bash
+copilot
 ```
-copilot -p "make this repo ai-ready"
+
+Then type:
+
+```
+make this repo ai-ready
 ```
 
 The plugin analyzes your code, CI, tests, docs, and structure, then generates assets customized to your project — not generic templates.

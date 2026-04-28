@@ -284,7 +284,7 @@ If `README.md` exists at the repo root but does not contain a "Contributing" sec
 - Add a `## Contributing` section near the end of the README with:
   - A suggestion to use Copilot CLI for contributions, with an example prompt in a code block:
     ```
-    copilot -p "Add a new [feature/command/endpoint] called X that does Y"
+    Add a new [feature/command/endpoint] called X that does Y
     ```
   - How to fork, branch, and submit a PR
   - How to run tests locally (exact commands)

@@ -44,9 +44,16 @@ copilot --plugin-dir /path/to/ai-ready
 
 # Or install from GitHub
 copilot plugin install johnpapa/ai-ready
+```
 
-# Then invoke the skill
-copilot -p "make this repo ai-ready"
+Then start Copilot and invoke the skill:
+
+```bash
+copilot
+```
+
+```
+make this repo ai-ready
 ```
 
 ## Testing
