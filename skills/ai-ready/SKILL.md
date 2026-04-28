@@ -28,21 +28,43 @@ When invoked, follow these steps in order to analyze the current repository and 
 
 ### The 11 tracked assets
 
-The score is calculated against these 11 assets. Each one is scored as **Nailed It** (🟩 = 1 point), **Could Be Better** (🟨 = 0.5 points), or **Missing** (⬜ = 0 points). The percentage is `total points / 11 × 100`, rounded to the nearest whole number.
+*Why?*: Not all assets matter equally. Getting `copilot-instructions.md` right (weight 3) has more impact on AI agent quality than having a `dependabot.yml` (weight 1). The weights reflect what actually reduces review burden.
 
-| # | Asset | Generated in |
-|---|-------|-------------|
-| 1 | `AGENTS.md` | Step 2 |
-| 2 | `.github/copilot-instructions.md` | Step 3 |
-| 3 | `.github/copilot-setup-steps.yml` | Step 4 |
-| 4 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
-| 5 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
-| 6 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
-| 7 | README Contributing section | Step 7 |
-| 8 | Maintenance matrix (in `copilot-instructions.md`) | Step 8 |
-| 9 | Changelog (`CHANGELOG.md`) | Step 9 |
-| 10 | Documentation (or explicit "not needed" note) | Step 10 |
-| 11 | `.github/dependabot.yml` | (checked, not generated) |
+Each asset is scored by status and weighted by impact:
+
+| # | Asset | Generated in | Impact | Weight |
+|---|-------|-------------|--------|--------|
+| 1 | `AGENTS.md` | Step 2 | High | 3 |
+| 2 | `.github/copilot-instructions.md` | Step 3 | High | 3 |
+| 3 | `.github/copilot-setup-steps.yml` | Step 4 | High | 3 |
+| 4 | CI workflow (`.github/workflows/ci.yml`) | Step 5 | High | 3 |
+| 5 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 | Medium | 2 |
+| 6 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 | Medium | 2 |
+| 7 | README Contributing section | Step 7 | Medium | 2 |
+| 8 | Maintenance matrix (in `copilot-instructions.md`) | Step 8 | High | 3 |
+| 9 | Changelog (`CHANGELOG.md`) | Step 9 | Low | 1 |
+| 10 | Documentation (or explicit "not needed" note) | Step 10 | Medium | 2 |
+| 11 | `.github/dependabot.yml` | (checked, not generated) | Low | 1 |
+
+**Scoring formula:** `Score = Σ(status × weight) / 25 × 100`, rounded to the nearest whole number.
+- **Nailed It** 🟩 = 1.0 × weight
+- **Could Be Better** 🟨 = 0.5 × weight
+- **Missing** ⬜ = 0.0 × weight
+
+Maximum possible score: 25 points (sum of all weights).
+
+### Maturity levels
+
+*Why?*: A percentage alone doesn't tell you where you stand. Levels give you a clear target — most teams should aim for 🥇 Solid. The 🏆 AI-Ready level means AI agents work like experienced contributors who've read every doc and followed every convention.
+
+| Level | Name | Score | What it means |
+|-------|------|-------|---------------|
+| 🥉 | **Getting Started** | < 40% | Basics are in place but AI agents are mostly guessing |
+| 🥈 | **On Track** | 40–69% | AI agents can help but they'll miss your conventions |
+| 🥇 | **Solid** | 70–89% | AI agents follow your patterns and catch most expectations |
+| 🏆 | **AI-Ready** | ≥ 90% | AI agents contribute like your best team members |
+
+The level is the primary metric. The percentage gives you granularity within each level.
 
 ---
 
@@ -470,7 +492,7 @@ Based on the documentation analysis from Step 1g:
 
 After completing all steps, you MUST display the AI-Readiness Report using the **exact format** below. Fill in the placeholders from your analysis. Do not skip, abbreviate, or restructure this report.
 
-Calculate the score using the point system defined in "The 11 tracked assets" section: Nailed It = 1 point (🟩), Could Be Better = 0.5 points (🟨), Missing = 0 points (⬜). The percentage is `total points / 11 × 100`, rounded to the nearest whole number. Always show 11 squares in the progress bar.
+Calculate the score using the weighted formula defined in "The 11 tracked assets" section. Sum `status × weight` for each asset (Nailed It = 1.0, Could Be Better = 0.5, Missing = 0.0), divide by 25 (total weight), and multiply by 100. Determine the maturity level from the percentage. Always show 11 squares in the progress bar.
 
 Display this report:
 
@@ -482,7 +504,7 @@ a whole lot faster to review. AI agents will know your conventions,
 follow your patterns, and deliver PRs that are ready to merge.
 Let's see where you stand.
 
-**{repo-name}** · Score: **{nailed}/{total}** · {progress-bar} {percent}%
+**{repo-name}** · {level-emoji} **{level-name}** · {progress-bar} {percent}%
 
 | Category | Detail |
 |----------|--------|
@@ -538,7 +560,7 @@ _Include this section only if the repo already has AI configuration (copilot-ins
 | 💬 Suggest | {suggestion} |
 | ✅ Skip | {count} files already in great shape |
 
-**Updated Score: {new-nailed}/{total}** · {updated-progress-bar} {new-percent}%
+**Updated Score:** {new-level-emoji} **{new-level-name}** · {updated-progress-bar} {new-percent}%
 
 ---
 
@@ -597,7 +619,7 @@ Rules for filling in the template:
 - The tech profile table should only include rows that apply (e.g., skip "Frameworks" if none detected)
 - Keep each detail to one short line — no multi-line descriptions
 - The "What I Did" section should list every file that was created, suggested, or skipped
-- **Show an updated progress bar** after the "What I Did" section — recalculate the score counting all created files as now "Nailed It." This shows the user the improvement visually (e.g., going from 🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜ 45% → 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 100%)
+- **Show an updated progress bar** after the "What I Did" section — recalculate the weighted score counting all created files as now "Nailed It," determine the new maturity level, and display both. This shows the user the improvement visually (e.g., going from 🟩🟩🟩🟩🟩🟨⬜⬜⬜⬜⬜ 🥈 On Track 48% → 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 🏆 AI-Ready 100%)
 - The "What To Do Next" section should include only the bullet points that are relevant — e.g., if no files were created, skip "review generated files" and instead say something like "Your repo is already AI-ready — nice work!"
 
 ---
