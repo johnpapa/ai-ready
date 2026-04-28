@@ -196,16 +196,16 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 
 If `AGENTS.md` does not already exist at the repository root, create it with the following sections (all content must be derived from the analysis in Step 1 and from inspecting the actual repo):
 
-- **Project Overview** — derived from README, package.json, pyproject.toml, Cargo.toml, or similar manifest files.
+- **Project Overview** — derived from README, package.json, pyproject.toml, Cargo.toml, or similar manifest files. **Never hardcode the project/package version** — reference the manifest file for it (e.g., "See `package.json` for the current version") so the file doesn't go stale. Runtime/tool versions may be included when they are derived from the repo (e.g., `.nvmrc`, `engines`, `.python-version`, CI/workflow files, or other manifests/config).
 - **Repository Structure** — a directory tree showing the key folders and what they contain.
 - **Tech Stack** — languages, frameworks, runtimes, and major dependencies.
 - **Build & Run** — exact commands to install dependencies, build, and run the project locally.
 - **Testing** — test runner, how to run tests, any special setup required (e.g., browser drivers, database fixtures).
 - **Key Patterns and Conventions** — architectural patterns, naming conventions, module structure, and any patterns inferred from the codebase (e.g., "all API routes live in `src/routes/`", "scenes extend BaseScene").
 - **CI/CD** — summary of existing CI workflows, what triggers them, and what they do.
-- **Adding a New [Feature/Module]** — a step-by-step guide customized to the project type (e.g., "Adding a New Game" for a game project, "Adding a New API Endpoint" for a web API, "Adding a New Command" for a CLI tool).
+- **Adding a New [Feature/Module]** — a step-by-step guide customized to the project type (e.g., "Adding a New Game" for a game project, "Adding a New API Endpoint" for a web API, "Adding a New Command" for a CLI tool). **Trace the full registration chain** — don't just list the obvious files. Follow imports to find enum definitions, type registries, index re-exports, and config declarations that must also be updated. For example, if commands are registered in `extension.ts` but their IDs come from an enum in `models/enums.ts`, include both files.
 - **Screen Size / Responsive Rules** — include this section only if the project is a frontend or UI project.
-- **Common Pitfalls** — things that frequently trip up contributors (e.g., "run `npm run build:frontend` before tests", "version must be updated in three files").
+- **Common Pitfalls** — things that frequently trip up contributors (e.g., "run `npm run build:frontend` before tests", "version must be updated in three files"). **If the analysis found any pointer files or non-standard locations** (e.g., a root `CHANGELOG.md` that redirects to `docs/changelog/`), call this out explicitly as a pitfall so agents edit the real file, not the pointer.
 
 ---
 
@@ -229,7 +229,7 @@ If `.github/copilot-instructions.md` does not already exist, create it with:
   | Build or tooling changed | List CI configs, Dockerfiles, setup scripts to update |
   | Project structure changed | List AGENTS.md, README, import paths, CI paths to update |
 
-  Populate the matrix with **real file paths and real patterns** from the repo.
+  Populate the matrix with **real file paths and real patterns** from the repo. **Trace import chains and registration patterns** — don't stop at the obvious top-level files. Follow imports to find enum definitions, type interfaces, index re-exports, config declarations, and other files in the dependency chain. For example, if a new command requires updating both `commands.ts` and an enum in `models/enums.ts`, include both. If a feature has a registration step in an index file, include that too. **If the analysis found pointer files or non-standard locations** (e.g., a changelog that lives in `docs/changelog/` instead of the root), use the real path in the matrix — never reference the pointer file.
 
 ---
 
