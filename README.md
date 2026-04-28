@@ -34,6 +34,16 @@ The plugin analyzes your code, CI, tests, docs, and structure, then generates as
 
 The plugin is safe to re-run. On the first run, it creates missing assets. On subsequent runs, it **audits** your existing AI-ready files against the current state of your codebase — flagging drift like outdated build commands, stale repo structure, or new PR review patterns that should become conventions. It never overwrites your files — it suggests updates and lets you decide.
 
+### Keeping updated
+
+The plugin doesn't auto-update. To get the latest features and fixes:
+
+```bash
+copilot plugin install johnpapa/ai-ready
+```
+
+Re-running the install command pulls the latest version from the repo.
+
 ### Skip what you don't need
 
 Add exclusions to your prompt and the skill will respect them:
