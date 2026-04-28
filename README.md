@@ -8,13 +8,15 @@ A Copilot CLI plugin that analyzes your repository and generates the configurati
 
 ## Quick Start
 
-Install the plugin:
+Install the plugin from the [awesome-copilot](https://github.com/github/awesome-copilot) marketplace:
 
 ```bash
-# From the awesome-copilot marketplace (once available)
 copilot plugin install ai-ready@awesome-copilot
+```
 
-# Or install directly from GitHub
+Or install directly from GitHub:
+
+```bash
 copilot plugin install johnpapa/ai-ready
 ```
 
@@ -106,7 +108,7 @@ These mined conventions go directly into `copilot-instructions.md`. The next AI-
 
 The skill is the recipe. The plugin is how you get it. Without the plugin wrapper, you'd have to manually copy a `SKILL.md` file and keep it updated yourself. The plugin system handles that:
 
-- **One-command install** — `copilot plugin install johnpapa/ai-ready`
+- **One-command install** — `copilot plugin install ai-ready@awesome-copilot`
 - **Versioning and updates** — `copilot plugin update ai-ready`
 - **Works on any repo** — install once, use everywhere
 
