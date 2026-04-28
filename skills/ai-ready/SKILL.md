@@ -196,7 +196,7 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 
 If `AGENTS.md` does not already exist at the repository root, create it with the following sections (all content must be derived from the analysis in Step 1 and from inspecting the actual repo):
 
-- **Project Overview** — derived from README, package.json, pyproject.toml, Cargo.toml, or similar manifest files. **Never hardcode version numbers** — reference where to find them (e.g., "See `package.json` for the current version") so the file doesn't go stale.
+- **Project Overview** — derived from README, package.json, pyproject.toml, Cargo.toml, or similar manifest files. **Never hardcode the project/package version** — reference the manifest file for it (e.g., "See `package.json` for the current version") so the file doesn't go stale. Runtime/tool versions may be included when they are derived from the repo (e.g., `.nvmrc`, `engines`, `.python-version`, CI/workflow files, or other manifests/config).
 - **Repository Structure** — a directory tree showing the key folders and what they contain.
 - **Tech Stack** — languages, frameworks, runtimes, and major dependencies.
 - **Build & Run** — exact commands to install dependencies, build, and run the project locally.
