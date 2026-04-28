@@ -282,10 +282,13 @@ Use the YAML issue form format (not the older markdown template format).
 If `README.md` exists at the repo root but does not contain a "Contributing" section (search for `## Contributing` or `# Contributing`):
 
 - Add a `## Contributing` section near the end of the README with:
+  - A suggestion to use Copilot CLI for contributions, with an example prompt in a code block:
+    ```
+    copilot "Add a new [feature/command/endpoint] called X that does Y"
+    ```
   - How to fork, branch, and submit a PR
   - How to run tests locally (exact commands)
   - A link to `AGENTS.md` for the full contributor guide
-  - Mention of any skills or AI-assisted workflows available in the repo
 - **Do NOT rewrite or restructure the rest of the README** — only append the Contributing section.
 
 If a Contributing section already exists, skip this step.
@@ -418,14 +421,11 @@ Let's see where you stand.
 
 1. Review the generated files and tweak anything you'd like
 2. Enable Copilot code review: **Settings → Copilot → Code review**
-3. Create a PR with everything:
 
-\`\`\`
-Create a PR with all the AI-ready config files. Title it "Add AI-ready configuration" and list what was added.
-\`\`\`
-
-Once merged, every Copilot interaction in your repo will follow your conventions automatically.
+Want me to create a branch and open a draft PR with these changes? You can review and edit before merging.
 ```
+
+After displaying the report, **ask the user** if they want a draft PR created. If they say yes, create a feature branch (e.g., `feat/ai-ready-config`), commit all new files with a descriptive message, push, and open a draft PR with a summary of what was added and the before/after score.
 
 Rules for filling in the template:
 
