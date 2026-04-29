@@ -36,7 +36,7 @@ TypeScript (99%) · VS Code Extension API · Mocha (87 tests) · `npm run build`
 |-------|---------------|
 | `AGENTS.md` | AI agents won't know the repo structure, build commands, or how to add a new color command |
 | Maintenance matrix | Contributors won't know that adding a command requires updating `package.json`, the command enum, and the docs |
-| `.github/copilot-setup-steps.yml` | Cloud agent can't build the project without setup steps |
+| `.github/workflows/copilot-setup-steps.yml` | Cloud agent can't build the project without setup steps |
 | PR template | PRs have no structured description, checklist, or test instructions |
 | `.vscode/mcp.json` | No MCP servers configured — N/A (no database or API dependencies detected) |
 
@@ -50,7 +50,7 @@ TypeScript (99%) · VS Code Extension API · Mocha (87 tests) · `npm run build`
 |--------|--------|
 | ➕ Create | `AGENTS.md` — repo structure, build/test commands, how to add a color command |
 | ➕ Create | `.github/copilot-instructions.md` — TypeScript conventions, VS Code extension patterns, maintenance matrix |
-| ➕ Create | `.github/copilot-setup-steps.yml` — Node 20, npm install, npm run build |
+| ➕ Create | `.github/workflows/copilot-setup-steps.yml` — Node 20, npm install, npm run build |
 | ➕ Create | `.github/PULL_REQUEST_TEMPLATE.md` — description, changes, test steps, checklist |
 | ➕ Create | `.github/ISSUE_TEMPLATE/bug-report.yml` — structured form with VS Code version, OS, Peacock settings |
 | ➕ Create | `.github/ISSUE_TEMPLATE/feature-request.yml` — description, motivation, alternatives |

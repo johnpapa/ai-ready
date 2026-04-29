@@ -50,7 +50,7 @@ Assets are grouped into three categories:
 | 2 | `.github/copilot-instructions.md` | Step 3 |
 | 3 | Maintenance matrix (in `copilot-instructions.md`) | Step 8 |
 | 4 | `.vscode/mcp.json` | Step 4b |
-| 5 | `.github/copilot-setup-steps.yml` | Step 4 |
+| 5 | `.github/workflows/copilot-setup-steps.yml` | Step 4 |
 
 **🔧 Dev Workflow** — what keeps PRs clean and contributors on track
 
@@ -192,7 +192,7 @@ Also check for:
 Check whether each of these exists:
 - `AGENTS.md`
 - `.github/copilot-instructions.md`
-- `.github/copilot-setup-steps.yml`
+- `.github/workflows/copilot-setup-steps.yml`
 - `.github/skills/` (any skill files)
 - `.github/agents/` (any agent files)
 - `.github/extensions/` (any extension files)
@@ -387,9 +387,9 @@ Include only what differs from root conventions — framework patterns, test set
 
 ---
 
-## Step 4 — Generate .github/copilot-setup-steps.yml
+## Step 4 — Generate .github/workflows/copilot-setup-steps.yml
 
-If `.github/copilot-setup-steps.yml` does not already exist, create it.
+If `.github/workflows/copilot-setup-steps.yml` does not already exist, create it.
 
 If it already exists, verify that runtime versions, install commands, and build steps still match the current project. Flag mismatches as "Could Be Better" suggestions.
 

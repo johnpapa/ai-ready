@@ -81,25 +81,33 @@ Together, they form a layered system:
 
 ---
 
-## The 11 Steps
+## The 12 Steps
 
-The plugin performs up to 11 steps, each serving a specific purpose:
+The plugin performs up to 12 steps, each serving a specific purpose:
 
-### 1. AGENTS.md
+### 0. GitHub Auto-Discovery
+
+Before looking at local files, the skill pulls context directly from GitHub — repo metadata, community health score, recent merged PRs, PR review comments, CI workflows, and releases. PR review mining discovers repeated feedback patterns that become automated conventions.
+
+### 1. Codebase Analysis
+
+Scans the local repository for languages, frameworks, test setup, CI configuration, existing AI config, changelog, documentation, directory structure, and monorepo detection. Combined with Step 0, this produces a complete picture of the repo's current state.
+
+### 2. AGENTS.md
 
 The project context file for the coding agent. Contains repository structure, build/test/release commands, architectural patterns, and contribution guides. Placed at the repo root.
 
-### 2. .github/copilot-instructions.md
+### 3. .github/copilot-instructions.md
 
 The coding conventions file for all Copilot interactions. Includes language idioms, framework patterns, test conventions, code style rules, and the maintenance matrix. Lives in `.github/`.
 
-### 3. .github/skills/
-
-A directory of on-demand task recipes. The plugin generates project-specific skills based on your repository's contribution patterns — for example, a skill for adding a new scene in a game project, or a skill for adding a new API route in a web service.
-
-### 4. .github/copilot-setup-steps.yml
+### 4. .github/workflows/copilot-setup-steps.yml
 
 Configuration for the Copilot coding agent's environment. Defines the setup steps the agent runs before working on your repo — installing dependencies, building the project, running any required bootstrapping. This ensures the agent's environment matches what a human developer would set up.
+
+### 4b. .vscode/mcp.json
+
+MCP server configuration connecting AI agents to your project's databases, APIs, and tools. Uses environment variable placeholders for secrets so the config is safe to commit.
 
 ### 5. CI Workflow (.github/workflows/ci.yml)
 
@@ -117,17 +125,17 @@ A contributing guide section for your README (or a standalone CONTRIBUTING.md) t
 
 A cross-reference table embedded in `copilot-instructions.md` that maps "when X changes, update Y." This is one of the most valuable assets — it ensures that when code changes, the related documentation, tests, templates, and CI configuration all stay in sync. See [The Maintenance Matrix](#the-maintenance-matrix) section below for details.
 
-### 9. License and Content Rules
-
-For projects with creative assets (images, sounds, fonts, etc.), the plugin generates rules about content licensing and attribution. This prevents the AI from generating or suggesting content that violates licensing terms, and ensures proper attribution in generated code.
-
-### 10. Changelog Evaluation
+### 9. Changelog Evaluation
 
 The plugin checks whether the repo has a changelog and whether it's healthy. It handles non-standard locations — some projects maintain changelogs in their docs site rather than a root `CHANGELOG.md`. The plugin follows pointer files, checks freshness against git tags, and flags stale changelogs. If no changelog exists, it creates one in Keep a Changelog format.
 
-### 11. Documentation Evaluation
+### 10. Documentation Evaluation
 
 The plugin checks whether the repo has documentation, identifies the framework (Docsify, Docusaurus, MkDocs, VitePress, etc.), verifies the docs deploy pipeline, and checks that the README links to the docs. If docs exist, their location and conventions are documented in AGENTS.md and the maintenance matrix. If docs don't exist, the plugin assesses whether they're needed based on the project type.
+
+### 11. AI-Readiness Report
+
+Displays the final readiness report — current score, category breakdown (AI Context, Dev Workflow, Onboarding), what was created or updated, and a projected score. Offers to create a PR with all changes and add the AI-Ready badge to the README.
 
 ---
 
@@ -182,7 +190,7 @@ Checks what AI-readiness assets already exist:
 - Does `AGENTS.md` already exist? What does it contain?
 - Is there a `.github/copilot-instructions.md`?
 - Are there existing skills in `.github/skills/`?
-- Is `copilot-setup-steps.yml` configured?
+- Is `.github/workflows/copilot-setup-steps.yml` configured?
 
 ### Directory Structure
 
@@ -195,7 +203,7 @@ Maps the layout of the repository:
 
 ### What's Missing
 
-Based on all of the above, the analysis identifies gaps — which of the 9 assets are missing, incomplete, or could be improved.
+Based on all of the above, the analysis identifies gaps — which of the 12 assets are missing, incomplete, or could be improved.
 
 ### Customized Output
 
@@ -231,7 +239,7 @@ The maintenance matrix is a structured cross-reference table that explicitly map
 | When this changes...        | Also update...                                    |
 |-----------------------------|---------------------------------------------------|
 | `src/game/scenes/`          | `src/game/game.ts` (scene registry), tests, AGENTS.md |
-| `package.json` dependencies | `copilot-setup-steps.yml`, CI workflow              |
+| `package.json` dependencies | `.github/workflows/copilot-setup-steps.yml`, CI workflow              |
 | API routes                  | OpenAPI spec, API tests, README endpoints list      |
 | Database schema             | Migrations, seed data, model tests                  |
 ```

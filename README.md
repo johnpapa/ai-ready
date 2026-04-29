@@ -155,7 +155,7 @@ Every file is customized to your repo's actual language, framework, and patterns
 | --- | --- |
 | **`AGENTS.md`** | Project context for the coding agent — repo structure, build/test commands, architectural decisions, how to add features |
 | **`.github/copilot-instructions.md`** | Coding conventions for all Copilot interactions — Chat, completions, PR reviews, CLI. Includes a maintenance matrix of what to update when code changes |
-| **`.github/copilot-setup-steps.yml`** | Cloud agent environment setup — runtime versions, dependencies, build steps |
+| **`.github/workflows/copilot-setup-steps.yml`** | Cloud agent environment setup — runtime versions, dependencies, build steps |
 | **`.github/workflows/ci.yml`** | PR validation pipeline — build, test, lint, typecheck. Skips non-code changes (docs, images, etc.) |
 | **`.github/ISSUE_TEMPLATE/bug-report.yml`** | Structured bug report form with fields relevant to your project type |
 | **`.github/ISSUE_TEMPLATE/feature-request.yml`** | Structured feature request form |

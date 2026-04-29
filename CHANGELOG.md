@@ -73,7 +73,7 @@ All notable changes to this project will be documented in this file.
 
 - AGENTS.md — contributor guide for this repo
 - `.github/copilot-instructions.md` — conventions + maintenance matrix
-- `.github/copilot-setup-steps.yml` — checkout-only setup
+- `.github/workflows/copilot-setup-steps.yml` — checkout-only setup
 - `.github/workflows/ci.yml` — plugin integrity validation
 - Issue templates (bug report, feature request, new skill idea)
 - README Contributing section with smoke test guide

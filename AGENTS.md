@@ -9,14 +9,14 @@ ai-ready/
 ├── .github/
 │   ├── plugin/plugin.json          # Plugin manifest (name, version, skill references)
 │   ├── copilot-instructions.md     # Conventions for contributing to THIS repo
-│   ├── copilot-setup-steps.yml     # Cloud agent setup (checkout only — no build)
+│   ├── workflows/copilot-setup-steps.yml  # Cloud agent setup (checkout only — no build)
 │   ├── dependabot.yml              # GitHub Actions dependency updates
 │   ├── workflows/ci.yml            # PR validation (plugin integrity checks)
 │   ├── ISSUE_TEMPLATE/             # Bug reports, feature requests, new skill ideas
 │   ├── PULL_REQUEST_TEMPLATE.md    # PR checklist (integrity checks, test evidence)
 │   └── CODEOWNERS                  # @johnpapa owns all paths
 ├── skills/
-│   └── ai-ready/SKILL.md      # The 9-step skill procedure
+│   └── ai-ready/SKILL.md      # The 12-step skill procedure
 ├── docs/
 │   └── how-it-works.md             # Detailed explanation of the 3 mechanisms + 9 assets
 ├── AGENTS.md                       # This file
