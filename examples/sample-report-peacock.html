@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Readiness Report — johnpapa/vscode-peacock</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; color: #1a1a2e; line-height: 1.6; padding: 2rem; }
+  .container { max-width: 800px; margin: 0 auto; }
+  .card { background: #fff; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  .subtitle { color: #666; font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .score-line { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.75rem; }
+  .medal { font-size: 1.5rem; }
+  .progress-bar { display: flex; gap: 4px; margin-bottom: 1.5rem; }
+  .progress-bar span { width: 32px; height: 24px; border-radius: 4px; display: inline-block; }
+  .nailed { background: #22c55e; }
+  .better { background: #f59e0b; }
+  .missing { background: #e5e7eb; }
+  table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
+  th { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 2px solid #e5e7eb; font-size: 0.8rem; text-transform: uppercase; color: #666; }
+  td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
+  .section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .status { display: inline-block; width: 20px; height: 20px; border-radius: 50%; text-align: center; font-size: 0.75rem; line-height: 20px; margin-right: 0.25rem; }
+  .s-nailed { background: #dcfce7; color: #166534; }
+  .s-better { background: #fef3c7; color: #92400e; }
+  .s-missing { background: #f3f4f6; color: #6b7280; }
+  .category-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; font-size: 0.95rem; }
+  .category-label { width: 140px; font-weight: 500; }
+  .category-dots { display: flex; gap: 4px; }
+  .dot { width: 18px; height: 18px; border-radius: 4px; display: inline-block; }
+  .updated-score { background: #f0fdf4; border: 2px solid #22c55e; border-radius: 12px; padding: 1.5rem; text-align: center; }
+  .updated-score .score-line { margin-bottom: 1rem; }
+  .arrow { color: #22c55e; font-size: 1.2rem; margin: 0 0.5rem; }
+  .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+  .badge-create { background: #dcfce7; color: #166534; }
+  .badge-audit { background: #dbeafe; color: #1e40af; }
+  .badge-skip { background: #f3f4f6; color: #6b7280; }
+  .next-steps { list-style: none; padding: 0; }
+  .next-steps li { padding: 0.5rem 0; padding-left: 1.5rem; position: relative; }
+  .next-steps li::before { content: '→'; position: absolute; left: 0; color: #22c55e; font-weight: bold; }
+  .footer { text-align: center; color: #999; font-size: 0.8rem; margin-top: 2rem; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="card">
+  <h1>🎯 AI-Readiness Report</h1>
+  <p class="subtitle">johnpapa/vscode-peacock · Generated April 28, 2026</p>
+
+  <div class="score-line">
+    <span class="medal">🥈</span> <strong>On Track</strong> · 5 of 12 nailed
+  </div>
+
+  <div class="progress-bar">
+    <span class="nailed"></span><span class="nailed"></span><span class="nailed"></span><span class="nailed"></span><span class="nailed"></span><span class="better"></span><span class="better"></span><span class="missing"></span><span class="missing"></span><span class="missing"></span><span class="missing"></span><span class="missing"></span>
+  </div>
+
+  <table>
+    <tr><th>Category</th><th>Detail</th></tr>
+    <tr><td>Languages</td><td>TypeScript (99%), JavaScript (1%)</td></tr>
+    <tr><td>Frameworks</td><td>VS Code Extension API</td></tr>
+    <tr><td>Tests</td><td>Jest (87 tests)</td></tr>
+    <tr><td>Build</td><td><code>npm run build</code></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="section-title">✅ Nailed It (5)</div>
+  <table>
+    <tr><th>Asset</th><th>Detail</th></tr>
+    <tr><td>README Contributing</td><td>Links to CONTRIBUTING.md with full setup guide</td></tr>
+    <tr><td>Changelog</td><td>CHANGELOG.md — Keep a Changelog format, current</td></tr>
+    <tr><td>Documentation</td><td><code>docs/</code> directory linked from README</td></tr>
+    <tr><td>dependabot.yml</td><td>Configured for npm and GitHub Actions</td></tr>
+    <tr><td>CI workflow</td><td><code>build.yml</code> — build + test + lint on PR</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="section-title">💡 Could Be Better (2)</div>
+  <table>
+    <tr><th>Asset</th><th>Suggestion</th></tr>
+    <tr><td>Issue templates</td><td>Has old-format <code>.md</code> templates — consider converting to YAML form format</td></tr>
+    <tr><td>copilot-instructions.md</td><td>No PR review patterns captured — 12 merged PRs had no review comments</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="section-title">⭕ Missing (5)</div>
+  <table>
+    <tr><th>Asset</th><th>Why it matters</th></tr>
+    <tr><td>AGENTS.md</td><td>AI agents won't know repo structure, build commands, or how to add a color command</td></tr>
+    <tr><td>Maintenance matrix</td><td>Adding a command requires updating package.json, command enum, and docs</td></tr>
+    <tr><td>copilot-setup-steps.yml</td><td>Cloud agent can't build the project without setup steps</td></tr>
+    <tr><td>PR template</td><td>PRs have no structured description, checklist, or test instructions</td></tr>
+    <tr><td>.vscode/mcp.json</td><td>N/A — no database or API dependencies detected</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="section-title">🛠️ What I Did</div>
+  <table>
+    <tr><th>Action</th><th>Detail</th></tr>
+    <tr><td><span class="badge badge-create">➕ Create</span></td><td><code>AGENTS.md</code> — repo structure, build/test commands, how to add a color command</td></tr>
+    <tr><td><span class="badge badge-create">➕ Create</span></td><td><code>copilot-instructions.md</code> — TypeScript conventions, extension patterns, maintenance matrix</td></tr>
+    <tr><td><span class="badge badge-create">➕ Create</span></td><td><code>copilot-setup-steps.yml</code> — Node 20, npm install, npm run build</td></tr>
+    <tr><td><span class="badge badge-create">➕ Create</span></td><td><code>PULL_REQUEST_TEMPLATE.md</code> — description, changes, test steps, checklist</td></tr>
+    <tr><td><span class="badge badge-audit">🔍 Audit</span></td><td>Issue templates — flagged old <code>.md</code> format, suggest YAML migration</td></tr>
+    <tr><td><span class="badge badge-skip">✅ Skip</span></td><td>5 files already in great shape</td></tr>
+  </table>
+</div>
+
+<div class="updated-score">
+  <div class="score-line">
+    🥈 On Track · 5 of 12 <span class="arrow">→</span> <span class="medal">🥇</span> <strong>Solid</strong> · 9 of 12 nailed
+  </div>
+
+  <div class="progress-bar" style="justify-content: center;">
+    <span class="nailed"></span><span class="nailed"></span><span class="nailed"></span><span class="nailed"></span><span class="nailed"></span><span class="nailed"></span><span class="nailed"></span><span class="nailed"></span><span class="nailed"></span><span class="better"></span><span class="better"></span><span class="missing"></span>
+  </div>
+
+  <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;">
+    <div class="category-row">
+      <span class="category-label">🤖 AI Context</span>
+      <div class="category-dots">
+        <span class="dot nailed"></span><span class="dot nailed"></span><span class="dot nailed"></span><span class="dot nailed"></span><span class="dot missing"></span>
+      </div>
+    </div>
+    <div class="category-row">
+      <span class="category-label">🔧 Dev Workflow</span>
+      <div class="category-dots">
+        <span class="dot nailed"></span><span class="dot nailed"></span><span class="dot nailed"></span><span class="dot nailed"></span>
+      </div>
+    </div>
+    <div class="category-row">
+      <span class="category-label">📖 Onboarding</span>
+      <div class="category-dots">
+        <span class="dot nailed"></span><span class="dot nailed"></span><span class="dot nailed"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-title">🚀 What To Do Next</div>
+  <ul class="next-steps">
+    <li>Review the generated files and tweak anything you'd like</li>
+    <li>Enable Copilot code review: <strong>Settings → Copilot → Code review</strong></li>
+  </ul>
+</div>
+
+<div class="footer">
+  Generated by <a href="https://github.com/johnpapa/ai-ready">ai-ready</a> · MIT License
+</div>
+
+</div>
+</body>
+</html>

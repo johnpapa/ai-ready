@@ -82,21 +82,37 @@ Then start `copilot` and say `make this repo ai-ready` — it works the same way
 
 After you run the skill, here's what happens:
 
-**1. Analysis** — the skill scans your repo using GitHub's APIs and your local codebase. You get a score, tech profile, and progress bar — no questions asked.
+**1. Analysis** — the skill scans your repo using GitHub's APIs and your local codebase. You get a medal, a score, and a progress bar — no questions asked.
 
 ![Score and tech profile](images/report-score.png)
 
-**2. Assessment** — every asset is categorized as nailed, could be better, or missing. You see exactly where you stand.
+**2. Assessment** — every asset is categorized as nailed, could be better, or missing. Assets are grouped into three categories so you can see where to focus:
+- 🤖 **AI Context** — what AI agents read to understand your repo
+- 🔧 **Dev Workflow** — what keeps PRs clean and contributors on track
+- 📖 **Onboarding** — what helps new contributors get started
 
 ![Nailed It, Could Be Better, Missing](images/report-assessment.png)
 
-**3. Generation** — the skill creates every missing file, customized to your repo's actual patterns. The progress bar updates to show the improvement.
+**3. Generation** — the skill creates every missing file, customized to your repo's actual patterns. The score updates to show the improvement.
 
 ![What I Did and updated score](images/report-actions.png)
 
-**4. Next steps** — clear actions: review, enable Copilot code review, add an AI-Ready badge, and a ready-to-use prompt to create the PR.
+**4. Next steps** — clear actions: review, enable Copilot code review, and an offer to create the PR for you.
 
 ![What To Do Next](images/report-next-steps.png)
+
+### Scoring
+
+Your score is simple: **how many of the 12 tracked assets are nailed.** That's it — no formulas, no weights.
+
+| Medal | Name | Count | What it means |
+|-------|------|-------|---------------|
+| 🥉 | **Getting Started** | 1–4 of 12 | Basics are in place but AI agents are mostly guessing |
+| 🥈 | **On Track** | 5–7 of 12 | AI agents can help but they'll miss your conventions |
+| 🥇 | **Solid** | 8–10 of 12 | AI agents follow your patterns and catch most expectations |
+| 🏆 | **AI-Ready** | 11–12 of 12 | AI agents contribute like your best team members |
+
+> 📄 See a [sample terminal report](examples/sample-report-peacock.md) and [sample HTML report](examples/sample-report-peacock.html) generated for [vscode-peacock](https://github.com/johnpapa/vscode-peacock).
 
 ## Why
 
@@ -153,6 +169,7 @@ Every file is customized to your repo's actual language, framework, and patterns
 | **`.github/ISSUE_TEMPLATE/feature-request.yml`** | Structured feature request form |
 | **`.github/PULL_REQUEST_TEMPLATE.md`** | PR description template with checklist items derived from the maintenance matrix |
 | **`CHANGELOG.md`** | Keep a Changelog format, populated from releases/tags if available |
+| **`.vscode/mcp.json`** | MCP server config connecting AI agents to your project's databases, APIs, and tools |
 | **README `## Contributing` section** | Onramp for new contributors — how to fork, build, test, and submit a PR |
 | **AI-Ready badge in README** | Shields.io badge linking back to this plugin — added automatically |
 
