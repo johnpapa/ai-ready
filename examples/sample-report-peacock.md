@@ -9,7 +9,7 @@ follow your patterns, and deliver PRs that are ready to merge.
 ---
 
 📊 **Your Repo Today** · 🥈 **On Track** · 🟩🟩🟩🟩🟩🟨🟨⬜⬜⬜⬜⬜ · 5 of 12 nailed
-TypeScript (99%) · VS Code Extension API · Jest (87 tests) · `npm run build`
+TypeScript (99%) · VS Code Extension API · Mocha (87 tests) · `npm run build`
 
 ✅ **Nailed It (5)**
 
