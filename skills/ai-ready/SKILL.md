@@ -32,6 +32,10 @@ The skill **never overwrites existing files without user approval**.
 
 **Skipping assets:** If the user's prompt mentions skipping specific assets (e.g., "make this repo ai-ready but skip CI and issue templates"), respect those exclusions. Still run the full analysis, but skip generation for the excluded assets and note them as "⏭️ Skipped (user requested)" in the report. The analysis is always complete — only generation is skipped.
 
+**Report-only mode:** If the user asks for a report without generating files (e.g., "how ai-ready is this repo?", "score this repo", "just show me the report", "check my repo's ai-readiness"), run the full analysis (Steps 0 and 1) and display the AI-Readiness Report (Step 11) — but **skip all generation steps** (Steps 2–10). The "What I'd Like To Do" section should still show what *would* be created, but nothing is written to disk. The "Ready?" section at the end should offer to run the full skill if they want to proceed.
+
+*Why?*: Sometimes you just want to know where you stand before committing to changes. Report-only mode lets you assess without modifying anything.
+
 ### The 12 tracked assets
 
 *Why?*: One score, at a glance. Count how many assets are nailed — that's it. No formulas, no weights. The progress bar and category breakdown show you where to focus.

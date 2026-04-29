@@ -67,6 +67,18 @@ make this repo ai-ready but skip CI and issue templates
 just generate AGENTS.md and copilot-instructions
 ```
 
+### Report only
+
+Just want to see where you stand? Ask for a report without generating any files:
+
+```
+how ai-ready is this repo?
+```
+
+```
+score this repo
+```
+
 ## What to Expect
 
 After you run the skill, you get a full AI-readiness report — analysis, proposed changes, and a projected score. Here's what it looks like for [vscode-peacock](https://github.com/johnpapa/vscode-peacock):
