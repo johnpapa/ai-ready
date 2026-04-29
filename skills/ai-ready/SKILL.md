@@ -648,13 +648,6 @@ follow your patterns, and deliver PRs that are ready to merge.
 
 **{repo-name}**
 
-{before-medal} **{before-level}** · {before-progress-bar} · {before-nailed} of 12 nailed
-→ {after-medal} **{after-level}** · {after-progress-bar} · {after-nailed} of 12 nailed
-
-🤖 AI Context        {5 status indicators}
-🔧 Dev Workflow      {4 status indicators}
-📖 Onboarding        {3 status indicators}
-
 | Category | Detail |
 |----------|--------|
 | Languages | {languages} |
@@ -664,19 +657,7 @@ follow your patterns, and deliver PRs that are ready to merge.
 
 ---
 
-🛠️ **What I Did** — here's what I created to close the gaps:
-
-| Action | Detail |
-|--------|--------|
-| ➕ Create | `{filename}` — {what it will contain} |
-| 🔍 Audit | `{filename}` — {what drifted and suggested fix} |
-| ⏭️ Skip | `{filename}` — skipped (user requested) |
-| 💬 Suggest | {suggestion} |
-| ✅ Skip | {count} files already in great shape |
-
-_For monorepos: list each `.github/instructions/{area}.instructions.md` file created as a separate ➕ Create row._
-
----
+📊 **Your Repo Today** · {medal} **{level-name}** · {progress-bar} · {nailed} of 12 nailed
 
 🤖 **Existing AI Config (detected)**
 
@@ -688,8 +669,6 @@ _Include this section only if the repo already has AI configuration (copilot-ins
 | {.github/agents/} | {count} agents: {names} |
 | {.github/skills/} | {count} skills: {names} |
 
----
-
 ⚠️ **Instruction Consistency**
 
 _Show this section when consistency issues are found — skip it when everything lines up._
@@ -697,10 +676,6 @@ _Show this section when consistency issues are found — skip it when everything
 | Issue | Files | Detail |
 |-------|-------|--------|
 | {issue-type} | {file1} ↔ {file2} | {specific contradiction or duplication} |
-
----
-
-📊 **Where Things Stand** — the full assessment:
 
 ✅ **Nailed It ({count})**
 
@@ -729,10 +704,33 @@ _Why these matter:_ {brief explanation of what the missing items cost the repo}
 
 ---
 
-🚀 **What To Do Next**
+🛠️ **What I'd Like To Do** — proposed changes to close the gaps:
 
-1. Review the generated files and tweak anything you'd like
-2. Enable Copilot code review: **Settings → Copilot → Code review**
+| Action | Detail |
+|--------|--------|
+| ➕ Create | `{filename}` — {what it will contain} |
+| 🔍 Audit | `{filename}` — {what drifted and suggested fix} |
+| ⏭️ Skip | `{filename}` — skipped (user requested) |
+| 💬 Suggest | {suggestion} |
+| ✅ Skip | {count} files already in great shape |
+
+_For monorepos: list each `.github/instructions/{area}.instructions.md` file created as a separate ➕ Create row._
+
+---
+
+🏆 **If You Accept** · {after-progress-bar} · {after-nailed} of 12 nailed → {after-medal} **{after-level}**
+
+🤖 AI Context        {5 status indicators}
+🔧 Dev Workflow      {4 status indicators}
+📖 Onboarding        {3 status indicators}
+
+---
+
+🚀 **Ready?**
+
+1. Review the proposed changes above and let me know if you'd like to tweak anything
+2. When you're happy, I'll create a branch and open a PR with these changes
+3. After merging, enable Copilot code review: **Settings → Copilot → Code review**
 ```
 
 ### HTML report (optional)
