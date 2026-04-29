@@ -53,12 +53,14 @@ Let's see where you stand.
 | ➕ Create | `.github/copilot-instructions.md` — TypeScript conventions, VS Code extension patterns, maintenance matrix |
 | ➕ Create | `.github/copilot-setup-steps.yml` — Node 20, npm install, npm run build |
 | ➕ Create | `.github/PULL_REQUEST_TEMPLATE.md` — description, changes, test steps, checklist |
-| 🔍 Audit | Issue templates — flagged old `.md` format, suggest YAML migration |
-| ✅ Skip | 5 files already in great shape |
+| ➕ Create | `.github/ISSUE_TEMPLATE/bug-report.yml` — structured form with VS Code version, OS, Peacock settings |
+| ➕ Create | `.github/ISSUE_TEMPLATE/feature-request.yml` — description, motivation, alternatives |
+| ➕ Create | `.vscode/mcp.json` — N/A, skipped (no database or API dependencies) |
+| 💬 Suggest | Convert old `.md` issue templates to YAML form format for consistency |
 
-**Updated Score:** 🥇 **Solid** · 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟨🟨⬜ · 9 of 12 nailed
+**Updated Score:** 🏆 **AI-Ready** · 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 · 12 of 12 nailed
 
-🤖 AI Context        ✅✅✅✅⬜
+🤖 AI Context        ✅✅✅✅✅
 🔧 Dev Workflow      ✅✅✅✅
 📖 Onboarding        ✅✅✅
 
