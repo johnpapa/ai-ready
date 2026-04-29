@@ -680,6 +680,8 @@ _Show this section when consistency issues are found — skip it when everything
 
 ---
 
+📊 **Current State** — here's what your repo has today, before any changes:
+
 ✅ **Nailed It ({count})**
 
 | Asset | Detail |
@@ -703,7 +705,7 @@ _Show this section when consistency issues are found — skip it when everything
 
 ---
 
-🛠️ **What I Did**
+🛠️ **What I Did** — here's what I created to close the gaps:
 
 | Action | Detail |
 |--------|--------|

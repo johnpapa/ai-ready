@@ -16,6 +16,8 @@ Let's see where you stand.
 
 ---
 
+📊 **Current State** — here's what your repo has today, before any changes:
+
 ✅ **Nailed It (5)**
 
 | Asset | Detail |
@@ -45,7 +47,7 @@ Let's see where you stand.
 
 ---
 
-🛠️ **What I Did**
+🛠️ **What I Did** — here's what I created to close the gaps:
 
 | Action | Detail |
 |--------|--------|
