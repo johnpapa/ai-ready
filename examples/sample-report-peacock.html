@@ -41,6 +41,12 @@
   .next-steps li { padding: 0.5rem 0; padding-left: 1.5rem; position: relative; }
   .next-steps li::before { content: '→'; position: absolute; left: 0; color: #22c55e; font-weight: bold; }
   .footer { text-align: center; color: #999; font-size: 0.8rem; margin-top: 2rem; }
+  details { margin-bottom: 0; }
+  details > summary { cursor: pointer; list-style: none; }
+  details > summary::-webkit-details-marker { display: none; }
+  details > summary::before { content: '▼ '; font-size: 0.7rem; color: #999; margin-right: 0.25rem; }
+  details[open] > summary::before { content: '▲ '; }
+  details > summary > .section-title { display: inline; }
 </style>
 </head>
 <body>
@@ -70,7 +76,8 @@
 </div>
 
 <div class="card">
-  <div class="section-title">✅ Nailed It (5)</div>
+<details open>
+  <summary><span class="section-title">✅ Nailed It (5)</span></summary>
   <table>
     <tr><th>Asset</th><th>Detail</th></tr>
     <tr><td>README Contributing</td><td>Links to CONTRIBUTING.md with full setup guide</td></tr>
@@ -79,19 +86,23 @@
     <tr><td>dependabot.yml</td><td>Configured for npm and GitHub Actions</td></tr>
     <tr><td>CI workflow</td><td><code>build.yml</code> — build + test + lint on PR</td></tr>
   </table>
+</details>
 </div>
 
 <div class="card">
-  <div class="section-title">💡 Could Be Better (2)</div>
+<details open>
+  <summary><span class="section-title">💡 Could Be Better (2)</span></summary>
   <table>
     <tr><th>Asset</th><th>Suggestion</th></tr>
     <tr><td>Issue templates</td><td>Has old-format <code>.md</code> templates — consider converting to YAML form format</td></tr>
     <tr><td>copilot-instructions.md</td><td>No PR review patterns captured — 12 merged PRs had no review comments</td></tr>
   </table>
+</details>
 </div>
 
 <div class="card">
-  <div class="section-title">⭕ Missing (5)</div>
+<details open>
+  <summary><span class="section-title">⭕ Missing (5)</span></summary>
   <table>
     <tr><th>Asset</th><th>Why it matters</th></tr>
     <tr><td>AGENTS.md</td><td>AI agents won't know repo structure, build commands, or how to add a color command</td></tr>
@@ -100,10 +111,12 @@
     <tr><td>PR template</td><td>PRs have no structured description, checklist, or test instructions</td></tr>
     <tr><td>.vscode/mcp.json</td><td>N/A — no database or API dependencies detected</td></tr>
   </table>
+</details>
 </div>
 
 <div class="card">
-  <div class="section-title">🛠️ What I Did — here's what I created to close the gaps</div>
+<details open>
+  <summary><span class="section-title">🛠️ What I Did — here's what I created to close the gaps</span></summary>
   <table>
     <tr><th>Action</th><th>Detail</th></tr>
     <tr><td><span class="badge badge-create">➕ Create</span></td><td><code>AGENTS.md</code> — repo structure, build/test commands, how to add a color command</td></tr>
@@ -115,6 +128,7 @@
     <tr><td><span class="badge badge-skip">⏭️ Skip</span></td><td><code>.vscode/mcp.json</code> — N/A, no database or API dependencies</td></tr>
     <tr><td><span class="badge badge-audit">💬 Suggest</span></td><td>Convert old <code>.md</code> issue templates to YAML form format</td></tr>
   </table>
+</details>
 </div>
 
 <div class="updated-score">
@@ -149,11 +163,13 @@
 </div>
 
 <div class="card">
-  <div class="section-title">🚀 What To Do Next</div>
+<details open>
+  <summary><span class="section-title">🚀 What To Do Next</span></summary>
   <ul class="next-steps">
     <li>Review the generated files and tweak anything you'd like</li>
     <li>Enable Copilot code review: <strong>Settings → Copilot → Code review</strong></li>
   </ul>
+</details>
 </div>
 
 <div class="footer">
