@@ -6,16 +6,10 @@ follow your patterns, and deliver PRs that are ready to merge.
 
 **johnpapa/vscode-peacock**
 
-| Category | Detail |
-|----------|--------|
-| Languages | TypeScript (99%), JavaScript (1%) |
-| Frameworks | VS Code Extension API |
-| Tests | Jest (87 tests) |
-| Build | `npm run build` |
-
 ---
 
 📊 **Your Repo Today** · 🥈 **On Track** · 🟩🟩🟩🟩🟩🟨🟨⬜⬜⬜⬜⬜ · 5 of 12 nailed
+TypeScript (99%) · VS Code Extension API · Jest (87 tests) · `npm run build`
 
 ✅ **Nailed It (5)**
 

@@ -648,16 +648,10 @@ follow your patterns, and deliver PRs that are ready to merge.
 
 **{repo-name}**
 
-| Category | Detail |
-|----------|--------|
-| Languages | {languages} |
-| Frameworks | {frameworks} |
-| Tests | {test-runner} ({test-count}) |
-| Build | `{build-command}` |
-
 ---
 
 📊 **Your Repo Today** · {medal} **{level-name}** · {progress-bar} · {nailed} of 12 nailed
+{languages} · {frameworks} · {test-runner} ({test-count}) · `{build-command}`
 
 🤖 **Existing AI Config (detected)**
 
