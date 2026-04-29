@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **Writing style pass** — added *Why?* explanations throughout SKILL.md for key decisions and rules, matching John Papa's Angular Style Guide voice
+
 ### Added
 
 - **Monorepo area support** (Step 1j/3) — detects workspace areas and generates per-area .instructions.md files with applyTo glob patterns for scoped AI instructions

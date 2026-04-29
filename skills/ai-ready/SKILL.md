@@ -18,11 +18,17 @@ Prioritize what **reduces review burden and contributor friction**. Don't just g
 
 Every decision you make should pass this test: **"Would an experienced maintainer want this in their repo?"** If the answer is no, leave it out.
 
+*Why?*: Generic boilerplate creates noise. Maintainers already have too much config to manage. Every file you generate should earn its place.
+
 ---
 
 When invoked, follow these steps in order to analyze the current repository and generate all missing AI-ready configuration assets.
 
-**First run vs. re-run:** The skill runs the same analysis every time. On the first run, most assets will be missing and the skill creates them. On re-runs, the skill **audits** existing assets against the current state of the codebase — checking for drift, stale content, and new conventions from recent PR reviews. It reports what's drifted in "Could Be Better" with specific suggestions, but **never overwrites existing files without user approval**. Only truly missing assets are created automatically.
+**First run vs. re-run:** The skill runs the same analysis every time. On the first run, most assets will be missing — the skill creates them. On re-runs, it **audits** existing assets against the current codebase, checking for drift, stale content, and new conventions from recent PR reviews. Drifted assets land in "Could Be Better" with specific suggestions. Only truly missing assets are created automatically.
+
+The skill **never overwrites existing files without user approval**.
+
+*Why?*: Overwriting existing files destroys customizations the maintainer already made. Suggest changes — don't force them.
 
 **Skipping assets:** If the user's prompt mentions skipping specific assets (e.g., "make this repo ai-ready but skip CI and issue templates"), respect those exclusions. Still run the full analysis, but skip generation for the excluded assets and note them as "⏭️ Skipped (user requested)" in the report. The analysis is always complete — only generation is skipped.
 
@@ -79,7 +85,9 @@ Assets are grouped into three categories:
 
 ## Step 0 — Detect GitHub context automatically
 
-**This step requires zero user input.** The skill is GitHub-native — it automatically discovers everything about the repo from GitHub's own tools and services.
+**This step requires zero user input.** The skill is GitHub-native — it discovers everything about the repo from GitHub's own tools and services.
+
+*Why?*: The user shouldn't have to explain their own repo. GitHub already knows the language, the CI setup, the community health, and the PR patterns. Use that.
 
 ### 0a. Identify the repo
 
@@ -105,7 +113,9 @@ Use the GitHub MCP tools (if available) or `gh` CLI to pull rich context the use
 
 ### 0c. Mine PR review comments for conventions
 
-This is the highest-value GitHub-native insight. Look at the 5-10 most recent merged PRs:
+This is the **highest-value** GitHub-native insight. Look at the 5-10 most recent merged PRs.
+
+*Why?*: If a maintainer leaves the same review comment on 5 different PRs, that's a convention waiting to be documented. Mining PR reviews turns reviewer fatigue into automated guidance.
 
 1. Use `github-mcp-server-list_pull_requests` (state: closed, sort: updated) to find recent merged PRs
 2. For each, use `github-mcp-server-pull_request_read` (method: get_review_comments) to read review threads
@@ -115,7 +125,7 @@ This is the highest-value GitHub-native insight. Look at the 5-10 most recent me
    - "Update the docs when you change this" → add to maintenance matrix
    - "Don't forget to update the changelog" → add to maintenance matrix
 
-**If few or no review comments are found** (e.g., PRs are self-merged or auto-merged), expand the search to up to 20 merged PRs. If there are still no review patterns, note this in the findings: _"No PR review patterns found — consider adding conventions as the team grows."_ Do not silently skip this section.
+**If few or no review comments are found** (e.g., PRs are self-merged or auto-merged), expand the search to up to 20 merged PRs. If there are still no review patterns, note this in the findings: _"No PR review patterns found — consider adding conventions as the team grows."_ Never silently skip this section.
 
 These mined conventions go directly into `copilot-instructions.md` — turning repeated human review feedback into automated AI guidance.
 
@@ -136,7 +146,11 @@ GitHub's community health API tells you exactly what's missing. Map it to the as
 
 ## Step 1 — Analyze the codebase
 
-With GitHub context from Step 0, now scan the local codebase for deeper technical details. Use built-in tools (glob, grep, view) and the GitHub context together.
+GitHub context tells you *what* the repo is. Local analysis tells you *how* it works. You need both.
+
+*Why?*: GitHub metadata covers languages, CI, and community health — but it can't tell you the test runner, the build commands, or the directory layout. Scan the local codebase for those deeper technical details.
+
+Use built-in tools (glob, grep, view) combined with the GitHub context from Step 0.
 
 ### 1a. Detect languages and frameworks
 
@@ -296,20 +310,26 @@ If a workspace config was found in Step 1a, read it to find package/project path
 
 ## Step 2 — Generate AGENTS.md
 
-If `AGENTS.md` does not already exist at the repository root, create it with the following sections (all content must be derived from the analysis in Step 1 and from inspecting the actual repo).
+If `AGENTS.md` does not already exist at the repository root, create it. All content must be derived from the analysis in Step 1 and from inspecting the actual repo.
 
-If `AGENTS.md` already exists, read it and compare against the current analysis. Flag any drift (e.g., outdated repo structure, stale build commands, missing sections) as a "Could Be Better" suggestion in the report. **Do not overwrite** — suggest specific updates and let the user decide.
+If `AGENTS.md` already exists, read it and compare against the current analysis. Flag drift (e.g., outdated repo structure, stale build commands, missing sections) as a "Could Be Better" suggestion. **Do not overwrite** — suggest specific updates and let the user decide.
 
 Sections to include (or verify):
 
-- **Project Overview** — derived from README, package.json, pyproject.toml, Cargo.toml, or similar manifest files. **Never hardcode the project/package version** — reference the manifest file for it (e.g., "See `package.json` for the current version") so the file doesn't go stale. Runtime/tool versions may be included when they are derived from the repo (e.g., `.nvmrc`, `engines`, `.python-version`, CI/workflow files, or other manifests/config).
+- **Project Overview** — derived from README, package.json, pyproject.toml, Cargo.toml, or similar manifest files. **Never hardcode the project/package version** — reference the manifest file (e.g., "See `package.json` for the current version") so the file doesn't go stale. Runtime/tool versions may be included when derived from the repo (e.g., `.nvmrc`, `engines`, `.python-version`, CI/workflow files, or other manifests/config).
+
+  *Why?*: Hardcoded versions go stale the moment someone bumps a number. A reference to the manifest is always current.
 - **Repository Structure** — a directory tree showing the key folders and what they contain.
 - **Tech Stack** — languages, frameworks, runtimes, and major dependencies.
 - **Build & Run** — exact commands to install dependencies, build, and run the project locally.
 - **Testing** — test runner, how to run tests, any special setup required (e.g., browser drivers, database fixtures).
 - **Key Patterns and Conventions** — architectural patterns, naming conventions, module structure, and any patterns inferred from the codebase (e.g., "all API routes live in `src/routes/`", "scenes extend BaseScene").
 - **CI/CD** — summary of existing CI workflows, what triggers them, and what they do.
-- **Adding a New [Feature/Module]** — a step-by-step guide customized to the project type (e.g., "Adding a New Game" for a game project, "Adding a New API Endpoint" for a web API, "Adding a New Command" for a CLI tool). **Trace the full registration chain** — don't just list the obvious files. Follow imports to find enum definitions, type registries, index re-exports, and config declarations that must also be updated. For example, if commands are registered in `extension.ts` but their IDs come from an enum in `models/enums.ts`, include both files.
+- **Adding a New [Feature/Module]** — a step-by-step guide customized to the project type (e.g., "Adding a New Game" for a game project, "Adding a New API Endpoint" for a web API, "Adding a New Command" for a CLI tool). **Trace the full registration chain** — don't just list the obvious files. Follow imports to find enum definitions, type registries, index re-exports, and config declarations that must also be updated.
+
+  *Why?*: The obvious files are easy. It's the hidden registration steps — the enum that must match, the index that must re-export, the config that must register — that trip up contributors. Trace the full chain.
+
+  For example, if commands are registered in `extension.ts` but their IDs come from an enum in `models/enums.ts`, include both files.
 - **Screen Size / Responsive Rules** — include this section only if the project is a frontend or UI project.
 - **Common Pitfalls** — things that frequently trip up contributors (e.g., "run `npm run build:frontend` before tests", "version must be updated in three files"). **If the analysis found any pointer files or non-standard locations** (e.g., a root `CHANGELOG.md` that redirects to `docs/changelog/`), call this out explicitly as a pitfall so agents edit the real file, not the pointer.
 
@@ -317,9 +337,9 @@ Sections to include (or verify):
 
 ## Step 3 — Generate .github/copilot-instructions.md
 
-If `.github/copilot-instructions.md` does not already exist, create it with:
+If `.github/copilot-instructions.md` does not already exist, create it.
 
-If it already exists, read it and compare against the current analysis — especially new PR review patterns from Step 0c that aren't yet captured as conventions, and maintenance matrix entries that no longer reflect the current file structure. Flag drift as "Could Be Better" suggestions.
+If it already exists, read it and compare against the current analysis — especially new PR review patterns from Step 0c not yet captured as conventions, and maintenance matrix entries that no longer reflect the current file structure. Flag drift as "Could Be Better" suggestions.
 
 Content to include (or verify):
 
@@ -329,7 +349,11 @@ Content to include (or verify):
 - **Test Conventions** — which test runner to use, naming patterns for test files, what to test (unit, integration, e2e), how to run tests.
 - **Code Style Notes** — inferred from linter/formatter configs if present (ESLint, Prettier, Black, Ruff, rustfmt, etc.). Reference the config files rather than duplicating rules.
 - **Asset and Content Rules** — include only if the project has static assets (images, sounds, fonts, etc.). Cover naming conventions, file formats, and where assets live.
-- **Maintenance Matrix** — this is critical. Define what must be updated when different parts of the codebase change:
+- **Maintenance Matrix** — this is critical.
+
+  *Why?*: This is the single most valuable section in copilot-instructions.md. Without it, every AI agent (and human contributor) has to rediscover which files need updating when something changes. That's exactly the knowledge that lives in a maintainer's head and never gets written down — until now.
+
+  Define what must be updated when different parts of the codebase change:
 
   | Change Made | Files to Update |
   |---|---|
@@ -339,7 +363,11 @@ Content to include (or verify):
   | Build or tooling changed | List CI configs, Dockerfiles, setup scripts to update |
   | Project structure changed | List AGENTS.md, README, import paths, CI paths to update |
 
-  Populate the matrix with **real file paths and real patterns** from the repo. **Trace import chains and registration patterns** — don't stop at the obvious top-level files. Follow imports to find enum definitions, type interfaces, index re-exports, config declarations, and other files in the dependency chain. For example, if a new command requires updating both `commands.ts` and an enum in `models/enums.ts`, include both. If a feature has a registration step in an index file, include that too. **If the analysis found pointer files or non-standard locations** (e.g., a changelog that lives in `docs/changelog/` instead of the root), use the real path in the matrix — never reference the pointer file.
+  Populate the matrix with **real file paths and real patterns** from the repo. **Trace import chains and registration patterns** — don't stop at the obvious top-level files. Follow imports to find enum definitions, type interfaces, index re-exports, config declarations, and other files in the dependency chain.
+
+  For example, if a new command requires updating both `commands.ts` and an enum in `models/enums.ts`, include both. If a feature has a registration step in an index file, include that too.
+
+  **If the analysis found pointer files or non-standard locations** (e.g., a changelog that lives in `docs/changelog/` instead of the root), use the real path in the matrix — never reference the pointer file.
 
 ### Monorepo: Area-scoped instructions
 
@@ -357,9 +385,9 @@ Include only what differs from root conventions — framework patterns, test set
 
 ## Step 4 — Generate .github/copilot-setup-steps.yml
 
-If `.github/copilot-setup-steps.yml` does not already exist, create it with steps to:
+If `.github/copilot-setup-steps.yml` does not already exist, create it.
 
-If it already exists, read it and verify that runtime versions, install commands, and build steps still match the current project. Flag any mismatches as "Could Be Better" suggestions.
+If it already exists, verify that runtime versions, install commands, and build steps still match the current project. Flag mismatches as "Could Be Better" suggestions.
 
 Steps to include (or verify):
 
@@ -371,7 +399,9 @@ Steps to include (or verify):
 
 Base every step on the analysis results from Step 1. Use the exact commands and versions the project actually uses.
 
-**Derive from existing CI when possible.** If the repo already has a CI workflow (`.github/workflows/`), use it as the source of truth for SDK versions, restore commands, and build steps. The setup steps should mirror CI — not invent new commands.
+**Derive from existing CI when possible.** If the repo already has a CI workflow (`.github/workflows/`), use it as the source of truth for SDK versions, restore commands, and build steps. Mirror CI — don't invent new commands.
+
+*Why?*: The CI workflow already has the correct SDK versions, restore commands, and build steps. Don't reinvent them — mirror them.
 
 **Multi-target frameworks (.NET):** If `.csproj` files use `<TargetFrameworks>` (plural) with multiple targets (e.g., `net8.0;net9.0;net10.0`), the setup steps must install **all** required SDK versions. Check every `.csproj` for `TargetFramework` and `TargetFrameworks` properties and collect the full set of versions needed.
 
@@ -435,7 +465,11 @@ Note which servers were added and why in the "What I Did" report section. If no 
 
 Check `.github/workflows/` for any existing workflow that triggers on `pull_request`. If none exists, create `.github/workflows/ci.yml` with:
 
-- **Triggers:** `pull_request` (all branches) and `push` to the **default branch** (detected in Step 0b — do not hardcode `main`), with **path filters** so CI only runs when code actually changes. Use `paths-ignore` to skip documentation-only and config-only changes:
+- **Triggers:** `pull_request` (all branches) and `push` to the **default branch** (detected in Step 0b — do not hardcode `main`), with **path filters** so CI only runs when code actually changes.
+
+  *Why?*: Without path filters, every docs typo fix triggers a full build. Path filters keep CI fast and focused on real code changes.
+
+  Use `paths-ignore` to skip documentation-only and config-only changes:
   ```yaml
   on:
     pull_request:
@@ -466,7 +500,7 @@ Check `.github/workflows/` for any existing workflow that triggers on `pull_requ
   - Runs the test suite
 - Match the project's actual build/test toolchain from the analysis
 
-**Do NOT modify or replace any existing workflow files.**
+**Never modify or replace existing workflow files.**
 
 ---
 
@@ -478,7 +512,9 @@ If `.github/ISSUE_TEMPLATE/` does not already exist, create:
 - **Feature Request** (`feature-request.yml`) — a structured form for proposing new features (description, motivation, alternatives considered).
 - **Project-Specific Templates** — if the project type warrants it, add a third template (e.g., "New Game Proposal" for a game project, "New Integration" for a platform with plugins, "API Change" for an API-heavy project).
 
-Use the YAML issue form format (not the older markdown template format).
+Use the **YAML issue form format** (not the older markdown template format).
+
+*Why?*: YAML forms give contributors structured fields instead of a blank text box. Structured reports are easier to triage and less likely to be missing critical info.
 
 **If old-format markdown templates exist** (`.md` files in `.github/ISSUE_TEMPLATE/` that are not `config.yml`), note them in the report as a "Could Be Better" suggestion: _"Consider converting `{filename}` from the old markdown template format to the newer YAML form format for consistency and better user experience."_ Do not delete or overwrite the old templates.
 
@@ -505,6 +541,8 @@ If `README.md` exists at the repo root but does not contain a "Contributing" sec
   See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute, including setup, testing, and PR conventions.
   ```
   Do not duplicate the content — link to it.
+
+  *Why?*: Duplicated content drifts apart. One source of truth with a link from README keeps things in sync.
 - **If no `CONTRIBUTING.md` exists**, add a `## Contributing` section near the end of the README with:
   - A suggestion to use Copilot CLI for contributions, with an example prompt in a code block:
     ```
@@ -513,7 +551,7 @@ If `README.md` exists at the repo root but does not contain a "Contributing" sec
   - How to fork, branch, and submit a PR
   - How to run tests locally (exact commands)
   - A link to `AGENTS.md` for the full contributor guide
-- **Do NOT rewrite or restructure the rest of the README** — only append the Contributing section.
+- **Never rewrite or restructure the rest of the README** — only append the Contributing section.
 
 If a Contributing section already exists, skip this step.
 
@@ -527,7 +565,11 @@ The maintenance matrix should already be part of `copilot-instructions.md` (gene
 - What must be updated when different parts of the codebase change
 - Cross-cutting concerns (e.g., version numbers in multiple files, route registrations, module re-exports)
 
-**Trace actual dependency graphs**, not just top-level files. Language-specific techniques:
+**Trace actual dependency graphs**, not just top-level files.
+
+*Why?*: The obvious files are easy. It's the hidden dependencies — the enum that must match, the index that must re-export, the config that must register — that trip up contributors. Trace the full chain.
+
+Language-specific techniques:
 
 | Language | How to trace |
 |----------|-------------|
@@ -743,8 +785,8 @@ _"Would you like me to create a branch and open a PR with these changes?"_
 If the user agrees:
 
 1. **Check push permissions** from Step 0b.
-2. **If the user has push access**: create a feature branch (e.g., `feat/ai-ready-config`), commit all new/modified files (including the badge), push, and open a PR targeting the **default branch** (detected in Step 0b — do not assume `main`).
-3. **If the user does NOT have push access**: use a fork-based flow automatically — fork the repo (`gh repo fork --clone=false`), add the fork as a remote, push the branch to the fork, then open a cross-fork PR (`gh pr create --head {user}:feat/ai-ready-config`). Do not ask the user to figure out the fork workflow — handle it end-to-end.
+2. **If the user has push access**: create a feature branch (e.g., `feat/ai-ready-config`), commit all new/modified files (including the badge), push, and open a PR targeting the **default branch** (detected in Step 0b — never assume `main`).
+3. **If the user does NOT have push access**: use a fork-based flow automatically — fork the repo (`gh repo fork --clone=false`), add the fork as a remote, push the branch to the fork, then open a cross-fork PR (`gh pr create --head {user}:feat/ai-ready-config`). Handle it end-to-end — never ask the user to figure out the fork workflow.
 
 Include a summary of what was added and the before/after score in the PR body. If the user declines, end the session gracefully.
 
@@ -767,14 +809,20 @@ Rules for filling in the template:
 - **NEVER open a pager** — append `| cat` to every `gh api`, `gh pr list`, `gh release list`, `gh issue list`, `git log`, `git diff`, and any other `gh` or `git` command that might paginate. Use `git --no-pager` for git commands. A pager will hang the session.
 
 - **NEVER overwrite existing files** — only create assets that are missing.
-- **ALWAYS customize to the repo's actual language, framework, and patterns** — do not produce generic boilerplate.
-- **Self-consistency — every generated file must follow the conventions you establish.** The skill creates `copilot-instructions.md` with conventions, and then creates other files (CI workflows, issue templates, AGENTS.md, setup steps) in the same PR. If Copilot code review reviews that PR, it should find **zero issues**. Before finalizing files, cross-check: does the CI workflow follow the YAML style you documented? Does AGENTS.md follow the markdown conventions you set? Do issue templates match the patterns you prescribed? If any generated file contradicts the conventions in `copilot-instructions.md`, fix the file before creating it. The skill's own PR is the first test of its output — it must pass its own rules.
-- **GitHub-native by default** — you are almost certainly in a GitHub repo. Use GitHub MCP tools and `gh` CLI to auto-discover repo metadata, community health, PR patterns, and contribution history. Never ask the user to explain what their repo is or what tools they use — discover it automatically. If GitHub tools are unavailable, fall back to local git + filesystem analysis.
-- **Mine PR reviews for conventions** — the maintainer's repeated review feedback is the most valuable source of conventions. Turn it into `copilot-instructions.md` rules so the AI stops making the same mistakes.
-- **Prefer specific, actionable instructions over generic advice** — include real file paths, real commands, and real patterns from the repo.
-- **If the repo already has some AI config, respect it and fill in the gaps** — treat existing config as authoritative.
+- **ALWAYS customize to the repo's actual language, framework, and patterns** — never produce generic boilerplate.
+- **Self-consistency — every generated file must follow the conventions you establish.** The skill creates `copilot-instructions.md` with conventions, then creates other files (CI workflows, issue templates, AGENTS.md, setup steps) in the same PR. Copilot code review should find **zero issues** in that PR.
+
+  Before finalizing files, cross-check: Does the CI workflow follow the YAML style you documented? Does AGENTS.md follow the markdown conventions you set? Do issue templates match the patterns you prescribed? If any generated file contradicts the conventions in `copilot-instructions.md`, fix it before creating it.
+
+  *Why?*: The skill's own PR is the first test of its output. If Copilot code review finds issues in the PR that created the conventions, the conventions aren't worth much.
+- **GitHub-native by default** — you are almost certainly in a GitHub repo. Use GitHub MCP tools and `gh` CLI to auto-discover repo metadata, community health, PR patterns, and contribution history. Never ask the user to explain what their repo is or what tools they use — discover it automatically.
+
+  If GitHub tools are unavailable, fall back to local git + filesystem analysis.
+- **Mine PR reviews for conventions** — the maintainer's repeated review feedback is the most valuable source of conventions. Turn it into `copilot-instructions.md` rules so AI stops making the same mistakes.
+- **Be specific and actionable** — include real file paths, real commands, and real patterns from the repo. Never produce generic advice.
+- **Respect existing AI config** — if the repo already has configuration, treat it as authoritative and fill in the gaps.
 - **Generate asset/content rules only if the project has assets** (images, sounds, fonts, models, etc.).
 - **Use the `create` tool to write files** — never use `edit` to create a new file from scratch.
-- **Run the full analysis first (Steps 0 and 1)** — do not guess at the repo's structure or toolchain. Every generated asset must be based on evidence from the analysis.
-- **ALWAYS display the AI-Readiness Report at the end** — use the exact format from the summary step. This is the user-facing output. Do not skip it, abbreviate it, or use a different layout.
+- **Run the full analysis first (Steps 0 and 1)** — never guess at the repo's structure or toolchain. Every generated asset must be based on evidence from the analysis.
+- **ALWAYS display the AI-Readiness Report at the end** — use the exact format from the summary step. This is the user-facing output. Never skip, abbreviate, or restructure it.
 - **NEVER use markdown headings (`#`, `##`, `###`) in your output to the user** — headings render in red/colored text in most terminals. Use **bold text** with emojis instead (e.g., `✅ **Nailed It (9)**`). This applies to the AI-Readiness Report and all other user-facing output during the skill execution.
