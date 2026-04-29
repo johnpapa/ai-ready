@@ -67,8 +67,21 @@ TypeScript (99%) · VS Code Extension API · Mocha (87 tests) · `npm run build`
 
 ---
 
-🚀 **Ready?**
+🚀 **What's Next?**
 
-1. Review the proposed files above and let me know if you'd like to tweak anything
-2. When you're happy, I'll create a branch and open a PR with these changes
-3. After merging, enable Copilot code review: **Settings → Copilot → Code review**
+👉 **Create the PR now** — just say:
+```
+create a branch and open a PR with these changes
+```
+
+👉 **Tweak first** — tell me what to change:
+```
+update the AGENTS.md to include more detail about the command registration pattern
+```
+
+👉 **Share the report** — want a visual version for your team?
+```
+generate an HTML report I can share
+```
+
+👉 **Skip for now** — no worries, the analysis is done. Come back anytime and say `make this repo ai-ready` to pick up where you left off.

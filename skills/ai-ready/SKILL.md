@@ -720,11 +720,24 @@ _For monorepos: list each `.github/instructions/{area}.instructions.md` file cre
 
 ---
 
-🚀 **Ready?**
+🚀 **What's Next?**
 
-1. Review the proposed changes above and let me know if you'd like to tweak anything
-2. When you're happy, I'll create a branch and open a PR with these changes
-3. After merging, enable Copilot code review: **Settings → Copilot → Code review**
+👉 **Create the PR now** — just say:
+```
+create a branch and open a PR with these changes
+```
+
+👉 **Tweak first** — tell me what to change:
+```
+update the AGENTS.md to include more detail about the command registration pattern
+```
+
+👉 **Share the report** — want a visual version for your team?
+```
+generate an HTML report I can share
+```
+
+👉 **Skip for now** — no worries, the analysis is done. Come back anytime and say `make this repo ai-ready` to pick up where you left off.
 ```
 
 ### HTML report (optional)
@@ -748,7 +761,7 @@ The file must be self-contained (inline CSS, no external dependencies) and share
 
 Generate the HTML report only when the user asks for it. The terminal output is always the default.
 
-After displaying the report, handle the badge, topic, and PR in this order:
+After displaying the report, handle the badge and PR in this order:
 
 ### 11a. Add AI-Ready badge
 
@@ -760,23 +773,9 @@ Check if the README already contains an `AI--Ready` badge. If it does not, **aut
 
 The badge is a static Shields.io image with zero dependencies. It links back to the ai-ready plugin repo so others can discover it. Include this in the "What I Did" section of the report as a `➕ Create` action.
 
-### 11b. Add GitHub topic
+### 11b. Offer to create the PR
 
-Check the topics fetched in Step 0b. If the repo does not already have the `ai-ready` topic:
-
-1. **Check push permissions** — use the push access result from Step 0b. If the user does not have push access, skip the topic and move on silently (the topic is a nice-to-have, not a blocker).
-2. **If the user has push access**, automatically add it:
-   ```bash
-   gh repo edit --add-topic ai-ready | cat
-   ```
-
-This makes the repo discoverable at `github.com/topics/ai-ready` alongside other AI-ready repos. This is repo metadata, not a file change — apply it immediately regardless of whether a PR is created.
-
-**If the command fails unexpectedly**, ask the user: _"I couldn't add the `ai-ready` topic — would you like me to try again, or should we skip it?"_ Do **not** dump a raw command for the user to copy-paste. If the user wants to skip, move on silently.
-
-### 11c. Offer to create the PR
-
-After displaying the report and handling the badge and topic, **ask the user** if they want to create a branch and open a PR. Do not tell them to type a command — ask them directly:
+After displaying the report and handling the badge, **ask the user** if they want to create a branch and open a PR. Do not tell them to type a command — ask them directly:
 
 _"Would you like me to create a branch and open a PR with these changes?"_
 
