@@ -1,20 +1,20 @@
-# AI Ready (a Copilot CLI Plugin)
+# AI Ready
 
 [![AI Ready](https://img.shields.io/badge/AI--Ready-yes-brightgreen?style=flat)](https://github.com/johnpapa/ai-ready)
 
-> ⚠️ **Experimental** — This plugin is under active development. It works, but expect rough edges. Feedback and contributions welcome.
+> ⚠️ **Experimental** — Under active development. It works, but expect rough edges. Feedback and contributions welcome.
 
-A Copilot CLI plugin that analyzes your repository and generates the configuration files AI agents need to contribute correctly. **GitHub-native** — it auto-discovers your repo's context, community health, and PR review patterns without you explaining anything.
+A Copilot CLI skill that analyzes your repository and generates the configuration files AI agents need to contribute correctly. **GitHub-native** — it auto-discovers your repo's context, community health, and PR review patterns without you explaining anything.
 
 ## Quick Start
 
-Install the plugin:
+Install the skill:
 
 ```bash
-copilot plugin install johnpapa/ai-ready
+mkdir -p ~/.copilot/skills/ai-ready
+curl -fsSL https://raw.githubusercontent.com/johnpapa/ai-ready/main/skills/ai-ready/SKILL.md \
+  -o ~/.copilot/skills/ai-ready/SKILL.md
 ```
-
-> 📦 Once [awesome-copilot marketplace](https://github.com/github/awesome-copilot) listing is live, install with `copilot plugin install ai-ready@awesome-copilot`
 
 Run it:
 
@@ -28,21 +28,32 @@ Then type:
 make this repo ai-ready
 ```
 
-The plugin analyzes your code, CI, tests, docs, and structure, then generates assets customized to your project — not generic templates.
+The skill analyzes your code, CI, tests, docs, and structure, then generates assets customized to your project — not generic templates.
+
+> 💡 **Also available as a plugin** — if you prefer one-command install: `copilot plugin install johnpapa/ai-ready`
+
+### Install for a single repo
+
+Instead of your personal skills directory, add it directly to the repo:
+
+```bash
+mkdir -p .github/skills/ai-ready
+curl -fsSL https://raw.githubusercontent.com/johnpapa/ai-ready/main/skills/ai-ready/SKILL.md \
+  -o .github/skills/ai-ready/SKILL.md
+```
 
 ### Run it again anytime
 
-The plugin is safe to re-run. On the first run, it creates missing assets. On subsequent runs, it **audits** your existing AI-ready files against the current state of your codebase — flagging drift like outdated build commands, stale repo structure, or new PR review patterns that should become conventions. It never overwrites your files — it suggests updates and lets you decide.
+The skill is safe to re-run. On the first run, it creates missing assets. On subsequent runs, it **audits** your existing AI-ready files against the current state of your codebase — flagging drift like outdated build commands, stale repo structure, or new PR review patterns that should become conventions. It never overwrites your files — it suggests updates and lets you decide.
 
 ### Keeping updated
 
-The plugin doesn't auto-update. To get the latest features and fixes:
+Re-run the `curl` command to pull the latest version:
 
 ```bash
-copilot plugin install johnpapa/ai-ready
+curl -fsSL https://raw.githubusercontent.com/johnpapa/ai-ready/main/skills/ai-ready/SKILL.md \
+  -o ~/.copilot/skills/ai-ready/SKILL.md
 ```
-
-Re-running the install command pulls the latest version from the repo.
 
 ### Skip what you don't need
 
@@ -55,28 +66,6 @@ make this repo ai-ready but skip CI and issue templates
 ```
 just generate AGENTS.md and copilot-instructions
 ```
-
-### Use without installing
-
-If your organization restricts external plugins, you can use the skill directly — no plugin install needed.
-
-**Add to a single repo** — copy the skill into your repo's `.github/skills/` directory:
-
-```bash
-mkdir -p .github/skills/ai-ready
-curl -fsSL https://raw.githubusercontent.com/johnpapa/ai-ready/main/skills/ai-ready/SKILL.md \
-  -o .github/skills/ai-ready/SKILL.md
-```
-
-**Add for all your repos** — copy it to your personal skills directory:
-
-```bash
-mkdir -p ~/.copilot/skills/ai-ready
-curl -fsSL https://raw.githubusercontent.com/johnpapa/ai-ready/main/skills/ai-ready/SKILL.md \
-  -o ~/.copilot/skills/ai-ready/SKILL.md
-```
-
-Then start `copilot` and say `make this repo ai-ready` — it works the same way. The tradeoff: you won't get automatic updates when the skill improves. Re-run the `curl` command to pull the latest version.
 
 ## What to Expect
 
@@ -109,15 +98,15 @@ Your score is simple: **how many of the 12 tracked assets are nailed.** That's i
 
 Contributors (human and AI) show up to your repo and don't know the conventions. They submit PRs that miss tests, break patterns, skip docs. You leave the same review comments on every PR. AI agents make this more challenging — they generate PRs faster, but without context, those PRs create _more_ review burden.
 
-It's the same gap from both sides: **contributors don't know what maintainers expect, and maintainers keep re-teaching it.** This plugin closes that gap by generating repo-level configuration that teaches everyone — human and AI — how to work in the repo correctly. It even mines your PR review comments for repeated feedback and turns them into automated conventions. The result: a 45-minute review becomes a 5-minute review.
+It's the same gap from both sides: **contributors don't know what maintainers expect, and maintainers keep re-teaching it.** This skill closes that gap by generating repo-level configuration that teaches everyone — human and AI — how to work in the repo correctly. It even mines your PR review comments for repeated feedback and turns them into automated conventions. The result: a 45-minute review becomes a 5-minute review.
 
 ### Built from Real Maintainer Experience
 
-This plugin isn't theoretical — it's shaped by [John Papa](https://github.com/johnpapa)'s experience maintaining popular open source projects and repos at large enterprises. The skill is tuned to prioritize what actually reduces review burden: maintenance matrices that catch the files contributors always forget, conventions mined from the PR feedback you're tired of repeating, and CI that catches problems before you have to.
+This skill isn't theoretical — it's shaped by [John Papa](https://github.com/johnpapa)'s experience maintaining popular open source projects and repos at large enterprises. The skill is tuned to prioritize what actually reduces review burden: maintenance matrices that catch the files contributors always forget, conventions mined from the PR feedback you're tired of repeating, and CI that catches problems before you have to.
 
 ## How It Works — GitHub-Native by Default
 
-You shouldn't have to explain to an AI tool that you're in a GitHub repo. This plugin assumes it, and leverages everything GitHub already knows about your project.
+You shouldn't have to explain to an AI tool that you're in a GitHub repo. This skill assumes it, and leverages everything GitHub already knows about your project.
 
 ### Auto-Discovery (zero user input)
 
@@ -137,7 +126,7 @@ It then scans your local codebase for deeper details — manifest files, test co
 
 ### PR Review Mining — The Killer Feature
 
-This is the highest-value thing the plugin does. It reads your recent PR review threads and looks for **repeated feedback** — the same comments you leave on every PR:
+This is the highest-value thing the skill does. It reads your recent PR review threads and looks for **repeated feedback** — the same comments you leave on every PR:
 
 - _"Please add tests for new features"_ → becomes a test convention rule
 - _"Use the X pattern instead of Y"_ → becomes a coding convention rule
@@ -162,26 +151,18 @@ Every file is customized to your repo's actual language, framework, and patterns
 | **`CHANGELOG.md`** | Keep a Changelog format, populated from releases/tags if available |
 | **`.vscode/mcp.json`** | MCP server config connecting AI agents to your project's databases, APIs, and tools |
 | **README `## Contributing` section** | Onramp for new contributors — how to fork, build, test, and submit a PR |
-| **AI-Ready badge in README** | Shields.io badge linking back to this plugin — added automatically |
-
-### Why a Plugin?
-
-The skill is the recipe. The plugin is how you keep it fresh. You can [use the skill without a plugin](#use-without-installing), but the plugin system adds convenience:
-
-- **One-command install** — `copilot plugin install ai-ready@awesome-copilot`
-- **Versioning and updates** — `copilot plugin update ai-ready`
-- **Works on any repo** — install once, use everywhere
+| **AI-Ready badge in README** | Shields.io badge linking back to this skill — added automatically |
 
 ## Two Layers of PR Quality
 
-The assets this plugin generates enable two complementary layers of PR quality — one you get automatically, one you enable:
+The assets this skill generates enable two complementary layers of PR quality — one you get automatically, one you enable:
 
 | Layer | What it catches | How it works |
 |-------|----------------|--------------|
-| **CI workflow** (generated by this plugin) | Broken builds, failing tests, lint errors | GitHub Actions runs on every PR — validates that the code compiles and tests pass |
-| **Copilot code review** (you enable this) | Convention violations, missing docs/tests, maintenance matrix gaps | Copilot reads `copilot-instructions.md` (generated by this plugin) and reviews PRs against your conventions |
+| **CI workflow** (generated by this skill) | Broken builds, failing tests, lint errors | GitHub Actions runs on every PR — validates that the code compiles and tests pass |
+| **Copilot code review** (you enable this) | Convention violations, missing docs/tests, maintenance matrix gaps | Copilot reads `copilot-instructions.md` (generated by this skill) and reviews PRs against your conventions |
 
-Together: PRs are validated for **correctness** (CI) and reviewed for **quality** (Copilot). This plugin generates the inputs for both — the CI workflow and the conventions file that Copilot code review reads.
+Together: PRs are validated for **correctness** (CI) and reviewed for **quality** (Copilot). This skill generates the inputs for both — the CI workflow and the conventions file that Copilot code review reads.
 
 To enable Copilot code review: go to your repo's **Settings → Copilot → Code review** and turn it on. Once enabled, every PR is automatically reviewed against the conventions in `copilot-instructions.md`.
 
@@ -190,9 +171,8 @@ To enable Copilot code review: go to your repo's **Settings → Copilot → Code
 ### Quick Start
 
 1. Fork this repo and create a branch
-2. Make your changes (skills, docs, or plugin config)
-3. Verify `plugin.json` references are valid — every path in the `skills` array must point to a directory containing `SKILL.md`
-4. Test locally: `copilot --plugin-dir /path/to/your/fork` then say *"make this repo ai-ready"*
+2. Make your changes (skills or docs)
+3. Test locally: `copilot --plugin-dir /path/to/your/fork` then say *"make this repo ai-ready"*
 5. Open a PR
 
 See [AGENTS.md](AGENTS.md) for the full contributor guide.
