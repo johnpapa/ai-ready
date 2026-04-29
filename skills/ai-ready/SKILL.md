@@ -645,9 +645,15 @@ Display this report:
 Your repo is about to get a whole lot easier to contribute to — and
 a whole lot faster to review. AI agents will know your conventions,
 follow your patterns, and deliver PRs that are ready to merge.
-Let's see where you stand.
 
-**{repo-name}** · {medal} **{level-name}** · {progress-bar} · {nailed} of 12 nailed
+**{repo-name}**
+
+{before-medal} **{before-level}** · {before-progress-bar} · {before-nailed} of 12 nailed
+→ {after-medal} **{after-level}** · {after-progress-bar} · {after-nailed} of 12 nailed
+
+🤖 AI Context        {5 status indicators}
+🔧 Dev Workflow      {4 status indicators}
+📖 Onboarding        {3 status indicators}
 
 | Category | Detail |
 |----------|--------|
@@ -655,6 +661,20 @@ Let's see where you stand.
 | Frameworks | {frameworks} |
 | Tests | {test-runner} ({test-count}) |
 | Build | `{build-command}` |
+
+---
+
+🛠️ **What I Did** — here's what I created to close the gaps:
+
+| Action | Detail |
+|--------|--------|
+| ➕ Create | `{filename}` — {what it will contain} |
+| 🔍 Audit | `{filename}` — {what drifted and suggested fix} |
+| ⏭️ Skip | `{filename}` — skipped (user requested) |
+| 💬 Suggest | {suggestion} |
+| ✅ Skip | {count} files already in great shape |
+
+_For monorepos: list each `.github/instructions/{area}.instructions.md` file created as a separate ➕ Create row._
 
 ---
 
@@ -680,7 +700,7 @@ _Show this section when consistency issues are found — skip it when everything
 
 ---
 
-📊 **Current State** — here's what your repo has today, before any changes:
+📊 **Where Things Stand** — the full assessment:
 
 ✅ **Nailed It ({count})**
 
@@ -696,6 +716,8 @@ _Show this section when consistency issues are found — skip it when everything
 | {asset-name} | {suggestion} |
 | ... | ... |
 
+_Why these matter:_ {brief explanation of why the could-be-better items are worth improving}
+
 ⭕ **Missing ({count})**
 
 | Asset | Why it matters |
@@ -703,25 +725,7 @@ _Show this section when consistency issues are found — skip it when everything
 | {asset-name} | {why it matters} |
 | ... | ... |
 
----
-
-🛠️ **What I Did** — here's what I created to close the gaps:
-
-| Action | Detail |
-|--------|--------|
-| ➕ Create | `{filename}` — {what it will contain} |
-| 🔍 Audit | `{filename}` — {what drifted and suggested fix} |
-| ⏭️ Skip | `{filename}` — skipped (user requested) |
-| 💬 Suggest | {suggestion} |
-| ✅ Skip | {count} files already in great shape |
-
-_For monorepos: list each `.github/instructions/{area}.instructions.md` file created as a separate ➕ Create row._
-
-**Updated Score:** {new-medal} **{new-level-name}** · {updated-progress-bar} · {new-nailed} of 12 nailed
-
-🤖 AI Context        {5 status indicators}
-🔧 Dev Workflow      {4 status indicators}
-📖 Onboarding        {3 status indicators}
+_Why these matter:_ {brief explanation of what the missing items cost the repo}
 
 ---
 

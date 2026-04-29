@@ -3,9 +3,15 @@
 Your repo is about to get a whole lot easier to contribute to — and
 a whole lot faster to review. AI agents will know your conventions,
 follow your patterns, and deliver PRs that are ready to merge.
-Let's see where you stand.
 
-**johnpapa/vscode-peacock** · 🥈 **On Track** · 🟩🟩🟩🟩🟩🟨🟨⬜⬜⬜⬜⬜ · 5 of 12 nailed
+**johnpapa/vscode-peacock**
+
+🥈 **On Track** · 🟩🟩🟩🟩🟩🟨🟨⬜⬜⬜⬜⬜ · 5 of 12 nailed
+→ 🏆 **AI-Ready** · 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 · 12 of 12 nailed
+
+🤖 AI Context        ✅✅✅✅✅
+🔧 Dev Workflow      ✅✅✅✅
+📖 Onboarding        ✅✅✅
 
 | Category | Detail |
 |----------|--------|
@@ -16,7 +22,22 @@ Let's see where you stand.
 
 ---
 
-📊 **Current State** — here's what your repo has today, before any changes:
+🛠️ **What I Did** — here's what I created to close the gaps:
+
+| Action | Detail |
+|--------|--------|
+| ➕ Create | `AGENTS.md` — repo structure, build/test commands, how to add a color command |
+| ➕ Create | `.github/copilot-instructions.md` — TypeScript conventions, VS Code extension patterns, maintenance matrix |
+| ➕ Create | `.github/copilot-setup-steps.yml` — Node 20, npm install, npm run build |
+| ➕ Create | `.github/PULL_REQUEST_TEMPLATE.md` — description, changes, test steps, checklist |
+| ➕ Create | `.github/ISSUE_TEMPLATE/bug-report.yml` — structured form with VS Code version, OS, Peacock settings |
+| ➕ Create | `.github/ISSUE_TEMPLATE/feature-request.yml` — description, motivation, alternatives |
+| ⏭️ Skip | `.vscode/mcp.json` — N/A, no database or API dependencies |
+| 💬 Suggest | Convert old `.md` issue templates to YAML form format for consistency |
+
+---
+
+📊 **Where Things Stand** — the full assessment:
 
 ✅ **Nailed It (5)**
 
@@ -35,6 +56,8 @@ Let's see where you stand.
 | Issue templates | Has old-format `.md` templates — consider converting to YAML form format |
 | `.github/copilot-instructions.md` | No PR review patterns captured — 12 merged PRs had no review comments |
 
+*Why these matter:* YAML form templates give contributors structured fields instead of a blank text box. PR review mining turns repeated feedback into automated conventions — but it needs review comments to mine.
+
 ⭕ **Missing (5)**
 
 | Asset | Why it matters |
@@ -45,26 +68,7 @@ Let's see where you stand.
 | PR template | PRs have no structured description, checklist, or test instructions |
 | `.vscode/mcp.json` | No MCP servers configured — N/A (no database or API dependencies detected) |
 
----
-
-🛠️ **What I Did** — here's what I created to close the gaps:
-
-| Action | Detail |
-|--------|--------|
-| ➕ Create | `AGENTS.md` — repo structure, build/test commands, how to add a color command |
-| ➕ Create | `.github/copilot-instructions.md` — TypeScript conventions, VS Code extension patterns, maintenance matrix |
-| ➕ Create | `.github/copilot-setup-steps.yml` — Node 20, npm install, npm run build |
-| ➕ Create | `.github/PULL_REQUEST_TEMPLATE.md` — description, changes, test steps, checklist |
-| ➕ Create | `.github/ISSUE_TEMPLATE/bug-report.yml` — structured form with VS Code version, OS, Peacock settings |
-| ➕ Create | `.github/ISSUE_TEMPLATE/feature-request.yml` — description, motivation, alternatives |
-| ➕ Create | `.vscode/mcp.json` — N/A, skipped (no database or API dependencies) |
-| 💬 Suggest | Convert old `.md` issue templates to YAML form format for consistency |
-
-**Updated Score:** 🏆 **AI-Ready** · 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 · 12 of 12 nailed
-
-🤖 AI Context        ✅✅✅✅✅
-🔧 Dev Workflow      ✅✅✅✅
-📖 Onboarding        ✅✅✅
+*Why these matter:* Without AGENTS.md and a maintenance matrix, every AI agent (and new contributor) has to rediscover which files need updating when something changes. That's the knowledge that lives in a maintainer's head — until now.
 
 ---
 
