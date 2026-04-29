@@ -114,6 +114,14 @@ Your score is simple: **how many of the 12 tracked assets are nailed.** That's i
 
 > 📄 See a [sample terminal report](examples/sample-report-peacock.md) and [sample HTML report](examples/sample-report-peacock.html) generated for [vscode-peacock](https://github.com/johnpapa/vscode-peacock).
 
+### HTML Report
+
+Need to share results with your team? Ask for an HTML report and get a self-contained file you can open in any browser, attach to an email, or post to a wiki.
+
+![HTML readiness report](images/report-html.png)
+
+> 🔗 [View the interactive version](https://johnpapa.github.io/ai-ready/examples/sample-report-peacock.html) — collapsible sections, responsive layout, works on mobile.
+
 ## Why
 
 Contributors (human and AI) show up to your repo and don't know the conventions. They submit PRs that miss tests, break patterns, skip docs. You leave the same review comments on every PR. AI agents make this more challenging — they generate PRs faster, but without context, those PRs create _more_ review burden.
