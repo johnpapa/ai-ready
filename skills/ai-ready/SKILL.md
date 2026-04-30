@@ -862,3 +862,36 @@ Rules for filling in the template:
 - **Run the full analysis first (Steps 0 and 1)** — never guess at the repo's structure or toolchain. Every generated asset must be based on evidence from the analysis.
 - **ALWAYS display the AI-Readiness Report at the end** — use the exact format from the summary step. This is the user-facing output. Never skip, abbreviate, or restructure it.
 - **NEVER use markdown headings (`#`, `##`, `###`) in your output to the user** — headings render in red/colored text in most terminals. Use **bold text** with emojis instead (e.g., `✅ **Nailed It (9)**`). This applies to the AI-Readiness Report and all other user-facing output during the skill execution.
+
+---
+
+## Training Repos
+
+This skill's heuristics — especially course detection, notebook handling, and multi-language support — were trained and validated against these repos. Use them for regression testing when making changes to the skill.
+
+**Course/Tutorial repos:**
+- `github/copilot-cli-for-beginners` — Copilot CLI course (markdown + Python)
+- `microsoft/ai-agents-for-beginners` — AI agents course (markdown + notebooks + Python/C#)
+- `microsoft/generative-ai-for-beginners` — GenAI course (markdown + notebooks + Python/JS/TS)
+- `microsoft/mcp-for-beginners` — MCP tutorial (markdown + TS/Python/Java/C#)
+- `microsoft/langchainjs-for-beginners` — LangChain.js course (markdown + TypeScript)
+- `microsoft/langchain-for-beginners` — LangChain course (markdown + Python)
+- `microsoft/langchain4j-for-beginners` — LangChain4j course (markdown + Java)
+- `microsoft/ML-For-Beginners` — Machine Learning course (markdown + notebooks + Python)
+- `microsoft/Web-Dev-For-Beginners` — Web development course (markdown + JS/HTML/CSS)
+- `microsoft/AI-For-Beginners` — AI course (markdown + notebooks + Python)
+- `microsoft/Data-Science-For-Beginners` — Data science course (markdown + notebooks + Python)
+- `microsoft/IoT-For-Beginners` — IoT course (markdown + hardware samples)
+- `microsoft/Generative-AI-for-beginners-dotnet` — GenAI .NET course (markdown + C#)
+- `microsoft/generative-ai-for-beginners-java` — GenAI Java course (markdown + Java)
+- `microsoft/AZD-for-beginners` — Azure Developer CLI tutorial (markdown + CLI examples)
+- `microsoft/edgeai-for-beginners` — Edge AI course (markdown + sample apps)
+- `microsoft/xr-development-for-beginners` — XR/Unity course (markdown + Unity/C#)
+
+**Application repos:**
+- `johnpapa/vscode-peacock` — VS Code extension (TypeScript, Mocha tests)
+- `johnpapa/shopathome` — Multi-framework shopping app (Angular 21, React 19, Svelte 5, Vue 3.5, Fastify 5, Azure Functions v4)
+- `johnpapa/angular-styleguide` — Documentation-only style guide (markdown)
+
+**Real-world field tests:**
+- `FritzAndFriends/BlazorWebFormsComponents` — .NET multi-target library (Blazor, C#)
