@@ -182,20 +182,21 @@ Also check for:
 
 Check for **multiple signals** — no single check is definitive:
 
-1. **Numbered folders** — glob for top-level directories matching `NN-*` (e.g., `00-intro`, `01-setup`, `05-advanced`). 3+ matches is a strong signal.
-2. **README content** — scan the root README for course/tutorial language: "lesson", "chapter", "module", "what you'll learn", "prerequisites", "course structure", "hands-on", "assignment". Multiple matches strengthen the signal.
-3. **Repo description/topics** — check the GitHub description and topics (from Step 0b) for terms like "beginners", "course", "tutorial", "workshop", "learn", "curriculum".
-4. **Lesson structure** — check if numbered folders each contain a `README.md` (lesson content) and optionally `assignment.md`, `solution/`, or `code/` subdirectories.
+1. **Numbered folders** — glob for top-level directories matching `NN-*` (e.g., `00-intro`, `01-setup`, `05-advanced`), `N-topic` (e.g., `1-Introduction`, `6-Data-Science-In-Wild`), `Chapter N`, `Module N`, or `Unit N`. 3+ matches is a strong signal.
+2. **README content** — scan the root README for course/tutorial language: "lesson", "chapter", "module", "unit", "what you'll learn", "prerequisites", "course structure", "hands-on", "assignment", "quiz", "curriculum", "week". Multiple matches strengthen the signal.
+3. **Repo description/topics** — check the GitHub description and topics (from Step 0b) for terms like "beginners", "course", "tutorial", "workshop", "learn", "curriculum", "lessons".
+4. **Lesson structure** — check if numbered folders each contain a `README.md` (lesson content) and optionally `assignment.md`, `solution/`, `code/`, `quiz/`, or `notebook/` subdirectories.
 5. **No primary application** — the repo has no root-level `package.json`, `Cargo.toml`, `go.mod`, or other manifest that would indicate a buildable application (individual lesson folders may have their own manifests for code samples).
+6. **Devcontainer** — check for `.devcontainer/` directory. Common in course repos to provide a ready-to-go development environment. If present, credit it as a form of environment setup (similar to copilot-setup-steps.yml).
 
 **A repo is a course if 3+ of these signals are present.** Record it in the findings table as `Repo type: course` with evidence.
 
 **When a repo is a course, the following steps adapt:**
-- **Step 4** (copilot-setup-steps.yml) — skip unless the course has a build step for its code samples
+- **Step 4** (copilot-setup-steps.yml) — skip if a `.devcontainer/` exists (it serves the same purpose for courses). If no devcontainer and no build step, skip entirely.
 - **Step 5** (CI workflow) — skip build/test CI. Suggest markdown validation (link checking, spell check) instead if not already present
-- **Step 3** (copilot-instructions.md) — include lesson structure conventions: expected folder contents, naming patterns, how to add a new lesson
-- **Step 2** (AGENTS.md) — "Adding a New Lesson" section instead of "Adding a New Feature"
-- **Report** — mark skipped assets as "N/A — course repo" instead of "Missing"
+- **Step 3** (copilot-instructions.md) — include lesson structure conventions: expected folder contents, naming patterns, how to add a new lesson. If lessons have quizzes or assignments, document the expected structure (e.g., each lesson needs `README.md` + `assignment.md` + `solution/`)
+- **Step 2** (AGENTS.md) — "Adding a New Lesson" section instead of "Adding a New Feature". Include the lesson template (what files/folders each lesson should contain)
+- **Report** — mark skipped assets as "N/A — course repo" instead of "Missing". Credit `.devcontainer/` in the "Nailed It" section if present.
 
 ### 1b. Detect test setup
 
@@ -221,6 +222,7 @@ Check whether each of these exists:
 - `.github/skills/` (any skill files)
 - `.github/agents/` (any agent files)
 - `.github/extensions/` (any extension files)
+- `.devcontainer/` (devcontainer config — common in course repos and Codespaces-enabled projects. Credit as environment setup if present.)
 
 **If `.github/agents/` or `.github/skills/` contain files, enumerate them.** List each agent/skill by name and note its description (from the file's frontmatter or first comment). These represent significant AI configuration that should be credited in the report. Include a count in the findings table (e.g., "6 custom Copilot skills, 2 custom agents").
 
@@ -316,6 +318,7 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | Push access | yes / no | `gh api repos/{owner}/{repo} --jq '.permissions.push'` |
 | Custom agents | e.g., 2 agents: migration guide, orchestrator | `.github/agents/` |
 | Custom skills | e.g., 6 skills: bunit-test, component-dev, ... | `.github/skills/` |
+| Devcontainer | yes/no | `.devcontainer/` |
 | Monorepo | yes/no | workspace config file |
 | Areas | e.g., frontend (React), backend (Express), shared (TypeScript) | workspace config paths |
 
@@ -379,7 +382,7 @@ Content to include (or verify):
 
   *Why?*: A repo with Python, TypeScript, and Java code needs three sets of conventions — not a blended soup. Agents working in the Python folder should see Python rules, not Java rules.
 - **Notebook Conventions** — include only if `.ipynb` files were detected. Cover: clear cell outputs before committing, pin kernel/runtime version, keep cells focused (one concept per cell), use markdown cells for explanations.
-- **Course/Lesson Conventions** — include only if the repo was detected as a course in Step 1a-ii. Cover: expected folder structure per lesson (e.g., `README.md` + `assignment.md` + `code/`), naming patterns for lesson folders, how to add a new lesson, what content each lesson README must include.
+- **Course/Lesson Conventions** — include only if the repo was detected as a course in Step 1a-ii. Cover: expected folder structure per lesson (e.g., `README.md` + `assignment.md` + `solution/` + `quiz/`), naming patterns for lesson folders (`NN-topic-name`), how to add a new lesson, what content each lesson README must include. If the course has quizzes, document the quiz format and where quiz files live. If the course has a progressive project (code built across lessons), document the dependency chain between lessons.
 - **Framework Patterns** — how the project uses its framework(s) (React component patterns, Express middleware conventions, Django app structure, etc.).
 - **Conventions Mined from PR Reviews** — if Step 0c found repeated review feedback, include those as explicit conventions. For example, if the maintainer frequently asks "add tests for new features," make that a rule. This is the highest-value section — it turns human review fatigue into automated AI guidance.
 - **Test Conventions** — which test runner to use, naming patterns for test files, what to test (unit, integration, e2e), how to run tests.
