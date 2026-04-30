@@ -174,6 +174,28 @@ Also check for:
 - **Lockfiles** — `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `bun.lockb`, `Cargo.lock`, `go.sum`, `poetry.lock`, `Pipfile.lock`
 - **Runtime version files** — `.nvmrc`, `.node-version`, `.python-version`, `.tool-versions`, `.ruby-version`, `rust-toolchain.toml`
 - **Monorepo markers** — `pnpm-workspace.yaml`, `lerna.json`, `nx.json`, `turbo.json`, Cargo workspace, Go workspace
+- **Notebooks** — `*.ipynb` files. If found, note the count and locations. Notebooks are common in course repos, data science projects, and tutorials.
+
+### 1a-ii. Detect course/tutorial repos
+
+*Why?*: Course repos are fundamentally different from application repos. The "product" is markdown lessons and code samples — not a running application. Generating CI, setup steps, or a build pipeline for a course repo misses the point. Detecting this early shapes every later step.
+
+Check for **multiple signals** — no single check is definitive:
+
+1. **Numbered folders** — glob for top-level directories matching `NN-*` (e.g., `00-intro`, `01-setup`, `05-advanced`). 3+ matches is a strong signal.
+2. **README content** — scan the root README for course/tutorial language: "lesson", "chapter", "module", "what you'll learn", "prerequisites", "course structure", "hands-on", "assignment". Multiple matches strengthen the signal.
+3. **Repo description/topics** — check the GitHub description and topics (from Step 0b) for terms like "beginners", "course", "tutorial", "workshop", "learn", "curriculum".
+4. **Lesson structure** — check if numbered folders each contain a `README.md` (lesson content) and optionally `assignment.md`, `solution/`, or `code/` subdirectories.
+5. **No primary application** — the repo has no root-level `package.json`, `Cargo.toml`, `go.mod`, or other manifest that would indicate a buildable application (individual lesson folders may have their own manifests for code samples).
+
+**A repo is a course if 3+ of these signals are present.** Record it in the findings table as `Repo type: course` with evidence.
+
+**When a repo is a course, the following steps adapt:**
+- **Step 4** (copilot-setup-steps.yml) — skip unless the course has a build step for its code samples
+- **Step 5** (CI workflow) — skip build/test CI. Suggest markdown validation (link checking, spell check) instead if not already present
+- **Step 3** (copilot-instructions.md) — include lesson structure conventions: expected folder contents, naming patterns, how to add a new lesson
+- **Step 2** (AGENTS.md) — "Adding a New Lesson" section instead of "Adding a New Feature"
+- **Report** — mark skipped assets as "N/A — course repo" instead of "Missing"
 
 ### 1b. Detect test setup
 
@@ -186,6 +208,9 @@ Also check for:
 - Check `.github/workflows/` — read each YAML file to determine triggers (`pull_request`, `push`), jobs, and steps
 - Note whether PR checks already exist
 - Check for other CI systems: `.gitlab-ci.yml`, `Jenkinsfile`, `.circleci/`, `azure-pipelines.yml`
+- **Recognize community workflows** — workflows like `welcome-issue`, `stale`, `lock`, `greetings`, or `close-stale-issues` are valid automation, not build CI. Don't flag a repo as "missing CI" just because its only workflows are community management. Note them as "community workflows" in the findings.
+
+*Why?*: Many course repos and open source projects have workflows for welcoming new contributors and managing stale issues. That's CI — just not build CI. Flagging it as "missing" is misleading.
 
 ### 1d. Check existing AI configuration
 
@@ -264,6 +289,9 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | Description | e.g., "Copilot CLI plugin..." | GitHub API / repo metadata |
 | Topics | e.g., copilot, skills, ai-ready | GitHub API |
 | Language | e.g., TypeScript (65%), Rust (30%) | GitHub API language breakdown |
+| Multi-language | yes/no — if no single language exceeds 50%, flag as multi-language | GitHub API |
+| Repo type | app / course / docs-only | Step 1a-ii detection |
+| Notebooks | e.g., 12 `.ipynb` files in `lessons/` | glob for `*.ipynb` |
 | Framework | e.g., React, Phaser | `package.json` dependencies |
 | Test runner | e.g., Vitest | `package.json` devDependencies |
 | Test command | e.g., `npm test` | `package.json` scripts.test |
@@ -347,7 +375,11 @@ If it already exists, read it and compare against the current analysis — espec
 
 Content to include (or verify):
 
-- **Language-Specific Conventions** — coding style, idioms, and patterns for the project's primary language(s) (TypeScript, Python, Go, Rust, etc.), derived from the analysis.
+- **Language-Specific Conventions** — coding style, idioms, and patterns for the project's primary language(s) (TypeScript, Python, Go, Rust, etc.), derived from the analysis. **If the repo is multi-language** (no single language exceeds 50%), create separate convention subsections for each language instead of one combined block. Each subsection should cover that language's idioms, style, and patterns independently.
+
+  *Why?*: A repo with Python, TypeScript, and Java code needs three sets of conventions — not a blended soup. Agents working in the Python folder should see Python rules, not Java rules.
+- **Notebook Conventions** — include only if `.ipynb` files were detected. Cover: clear cell outputs before committing, pin kernel/runtime version, keep cells focused (one concept per cell), use markdown cells for explanations.
+- **Course/Lesson Conventions** — include only if the repo was detected as a course in Step 1a-ii. Cover: expected folder structure per lesson (e.g., `README.md` + `assignment.md` + `code/`), naming patterns for lesson folders, how to add a new lesson, what content each lesson README must include.
 - **Framework Patterns** — how the project uses its framework(s) (React component patterns, Express middleware conventions, Django app structure, etc.).
 - **Conventions Mined from PR Reviews** — if Step 0c found repeated review feedback, include those as explicit conventions. For example, if the maintainer frequently asks "add tests for new features," make that a rule. This is the highest-value section — it turns human review fatigue into automated AI guidance.
 - **Test Conventions** — which test runner to use, naming patterns for test files, what to test (unit, integration, e2e), how to run tests.

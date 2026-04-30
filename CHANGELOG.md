@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Course repo detection** (Step 1a-ii) — multi-signal detection (numbered folders + README language + topics + lesson structure + no root manifest) to identify course/tutorial repos and adapt generation accordingly
+- **Notebook awareness** (Step 1a) — detects `.ipynb` files and generates notebook conventions (clear outputs, pin kernel, focused cells)
+- **Multi-language support** (Step 3) — repos with no dominant language get per-language convention sections instead of one blended block
+- **Community workflow recognition** (Step 1c) — welcome/stale/lock workflows are recognized as valid automation, not flagged as "missing CI"
+
 ### Changed
 
 - **Writing style pass** — added *Why?* explanations throughout SKILL.md for key decisions and rules, matching John Papa's Angular Style Guide voice
