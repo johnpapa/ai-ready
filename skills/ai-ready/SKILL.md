@@ -177,6 +177,16 @@ Also check for:
 
   *Why?*: Large open-source libraries like LangChain organize code as multi-package monorepos — dozens of independently published packages under one repo. Treating them as a single package misses cross-package dependencies, per-package build commands, and module-specific conventions.
 - **Notebooks** — `*.ipynb` files. If found, note the count and locations. Notebooks are common in course repos, data science projects, and tutorials.
+- **VS Code extension markers** — check for `contributes` in root `package.json` (commands, themes, snippets, views, menus). If present, this is a **VS Code extension**, not a regular app. Also check for `vsce` or `@vscode/vsce` in devDependencies, and `vscode:prepublish` in scripts. Extensions come in three flavors:
+  - **Functional extensions** — TypeScript code with activation events, commands, webpack/esbuild bundling, tests
+  - **Theme extensions** — JSON theme files, no runtime code, published via `vsce`
+  - **Snippet extensions** — JSON snippet definitions, language-scoped, content-driven not logic-driven
+
+  *Why?*: VS Code extensions look like npm packages but have completely different conventions. The `package.json` IS the product spec — commands, menus, settings, keybindings. Treating them like a web app misses what matters.
+- **Multi-app collections** — multiple independent apps in subdirectories (e.g., `angular/`, `react/`, `svelte/`), each with its own `package.json`, but **no workspace config** tying them together. This is different from a monorepo — there's no shared build or dependency graph. Each app builds and runs independently.
+
+  *Why?*: Not every repo with multiple folders is a monorepo. Some are "collections" — the same concept implemented in different frameworks for comparison or learning. Don't invent workspace tooling where none exists.
+- **Demo app patterns** — a frontend app + mock backend (`json-server`, `db.json`) + proxy config (`proxy.conf.json`, `vite.config.ts` proxy). Common in demo/tutorial repos. If detected, document the mock API setup in AGENTS.md so agents know to start both frontend and backend.
 
 ### 1a-ii. Detect course/tutorial repos
 
@@ -294,8 +304,10 @@ Before proceeding, produce a structured summary combining GitHub context (Step 0
 | Topics | e.g., copilot, skills, ai-ready | GitHub API |
 | Language | e.g., TypeScript (65%), Rust (30%) | GitHub API language breakdown |
 | Multi-language | yes/no — if no single language exceeds 50%, flag as multi-language | GitHub API |
-| Repo type | app / course / docs-only | Step 1a-ii detection |
+| Repo type | app / course / docs-only / VS Code extension / npm package / collection | Step 1a-ii detection |
+| VS Code extension type | functional / theme / snippets (if applicable) | `package.json` contributes field |
 | Notebooks | e.g., 12 `.ipynb` files in `lessons/` | glob for `*.ipynb` |
+| Mock backend | e.g., json-server on port 3000 | `db.json`, proxy config |
 | Framework | e.g., React, Phaser | `package.json` dependencies |
 | Test runner | e.g., Vitest | `package.json` devDependencies |
 | Test command | e.g., `npm test` | `package.json` scripts.test |
@@ -900,9 +912,24 @@ This skill's heuristics — especially course detection, notebook handling, and 
 - `microsoft/xr-development-for-beginners` — XR/Unity course (markdown + Unity/C#)
 
 **Application repos:**
-- `johnpapa/vscode-peacock` — VS Code extension (TypeScript, Mocha tests)
+- `johnpapa/vscode-peacock` — VS Code functional extension (TypeScript, Mocha tests)
 - `johnpapa/shopathome` — Multi-framework shopping app (Angular 21, React 19, Svelte 5, Vue 3.5, Fastify 5, Azure Functions v4)
 - `johnpapa/angular-styleguide` — Documentation-only style guide (markdown)
+- `johnpapa/heroes-angular` — Standard Angular SPA with json-server backend, Cypress, proxy config
+- `johnpapa/heroes-vue` — Vue SPA with separate API package, not a monorepo
+- `johnpapa/heroes-react` — React SPA (CRA-era) with json-server, proxy, Docker, env files
+
+**npm packages:**
+- `johnpapa/lite-server` — Small CLI package (JS, Mocha/Istanbul tests, bin/ entry point)
+
+**Multi-app collections:**
+- `johnpapa/hello-worlds` — Angular/React/Svelte/Vue demos, independent apps, no workspace
+- `johnpapa/http-interceptors` — Same concept in Angular + Svelte, comparison monorepo
+
+**VS Code extension variants:**
+- `johnpapa/vscode-cloak` — Functional extension (TypeScript, webpack, commands + settings)
+- `johnpapa/vscode-winteriscoming` — Theme extension (JSON theme files, no runtime code)
+- `johnpapa/vscode-angular-snippets` — Snippets extension (JSON snippets, language-scoped, devcontainer)
 
 **Large open-source library monorepos:**
 - `langchain-ai/langchain` — Python multi-package monorepo (`libs/*`), pyproject.toml per package, AGENTS.md + CLAUDE.md
