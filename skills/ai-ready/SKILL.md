@@ -173,7 +173,9 @@ Use glob to find manifest files. Read each one with view to extract details:
 Also check for:
 - **Lockfiles** — `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `bun.lockb`, `Cargo.lock`, `go.sum`, `poetry.lock`, `Pipfile.lock`
 - **Runtime version files** — `.nvmrc`, `.node-version`, `.python-version`, `.tool-versions`, `.ruby-version`, `rust-toolchain.toml`
-- **Monorepo markers** — `pnpm-workspace.yaml`, `lerna.json`, `nx.json`, `turbo.json`, Cargo workspace, Go workspace
+- **Monorepo markers** — `pnpm-workspace.yaml`, `lerna.json`, `nx.json`, `turbo.json`, Cargo workspace, Go workspace. Also check for **large library monorepos**: Maven aggregator (`pom.xml` with `<modules>`), Python multi-package (`libs/` directory with multiple `pyproject.toml`), or Turborepo + Changesets (`turbo.json` + `.changeset/`).
+
+  *Why?*: Large open-source libraries like LangChain organize code as multi-package monorepos — dozens of independently published packages under one repo. Treating them as a single package misses cross-package dependencies, per-package build commands, and module-specific conventions.
 - **Notebooks** — `*.ipynb` files. If found, note the count and locations. Notebooks are common in course repos, data science projects, and tutorials.
 
 ### 1a-ii. Detect course/tutorial repos
@@ -339,7 +341,16 @@ For each existing asset where you find drift, classify it as **"Could Be Better"
 
 ### 1j. Detect monorepo areas
 
-If a workspace config was found in Step 1a, read it to find package/project paths (e.g., `packages/*`, `apps/*`). List each area — name, path glob, and primary stack — and note which areas have conventions that differ from root.
+If a workspace config was found in Step 1a, read it to find package/project paths (e.g., `packages/*`, `apps/*`, `libs/*`). List each area — name, path glob, and primary stack — and note which areas have conventions that differ from root.
+
+**For large library monorepos** (Maven aggregator, Python `libs/`, pnpm workspace with many packages):
+- List each published package/module separately with its purpose (e.g., `langchain4j-core`, `langchain4j-open-ai`, `langchain4j-ollama`)
+- Note the module taxonomy if one exists (core vs providers vs integrations vs experimental)
+- Identify **cross-package dependencies** — which packages depend on which. Changes to core packages ripple to all dependents.
+- Detect **release tooling** — Changesets (`.changeset/`), semantic-release, Maven release plugin, or manual versioning. Document in the maintenance matrix.
+- Detect **conditional modules** — JDK-specific modules (`jdk21`), platform-specific builds, or optional integrations that only build under certain conditions.
+
+*Why?*: A fix in `langchain4j-core` affects 30+ downstream modules. Without mapping cross-package dependencies, agents make changes to one package and miss the ripple effects.
 
 ---
 
@@ -892,6 +903,11 @@ This skill's heuristics — especially course detection, notebook handling, and 
 - `johnpapa/vscode-peacock` — VS Code extension (TypeScript, Mocha tests)
 - `johnpapa/shopathome` — Multi-framework shopping app (Angular 21, React 19, Svelte 5, Vue 3.5, Fastify 5, Azure Functions v4)
 - `johnpapa/angular-styleguide` — Documentation-only style guide (markdown)
+
+**Large open-source library monorepos:**
+- `langchain-ai/langchain` — Python multi-package monorepo (`libs/*`), pyproject.toml per package, AGENTS.md + CLAUDE.md
+- `langchain-ai/langchainjs` — TypeScript monorepo (pnpm + Turborepo + Changesets), workspace packages under `libs/`
+- `langchain4j/langchain4j` — Java Maven aggregator with 30+ modules, JDK-conditional builds, Spotless formatting
 
 **Real-world field tests:**
 - `FritzAndFriends/BlazorWebFormsComponents` — .NET multi-target library (Blazor, C#)
