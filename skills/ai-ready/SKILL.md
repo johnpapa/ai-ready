@@ -854,7 +854,10 @@ Include a summary of what was added and the before/after score in the PR body. I
 ```
 ## 🎯 AI-Readiness Report
 
-**{repo-name}** · {before-medal} **{before-level}** → {after-medal} **{after-level}** · {before-nailed} → {after-nailed} of 12 nailed
+**{repo-name}**
+
+**Before:** {before-medal} **{before-level}** · {before-nailed} of 12 nailed
+**After this PR:** {after-medal} **{after-level}** · {after-nailed} of 12 nailed
 
 🤖 AI Context        {status indicators}
 🔧 Dev Workflow      {status indicators}
