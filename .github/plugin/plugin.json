@@ -18,9 +18,7 @@
     "contributions",
     "maintainer"
   ],
-  "hooks": "./hooks/hooks.json",
   "skills": [
-    "./skills/ai-ready",
-    "./skills/daily-tip"
+    "./skills/ai-ready"
   ]
 }

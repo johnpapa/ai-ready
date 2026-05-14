@@ -4,11 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Added
+### Removed
 
-- **Daily tip hook** — shows a rotating AI-ready tip every time a new Copilot CLI session starts, via a `sessionStart` prompt hook
-- **Daily tip skill** (`skills/daily-tip/SKILL.md`) — 20 curated tips about making repos AI-ready, one per day based on day-of-year rotation
-- **Hooks support** (`hooks/hooks.json`) — plugin now declares a `sessionStart` hook in `plugin.json`
+- **Daily tip hook** — removed `sessionStart` prompt hook and `hooks/hooks.json`
+- **Daily tip skill** — removed `skills/daily-tip/SKILL.md`
 
 ### Added
 
