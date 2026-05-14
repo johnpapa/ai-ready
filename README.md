@@ -22,26 +22,6 @@ make this repo ai-ready
 
 The skill analyzes your code, CI, tests, docs, and structure, then generates assets customized to your project — not generic templates.
 
-### Install manually
-
-If you prefer to install without the prompt:
-
-```bash
-mkdir -p ~/.copilot/skills/ai-ready
-curl -fsSL https://raw.githubusercontent.com/johnpapa/ai-ready/main/skills/ai-ready/SKILL.md \
-  -o ~/.copilot/skills/ai-ready/SKILL.md
-```
-
-### Install for a single repo
-
-Instead of your personal skills directory, add it directly to the repo:
-
-```bash
-mkdir -p .github/skills/ai-ready
-curl -fsSL https://raw.githubusercontent.com/johnpapa/ai-ready/main/skills/ai-ready/SKILL.md \
-  -o .github/skills/ai-ready/SKILL.md
-```
-
 ### Run it again anytime
 
 The skill is safe to re-run. On the first run, it creates missing assets. On subsequent runs, it **audits** your existing AI-ready files against the current state of your codebase — flagging drift like outdated build commands, stale repo structure, or new PR review patterns that should become conventions. It never overwrites your files — it suggests updates and lets you decide.
