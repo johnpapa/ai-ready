@@ -11,7 +11,7 @@ A Copilot CLI skill that analyzes your repository and generates the configuratio
 Install the skill from inside Copilot CLI:
 
 ```
-/skill install johnpapa/ai-ready
+/skill add johnpapa/ai-ready
 ```
 
 Then type:
@@ -28,10 +28,10 @@ The skill is safe to re-run. On the first run, it creates missing assets. On sub
 
 ### Keeping updated
 
-Re-run the install command to pull the latest version:
+Re-run the add command to pull the latest version:
 
 ```
-/skill install johnpapa/ai-ready
+/skill add johnpapa/ai-ready
 ```
 
 ### Skip what you don't need
