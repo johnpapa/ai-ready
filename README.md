@@ -170,6 +170,13 @@ This skill has been validated against a diverse set of repos — courses, applic
 
 See [AGENTS.md](AGENTS.md) for the full contributor guide.
 
+## Credits
+
+This skill was strengthened using:
+
+- **[Sensei](https://github.com/spboyer/sensei)** — AI skill quality scorer that evaluates frontmatter, structure, and discoverability. Used to achieve a "High" rating.
+- **[Agent Skills Spec](https://github.com/github/awesome-copilot/blob/main/docs/README.skills.md)** — GitHub's specification for skill authoring. Used to refactor from 964 lines to a 225-line spec-compliant structure with progressive disclosure.
+
 ## License
 
 MIT
