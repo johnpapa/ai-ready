@@ -12,13 +12,14 @@ Install the skill from inside Copilot CLI:
 copilot plugin install johnpapa/ai-ready
 ```
 
-Then type:
+Then inside Copilot CLI, type:
 
 ```
 make this repo ai-ready
 ```
 
 The skill analyzes your code, CI, tests, docs, and structure, then generates assets customized to your project — not generic templates.
+
 
 ### Run it again anytime
 
@@ -138,7 +139,7 @@ Every file is customized to your repo's actual language, framework, and patterns
 | **`.github/ISSUE_TEMPLATE/feature-request.yml`** | Structured feature request form |
 | **`.github/PULL_REQUEST_TEMPLATE.md`** | PR description template with checklist items derived from the maintenance matrix |
 | **`CHANGELOG.md`** | Keep a Changelog format, populated from releases/tags if available |
-| **`.vscode/mcp.json`** | MCP server config connecting AI agents to your project's databases, APIs, and tools |
+| **`.mcp.json`** | MCP server config connecting AI agents to your project's databases, APIs, and tools |
 | **README `## Contributing` section** | Onramp for new contributors — how to fork, build, test, and submit a PR |
 | **AI-Ready badge in README** | Shields.io badge linking back to this skill — added automatically |
 
