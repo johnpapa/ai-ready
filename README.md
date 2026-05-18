@@ -9,7 +9,7 @@ A Copilot CLI skill that analyzes your repository and generates the configuratio
 Install the skill from inside Copilot CLI:
 
 ```
-copilot plugin install ai-ready@awesome-copilot
+copilot plugin install johnpapa/ai-ready
 ```
 
 Then type:
