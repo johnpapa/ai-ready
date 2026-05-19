@@ -44,3 +44,4 @@ This is a **Copilot CLI skill** containing only markdown, YAML, and JSON files. 
 | `docs/how-it-works.md` | Verify consistency with `SKILL.md` steps and `README.md` |
 | `README.md` problem statement or architecture | Verify consistency with `docs/how-it-works.md` |
 | Repo structure changes (new dirs, moved files) | `AGENTS.md` (structure section), `CHANGELOG.md` |
+| Version bump (`SKILL.md` metadata, `plugin.json`) | `CHANGELOG.md`, GitHub Release |

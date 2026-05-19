@@ -8,6 +8,8 @@ This is a **Copilot CLI skill** — not a traditional application. It contains n
 ai-ready/
 ├── .github/
 │   ├── copilot-instructions.md     # Conventions for contributing to THIS repo
+│   ├── plugin/
+│   │   └── plugin.json             # Plugin manifest for copilot plugin install
 │   ├── workflows/copilot-setup-steps.yml  # Cloud agent setup (checkout only — no build)
 │   ├── dependabot.yml              # GitHub Actions dependency updates
 │   ├── workflows/ci.yml            # PR validation (skill integrity checks)
@@ -49,8 +51,7 @@ There is no build step. This repo ships markdown and JSON files that Copilot CLI
 **To test the skill locally:**
 
 ```bash
-# Copy the skill to your personal skills directory
-cp skills/ai-ready/SKILL.md ~/.copilot/skills/ai-ready/SKILL.md
+copilot plugin install johnpapa/ai-ready
 ```
 
 Then start Copilot and invoke the skill:

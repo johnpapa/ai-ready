@@ -13,8 +13,8 @@
 <!-- How can a reviewer verify this works? For skill changes, include the command to invoke it. -->
 
 ```bash
-# Copy skill to personal skills directory and test
-cp skills/ai-ready/SKILL.md ~/.copilot/skills/ai-ready/SKILL.md
+# Install the plugin and test
+copilot plugin install johnpapa/ai-ready
 # Then start copilot and say: "make this repo ai-ready"
 ```
 
