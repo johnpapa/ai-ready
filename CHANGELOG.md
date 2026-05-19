@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - **MCP config path** — changed from `.vscode/mcp.json` to `.mcp.json` at repo root (Copilot CLI dropped `.vscode/mcp.json` support). Existing `.vscode/mcp.json` files are now flagged for migration. (Fixes #24)
-- **Install instructions** — fixed install command to use `gh skills install johnpapa/ai-ready ai-ready --scope user` (the official [GitHub CLI skills command](https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli/)). (Fixes #23)
+- **Install instructions** — fixed install command to use `copilot plugin install johnpapa/ai-ready` (direct repo reference while marketplace listing is pending). (Fixes #23)
 
 ## [1.0.0] — 2026-05-15
 
