@@ -2,12 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.1.0] — 2026-05-19
+
+### Added
+
+- **Plugin manifest** (`.github/plugin/plugin.json`) — enables installation via `copilot plugin install johnpapa/ai-ready` from the terminal. Submitted as external plugin to awesome-copilot marketplace (issue #1750).
 
 ### Fixed
 
 - **MCP config path** — changed from `.vscode/mcp.json` to `.mcp.json` at repo root (Copilot CLI dropped `.vscode/mcp.json` support). Existing `.vscode/mcp.json` files are now flagged for migration. (Fixes #24)
-- **Install instructions** — fixed install command to use `copilot plugin install johnpapa/ai-ready` (direct repo reference while marketplace listing is pending). (Fixes #23)
+- **Install instructions** — fixed install command to use `copilot plugin install johnpapa/ai-ready`. (Fixes #23)
+
+### Changed
+
+- **CI workflow** — added `paths-ignore` to skip runs on docs-only changes
 
 ## [1.0.0] — 2026-05-15
 
