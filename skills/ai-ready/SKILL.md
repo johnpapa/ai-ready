@@ -2,7 +2,7 @@
 name: ai-ready
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 description: "**ANALYSIS SKILL** — Analyze any repository and generate AI-ready configuration — AGENTS.md, copilot-instructions.md, skills, CI workflows, issue templates. WHEN: \"make this repo ai-ready\", \"set up AI config\", \"add copilot instructions\", \"prepare this repo for AI contributions\", \"generate AGENTS.md\". INVOKES: glob, grep, view, create, edit for repo analysis and file generation. FOR SINGLE OPERATIONS: use create/edit directly for individual config files."
 ---
 
