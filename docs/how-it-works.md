@@ -135,7 +135,7 @@ The skill checks whether the repo has documentation, identifies the framework (D
 
 ### 11. AI-Readiness Report
 
-Displays the final readiness report — current score, category breakdown (AI Context, Dev Workflow, Onboarding), what was created or updated, and a projected score. Offers to create a PR with all changes and add the AI-Ready badge to the README. When the skill posts to an issue or PR thread, it includes explicit AI Ready skill attribution (`Assisted by ai-ready`).
+Displays the final readiness report — current score, category breakdown (AI Context, Dev Workflow, Onboarding), what was created or updated, and a projected score. Offers to create a PR with all changes and add the AI-Ready badge to the README. When the skill posts to an issue or PR thread, it includes explicit AI Ready skill attribution (`Assisted by ai-ready`), keeps docs updates aligned to repo standards, and attempts to resolve PR conflicts before asking for manual help.
 
 ---
 
