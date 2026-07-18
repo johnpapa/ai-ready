@@ -69,3 +69,31 @@ jobs:
               sys.exit(1)
           print('All YAML files valid')
           "
+
+      - name: Validate plugin manifest version
+        run: |
+          python3 -c "
+          import json, sys, yaml
+          content = open('skills/ai-ready/SKILL.md').read()
+          parts = content.split('---', 2)
+          if len(parts) < 3:
+              print('skills/ai-ready/SKILL.md: invalid frontmatter format')
+              sys.exit(1)
+          frontmatter = yaml.safe_load(parts[1]) or {}
+          skill_version = (frontmatter.get('metadata') or {}).get('version')
+          if not skill_version:
+              print('skills/ai-ready/SKILL.md: metadata.version missing')
+              sys.exit(1)
+          plugin_version = json.load(open('.github/plugin/plugin.json')).get('version')
+          if not plugin_version:
+              print('.github/plugin/plugin.json: version missing')
+              sys.exit(1)
+          if skill_version != plugin_version:
+              print(
+                  f'version mismatch: '
+                  f'skills/ai-ready/SKILL.md={skill_version}, '
+                  f'.github/plugin/plugin.json={plugin_version}'
+              )
+              sys.exit(1)
+          print(f'Plugin manifest version matches skill version: {skill_version}')
+          "

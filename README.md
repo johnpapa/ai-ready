@@ -12,6 +12,9 @@ Install the skill from inside Copilot CLI:
 copilot plugin install johnpapa/ai-ready
 ```
 
+This direct repo install is the canonical path. If a marketplace mirrors this skill, it should point to a release
+tag such as `v1.2.0`, not a raw commit SHA.
+
 Then type:
 
 ```

@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Marketplace install metadata** — aligned `.github/plugin/plugin.json` with the released `1.2.0` skill
+  version and added a CI check that fails when the plugin manifest version drifts from
+  `skills/ai-ready/SKILL.md`. Marketplace refs should use a release tag such as `v1.2.0`, not a commit SHA.
+  (Fixes #26)
+
 ### Changed
 
 - **Documentation sync rule** — when skill behavior changes, update related docs to match repo standards and maintenance matrix.
