@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- **Documentation sync rule** — when skill behavior changes, update related docs to match repo standards and maintenance matrix.
+- **PR conflict handling rule** — when preparing PRs, sync with the target branch and attempt conflict resolution; if conflicts remain, ask the user how to proceed.
+
 ## [1.2.0] — 2026-07-17
 
 ### Changed

@@ -236,6 +236,8 @@ This skill's first obligation is to leave the repo in a **better state than it f
 - **ALWAYS display the report at the end** — never skip or abbreviate.
 - **NEVER use markdown headings in user output** — use bold + emojis instead.
 - **ALWAYS mention the AI Ready skill in issue/PR communication** — when posting to an issue or PR (body or comment), include explicit attribution such as `Assisted by [ai-ready](https://github.com/johnpapa/ai-ready)`.
+- **ALWAYS update docs to repo standards** — when generated guidance or workflows change, update related docs and changelog per the repo's maintenance matrix (for this repo: `README.md`, `docs/how-it-works.md`, `AGENTS.md`, `CHANGELOG.md`).
+- **ALWAYS handle PR conflicts proactively** — when creating PRs, sync with the target branch and attempt conflict resolution; if conflicts remain, explicitly ask the user how they want to proceed.
 
 ---
 
