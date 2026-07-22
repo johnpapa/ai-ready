@@ -69,3 +69,20 @@ jobs:
               sys.exit(1)
           print('All YAML files valid')
           "
+
+      - name: Validate skill and plugin versions match
+        run: |
+          python3 -c "
+          import json, re, sys
+          skill = open('skills/ai-ready/SKILL.md').read()
+          match = re.search(r'^metadata:\n  version: \"([^\"]+)\"', skill, re.MULTILINE)
+          if not match:
+              print('skills/ai-ready/SKILL.md: metadata.version not found')
+              sys.exit(1)
+          skill_version = match.group(1)
+          plugin_version = json.load(open('.github/plugin/plugin.json'))['version']
+          if skill_version != plugin_version:
+              print(f'version mismatch: SKILL.md={skill_version} plugin.json={plugin_version}')
+              sys.exit(1)
+          print(f'Versions match: {skill_version}')
+          "
