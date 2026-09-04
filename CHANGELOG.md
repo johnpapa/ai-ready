@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - **Documentation sync rule** — when skill behavior changes, update related docs to match repo standards and maintenance matrix.
 - **PR conflict handling rule** — when preparing PRs, sync with the target branch and attempt conflict resolution; if conflicts remain, ask the user how to proceed.
 - **PR follow-through rule** — the never-push-to-main rule now covers what happens after a PR is opened too: once CI passes, merge it (if low-risk and well-tested) or ask the user, and always report the outcome. An opened PR left unattended, with no report back, is no longer acceptable.
+- **PR follow-through rule, revised** — merging is never the skill's own call, even for a low-risk change: always ask the user first. When they say yes, merge with squash and delete the branch afterward.
 
 ## [1.2.0] — 2026-07-17
 
