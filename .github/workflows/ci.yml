@@ -69,3 +69,102 @@ jobs:
               sys.exit(1)
           print('All YAML files valid')
           "
+
+      - name: Validate plugin manifest version
+        run: |
+          python3 -c "
+          import json, sys, yaml
+          content = open('skills/ai-ready/SKILL.md').read()
+          parts = content.split('---', 2)
+          if len(parts) < 3:
+              print('skills/ai-ready/SKILL.md: invalid frontmatter format')
+              sys.exit(1)
+          frontmatter = yaml.safe_load(parts[1]) or {}
+          skill_version = (frontmatter.get('metadata') or {}).get('version')
+          if not skill_version:
+              print('skills/ai-ready/SKILL.md: metadata.version missing')
+              sys.exit(1)
+
+          manifests = {
+              '.github/plugin/plugin.json': lambda d: d.get('version'),
+              '.claude-plugin/plugin.json': lambda d: d.get('version'),
+              '.codex-plugin/plugin.json': lambda d: d.get('version'),
+              'plugin.json': lambda d: d.get('version'),
+              '.claude-plugin/marketplace.json': lambda d: d['plugins'][0].get('version'),
+          }
+          errors = []
+          for path, get_version in manifests.items():
+              try:
+                  version = get_version(json.load(open(path)))
+              except Exception as e:
+                  errors.append(f'{path}: unreadable ({e})')
+                  continue
+              if not version:
+                  errors.append(f'{path}: version missing')
+              elif version != skill_version:
+                  errors.append(f'{path}: {version} != SKILL.md {skill_version}')
+          if errors:
+              print('version mismatch:')
+              print('\n'.join('  ' + e for e in errors))
+              sys.exit(1)
+          print(f'All plugin manifests match skill version: {skill_version}')
+          "
+
+      - name: Validate Agent Skills spec compliance
+        run: |
+          python3 -c "
+          import os, re, sys, yaml
+          errors = []
+          for root, dirs, files in os.walk('skills'):
+              if 'SKILL.md' not in files:
+                  continue
+              path = os.path.join(root, 'SKILL.md')
+              frontmatter = yaml.safe_load(open(path).read().split('---', 2)[1]) or {}
+              name = frontmatter.get('name')
+              directory = os.path.basename(root)
+              # The Agent Skills spec requires name to match the parent directory.
+              if name != directory:
+                  errors.append(f'{path}: name {name!r} must match directory {directory!r}')
+              if not re.fullmatch(r'(?!.*--)[a-z0-9](?:[a-z0-9-]*[a-z0-9])?', name or ''):
+                  errors.append(f'{path}: name {name!r} is not valid kebab-case')
+              description = frontmatter.get('description') or ''
+              if not 1 <= len(description) <= 1024:
+                  errors.append(f'{path}: description must be 1-1024 chars, got {len(description)}')
+              allowed = {'name', 'description', 'license', 'compatibility', 'metadata', 'allowed-tools'}
+              extra = set(frontmatter) - allowed
+              if extra:
+                  errors.append(f'{path}: non-portable frontmatter keys {sorted(extra)}')
+              metadata = frontmatter.get('metadata') or {}
+              non_strings = [k for k, v in metadata.items() if not isinstance(v, str)]
+              if non_strings:
+                  errors.append(f'{path}: metadata values must be strings: {non_strings}')
+              print(f'{path}: Agent Skills compliant')
+          if errors:
+              print('\n'.join(errors))
+              sys.exit(1)
+          "
+
+      - name: Validate skills CLI discovery
+        run: |
+          OUT="$(npx -y skills@latest add ./ --list)"
+          echo "$OUT"
+          echo "$OUT" | grep -q 'ai-ready' \
+            || { echo 'skills CLI did not discover the ai-ready skill'; exit 1; }
+          echo 'skills CLI discovery verified'
+
+      - name: Validate skills.sh registry config
+        run: |
+          python3 -c "
+          import json
+          cfg = json.load(open('skills.sh.json'))
+          listed = {s for g in cfg['groupings'] for s in g['skills']}
+          import os
+          actual = {d for d in os.listdir('skills') if os.path.isdir(f'skills/{d}')}
+          missing = actual - listed
+          if missing:
+              raise SystemExit(f'skills.sh.json is missing skills: {sorted(missing)}')
+          unknown = listed - actual
+          if unknown:
+              raise SystemExit(f'skills.sh.json lists unknown skills: {sorted(unknown)}')
+          print('skills.sh.json matches skills/')
+          "

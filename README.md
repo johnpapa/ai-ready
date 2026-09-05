@@ -2,21 +2,58 @@
 
 [![AI Ready](https://img.shields.io/badge/AI--Ready-yes-brightgreen?style=flat)](https://github.com/johnpapa/ai-ready) [![Version](https://img.shields.io/github/v/release/johnpapa/ai-ready?label=version)](https://github.com/johnpapa/ai-ready/releases/latest)
 
-A Copilot CLI skill that analyzes your repository and generates the configuration files AI agents need to contribute correctly. **GitHub-native** — it auto-discovers your repo's context, community health, and PR review patterns without you explaining anything.
+An [Agent Skill](https://agentskills.io) that analyzes your repository and generates the configuration files AI agents need to contribute correctly. **GitHub-native** — it auto-discovers your repo's context, community health, and PR review patterns without you explaining anything.
+
+Works in **GitHub Copilot, Claude Code, OpenAI Codex, Cursor**, and any other tool that supports the Agent Skills
+standard.
 
 ## Quick Start
 
-Install the skill from inside Copilot CLI:
+### Any agent, one command
 
-```
-copilot plugin install johnpapa/ai-ready
+The open [skills CLI](https://github.com/vercel-labs/skills) installs into Claude Code, Codex, Cursor, Copilot,
+and 70+ other agents:
+
+```bash
+npx skills add johnpapa/ai-ready
 ```
 
-Then type:
+That's it — no per-tool setup. Restart your agent afterward.
+
+### Native plugin installs
+
+Prefer your tool's own plugin system? Each of these installs the same skill.
+
+| Tool | Install |
+|---|---|
+| **GitHub Copilot CLI** | `copilot plugin install johnpapa/ai-ready` |
+| **Claude Code** | `/plugin marketplace add johnpapa/ai-ready`<br>`/plugin install ai-ready@johnpapa-ai-ready` |
+| **OpenAI Codex** | `codex plugin marketplace add johnpapa/ai-ready`<br>`codex plugin add ai-ready@johnpapa-ai-ready` |
+| **Cursor** | Copy `skills/ai-ready/` into `~/.cursor/skills/ai-ready/` |
+| **Anything else** | Copy `skills/ai-ready/` into `~/.agents/skills/ai-ready/` |
+
+Claude and Codex each need **two** commands — the first registers the marketplace, the second installs the
+plugin from it.
+
+`~/.agents/skills/` is the vendor-neutral [Agent Skills](https://agentskills.io) directory that Codex and Cursor
+both read, so the last row works for most tools.
+
+If a marketplace mirrors this skill, it should point to a release tag such as `v1.2.0`, not a raw commit SHA.
+
+### Then type
 
 ```
 make this repo ai-ready
 ```
+
+Or invoke it explicitly:
+
+| Tool | Invoke |
+|---|---|
+| Claude Code, Cursor, Copilot CLI | `/ai-ready` |
+| OpenAI Codex | `$ai-ready` |
+
+When installed as a plugin from a marketplace, Claude namespaces it as `/ai-ready:ai-ready`.
 
 The skill analyzes your code, CI, tests, docs, and structure, then generates assets customized to your project — not generic templates.
 
@@ -26,11 +63,53 @@ The skill is safe to re-run. On the first run, it creates missing assets. On sub
 
 ### Keeping updated
 
-Update to the latest version:
+| Tool | Update |
+|---|---|
+| skills CLI | `npx skills update` |
+| GitHub Copilot CLI | `copilot plugin update ai-ready` |
+| Claude Code | `/plugin marketplace update johnpapa-ai-ready` |
+| Codex | `codex plugin marketplace upgrade` |
+
+### Troubleshooting
+
+<details>
+<summary><b>The agent doesn't use the skill</b></summary>
+
+1. **Restart your agent.** Most tools only scan for skills at startup.
+2. **Confirm it's installed.** Run `npx skills list`, `copilot plugin list`, `claude plugin list`, or
+   `codex plugin list` depending on how you installed it.
+3. **Check you finished both steps.** Claude and Codex need a marketplace command *and* an install command.
+4. **Ask for it by name** — `/ai-ready` (or `$ai-ready` in Codex) — to rule out matching problems.
+
+</details>
+
+<details>
+<summary><b>Install fails with a "reference is not a tree" or SHA error</b></summary>
+
+The marketplace entry is pointing at a commit SHA. Plugin installs clone with `git clone --branch <ref>`, which
+only accepts a branch or tag, so a raw SHA always fails. The registry entry needs to use a release tag such as
+`v1.2.0`. See [#26](https://github.com/johnpapa/ai-ready/issues/26).
+
+Installing directly from this repo (`copilot plugin install johnpapa/ai-ready`) avoids the problem entirely.
+
+</details>
+
+<details>
+<summary><b>Claude marketplace add fails over SSH</b></summary>
+
+If `/plugin marketplace add` fails with a Git authentication error, use the full HTTPS URL:
 
 ```
-copilot plugin update ai-ready
+/plugin marketplace add https://github.com/johnpapa/ai-ready
 ```
+
+Or tell Git to prefer HTTPS for GitHub:
+
+```bash
+git config --global url."https://github.com/".insteadOf git@github.com:
+```
+
+</details>
 
 ### Skip what you don't need
 

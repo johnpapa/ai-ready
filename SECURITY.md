@@ -8,6 +8,7 @@ If you discover a security vulnerability in this project, please report it respo
 
 ## Scope
 
-This is a Copilot CLI skill that generates markdown, YAML, and JSON files. It does not execute code, access networks, or handle credentials. The primary security concerns are:
+This is an Agent Skill that generates markdown, YAML, and JSON files. The skill itself does not access networks or handle credentials. This repo contains **no executables** — installation is handled by your agent's own plugin system or the third-party [skills CLI](https://github.com/vercel-labs/skills). The primary security concerns are:
 
 - **Skill instructions that could cause harmful file modifications** in target repos
+- **Plugin manifests** that could point an agent at unexpected content. Every manifest here references only the local `skills/ai-ready/` directory.

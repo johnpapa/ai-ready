@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Multi-tool support** — the skill now installs in Claude Code, OpenAI Codex, and Cursor in addition to GitHub
+  Copilot, via the vendor-neutral [Agent Skills](https://agentskills.io) standard. Added `.claude-plugin/plugin.json`,
+  `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json`, and an [Agent Plugins](https://agent-plugins.org)
+  `plugin.json` at the repo root. All manifests point at the same canonical `skills/ai-ready/` — no content is
+  duplicated.
+- **`npx skills add johnpapa/ai-ready`** — documented as the primary install path. The open
+  [skills CLI](https://github.com/vercel-labs/skills) reads the standard `skills/<name>/SKILL.md` layout and
+  installs into 70+ agents, so no bespoke installer is needed. Added `skills.sh.json` so the repo renders
+  correctly on the skills.sh registry.
+
+- **Install troubleshooting** — README now covers the three failure modes users actually hit: the agent not
+  picking up the skill, SHA-vs-tag marketplace clone errors, and Claude marketplace SSH auth failures.
+
+### Fixed
+
+- **Incomplete Codex install instructions** — the documented Codex path registered the marketplace but never
+  installed the plugin. Added the required second command, `codex plugin add ai-ready@johnpapa-ai-ready`.
+- **Wrong Codex invocation syntax** — Codex CLI mentions skills with `$ai-ready`, not `/ai-ready`. Documented
+  the correct prefix per tool.
+- **Skill not discovered outside GitHub Copilot** — the repo previously shipped only a Copilot plugin manifest, so
+  Claude Code, Codex, and Cursor had nothing to discover and never invoked the skill.
+- **Marketplace install metadata** — aligned `.github/plugin/plugin.json` with the released `1.2.0` skill
+  version and added a CI check that fails when the plugin manifest version drifts from
+  `skills/ai-ready/SKILL.md`. Marketplace refs should use a release tag such as `v1.2.0`, not a commit SHA.
+  (Fixes #26)
+
 ### Changed
 
 - **Documentation sync rule** — when skill behavior changes, update related docs to match repo standards and maintenance matrix.
