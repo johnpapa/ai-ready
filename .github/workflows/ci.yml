@@ -2,14 +2,6 @@ name: CI
 
 on:
   pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "images/**"
-      - "examples/**"
-      - "LICENSE"
-      - "README.md"
-      - "CHANGELOG.md"
-      - "SECURITY.md"
   push:
     branches: [main]
     paths-ignore:
