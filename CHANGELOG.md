@@ -10,6 +10,13 @@ All notable changes to this project will be documented in this file.
   `copilot plugin install ai-ready@awesome-copilot` instead of installing straight from the repo. Copilot CLI
   reports direct repo, URL, and local-path installs as deprecated.
 
+### Fixed
+
+- **Docs-only PRs could never merge** — `validate` is a required status check, but the CI workflow's
+  `pull_request` trigger used `paths-ignore` for markdown. A PR touching only docs never ran the check, so
+  branch protection blocked it forever. Removed `paths-ignore` from the `pull_request` trigger; the job takes
+  about ten seconds.
+
 ## [1.3.0] — 2026-09-05
 
 ### Added
