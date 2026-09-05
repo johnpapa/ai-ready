@@ -16,8 +16,15 @@ All notable changes to this project will be documented in this file.
   installs into 70+ agents, so no bespoke installer is needed. Added `skills.sh.json` so the repo renders
   correctly on the skills.sh registry.
 
+- **Install troubleshooting** — README now covers the three failure modes users actually hit: the agent not
+  picking up the skill, SHA-vs-tag marketplace clone errors, and Claude marketplace SSH auth failures.
+
 ### Fixed
 
+- **Incomplete Codex install instructions** — the documented Codex path registered the marketplace but never
+  installed the plugin. Added the required second command, `codex plugin add ai-ready@johnpapa-ai-ready`.
+- **Wrong Codex invocation syntax** — Codex CLI mentions skills with `$ai-ready`, not `/ai-ready`. Documented
+  the correct prefix per tool.
 - **Skill not discovered outside GitHub Copilot** — the repo previously shipped only a Copilot plugin manifest, so
   Claude Code, Codex, and Cursor had nothing to discover and never invoked the skill.
 - **Marketplace install metadata** — aligned `.github/plugin/plugin.json` with the released `1.2.0` skill
