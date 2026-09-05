@@ -1,0 +1,10 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "title": "Repository Setup",
+      "description": "Analyze a repository and generate the configuration AI agents need to contribute correctly.",
+      "skills": ["ai-ready"]
+    }
+  ]
+}

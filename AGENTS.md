@@ -28,7 +28,7 @@ ai-ready/
 ├── .agents/
 │   └── plugins/marketplace.json    # Codex marketplace catalog (source.path: "./")
 ├── plugin.json                     # Agent Plugins 1.0.0 manifest (Cursor + neutral clients)
-├── install.sh                      # Universal installer for any Agent Skills tool
+├── skills.sh.json                  # skills.sh registry page config
 ├── skills/
 │   └── ai-ready/
 │       ├── SKILL.md                   # The 12-step skill procedure (<500 lines)
@@ -54,20 +54,27 @@ ai-ready/
 
 ## Packaging Model
 
-All four manifests describe the **same** `skills/ai-ready/` directory. The repo root doubles as the plugin root,
-which is why no manifest needs to copy or relocate skill content.
+Distribution follows existing ecosystem conventions — **nothing bespoke**. The canonical
+`skills/ai-ready/SKILL.md` follows the [Agent Skills](https://agentskills.io) standard, which is all the
+[skills CLI](https://github.com/vercel-labs/skills) (`npx skills add`) needs to install into 70+ agents.
+
+The native plugin manifests are additive, for users who prefer their tool's own plugin system. All of them
+describe the **same** `skills/ai-ready/` directory. The repo root doubles as the plugin root, which is why no
+manifest needs to copy or relocate skill content.
 
 | File | Consumed by | How it finds the skill |
 |---|---|---|
+| *(none — convention)* | `npx skills add johnpapa/ai-ready` | scans `skills/*/SKILL.md` |
 | `.github/plugin/plugin.json` | GitHub Copilot CLI | explicit `"skills": ["./skills/ai-ready"]` |
 | `.claude-plugin/plugin.json` | Claude Code | convention — `skills/` in plugin root |
 | `.claude-plugin/marketplace.json` | Claude Code `/plugin marketplace add` | plugin `source: "./"` |
 | `.codex-plugin/plugin.json` | OpenAI Codex | explicit `"skills": "./skills/"` |
 | `.agents/plugins/marketplace.json` | Codex `plugin marketplace add` | plugin `source.path: "./"` |
 | `plugin.json` | Cursor and Agent Plugins clients | convention — `skills/` in plugin root |
+| `skills.sh.json` | skills.sh registry page | groups skills for display |
 
-The `version` field must be identical in all five manifests and in `SKILL.md` frontmatter `metadata.version`.
-CI enforces this.
+The `version` field must be identical in all five plugin manifests and in `SKILL.md` frontmatter
+`metadata.version`. CI enforces this.
 
 ## Tech Stack
 
@@ -81,27 +88,28 @@ There is no build step. This repo ships markdown and JSON files that agents read
 **To test the skill locally in every installed tool:**
 
 ```bash
-./install.sh
+npx skills add ./ --agent claude-code codex cursor
 ```
 
-That symlinks `skills/ai-ready/` into each detected tool, so edits take effect on the next agent restart. Then
+That installs `skills/ai-ready/` into each tool, so edits take effect on the next agent restart. Then
 start your agent and invoke the skill:
 
 ```
 make this repo ai-ready
 ```
 
-**Per-tool install** is documented in `README.md`. Use `./install.sh --uninstall` to remove the symlinks.
+Use `npx skills add ./ --list` to confirm the skill is discoverable without installing it, and
+`npx skills remove ai-ready` to clean up. **Native plugin installs** are documented in `README.md`.
 
 ## Testing
 
 There is no automated test suite. Validation is:
 
-1. **Skill integrity** — SKILL.md exists and frontmatter is valid
+1. **Skill integrity** — SKILL.md exists and frontmatter is valid Agent Skills
 2. **Manifest integrity** — all plugin manifests are valid JSON and agree on `version`
-3. **Installer** — `bash -n install.sh`, then run it against a throwaway `HOME` and confirm each target resolves
+3. **Discovery** — `npx skills add ./ --list` finds `ai-ready`
 4. **Smoke test** — install the skill, invoke it on a sample repo, verify the analysis is correct and files are generated properly
-5. **CI** — the workflow validates YAML syntax, skill frontmatter, and manifest versions on every PR
+5. **CI** — the workflow validates YAML syntax, skill frontmatter, manifest versions, and skills CLI discovery on every PR
 
 ## Key Patterns and Conventions
 

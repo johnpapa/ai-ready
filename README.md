@@ -9,26 +9,31 @@ standard.
 
 ## Quick Start
 
-### Any tool (one command)
+### Any agent, one command
+
+The open [skills CLI](https://github.com/vercel-labs/skills) installs into Claude Code, Codex, Cursor, Copilot,
+and 70+ other agents:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/johnpapa/ai-ready/main/install.sh | bash
+npx skills add johnpapa/ai-ready
 ```
 
-This installs the skill into every AI coding tool it detects. Restart your agent afterward.
+That's it — no per-tool setup. Restart your agent afterward.
 
-### Per-tool install
+### Native plugin installs
+
+Prefer your tool's own plugin system? Each of these installs the same skill.
 
 | Tool | Install |
 |---|---|
 | **GitHub Copilot CLI** | `copilot plugin install johnpapa/ai-ready` |
 | **Claude Code** | `/plugin marketplace add johnpapa/ai-ready` then `/plugin install ai-ready@johnpapa-ai-ready` |
-| **OpenAI Codex** | `codex plugin marketplace add johnpapa/ai-ready`, or use the installer above |
-| **Cursor** | Use the installer above, or add the repo as a plugin in the Cursor marketplace |
-| **Anything else** | Copy `skills/ai-ready/` into `~/.agents/skills/ai-ready/` |
+| **OpenAI Codex** | `codex plugin marketplace add johnpapa/ai-ready` |
+| **Cursor** | `npx skills add johnpapa/ai-ready --agent cursor` |
+| **Manual** | Copy `skills/ai-ready/` into `~/.agents/skills/ai-ready/` |
 
-`~/.agents/skills/` is the vendor-neutral Agent Skills directory. The installer also writes to `~/.claude/skills/`,
-`~/.cursor/skills/`, and `~/.codex/skills/` when those tools are present.
+`~/.agents/skills/` is the vendor-neutral [Agent Skills](https://agentskills.io) directory that Codex and Cursor
+both read.
 
 If a marketplace mirrors this skill, it should point to a release tag such as `v1.2.0`, not a raw commit SHA.
 
@@ -38,8 +43,8 @@ If a marketplace mirrors this skill, it should point to a release tag such as `v
 make this repo ai-ready
 ```
 
-You can also invoke it directly: `/ai-ready` when installed via the installer script, or
-`/ai-ready:ai-ready` when installed as a plugin from a marketplace (plugins namespace their skills).
+You can also invoke it directly as `/ai-ready`, or `/ai-ready:ai-ready` when installed as a plugin from a
+marketplace (plugins namespace their skills).
 
 The skill analyzes your code, CI, tests, docs, and structure, then generates assets customized to your project — not generic templates.
 
@@ -51,10 +56,10 @@ The skill is safe to re-run. On the first run, it creates missing assets. On sub
 
 | Tool | Update |
 |---|---|
+| skills CLI | `npx skills update` |
 | GitHub Copilot CLI | `copilot plugin update ai-ready` |
 | Claude Code | `/plugin marketplace update johnpapa-ai-ready` |
 | Codex | `codex plugin marketplace upgrade` |
-| Installer script | Re-run it, or `git pull` in your clone if you installed with symlinks |
 
 ### Skip what you don't need
 

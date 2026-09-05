@@ -49,5 +49,5 @@ The skill targets GitHub Copilot, Claude Code, OpenAI Codex, and Cursor from one
 | Repo structure changes (new dirs, moved files) | `AGENTS.md` (structure section), `CHANGELOG.md` |
 | Version bump (`SKILL.md` metadata) | **All** manifests — `.github/plugin/plugin.json`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json`, root `plugin.json` — plus `CHANGELOG.md` and GitHub Release |
 | Any plugin manifest | Keep `version` identical across all manifests and `SKILL.md`; CI fails on drift |
-| `install.sh` | `README.md` (install table), `AGENTS.md` (Build & Run), `CHANGELOG.md` |
-| New tool/platform supported | `install.sh`, `README.md` install table, `AGENTS.md` (packaging model), `.github/workflows/ci.yml` installer check |
+| `skills.sh.json` | Must list every directory under `skills/`; CI fails on drift |
+| New tool/platform supported | `README.md` install table, `AGENTS.md` (packaging model); add a manifest only if the tool cannot use `npx skills` |

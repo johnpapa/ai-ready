@@ -11,9 +11,10 @@ All notable changes to this project will be documented in this file.
   `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json`, and an [Agent Plugins](https://agent-plugins.org)
   `plugin.json` at the repo root. All manifests point at the same canonical `skills/ai-ready/` — no content is
   duplicated.
-- **`install.sh`** — one-command installer that detects installed AI coding tools and symlinks (or copies) the
-  skill into `~/.agents/skills/`, `~/.claude/skills/`, `~/.cursor/skills/`, and `~/.codex/skills/`. Supports
-  `--all`, `--copy`, and `--uninstall`.
+- **`npx skills add johnpapa/ai-ready`** — documented as the primary install path. The open
+  [skills CLI](https://github.com/vercel-labs/skills) reads the standard `skills/<name>/SKILL.md` layout and
+  installs into 70+ agents, so no bespoke installer is needed. Added `skills.sh.json` so the repo renders
+  correctly on the skills.sh registry.
 
 ### Fixed
 

@@ -144,17 +144,27 @@ jobs:
               sys.exit(1)
           "
 
-      - name: Validate installer
+      - name: Validate skills CLI discovery
         run: |
-          bash -n install.sh
-          test -x install.sh || { echo 'install.sh is not executable'; exit 1; }
-          SANDBOX="$(mktemp -d)"
-          HOME="$SANDBOX" bash ./install.sh --all --copy
-          for tool in .agents .claude .cursor .codex; do
-            test -f "$SANDBOX/$tool/skills/ai-ready/SKILL.md" \
-              || { echo "installer did not populate $tool"; exit 1; }
-          done
-          HOME="$SANDBOX" bash ./install.sh --uninstall
-          test ! -e "$SANDBOX/.agents/skills/ai-ready" \
-            || { echo 'uninstall left files behind'; exit 1; }
-          echo 'Installer install/uninstall verified'
+          OUT="$(npx -y skills@latest add ./ --list)"
+          echo "$OUT"
+          echo "$OUT" | grep -q 'ai-ready' \
+            || { echo 'skills CLI did not discover the ai-ready skill'; exit 1; }
+          echo 'skills CLI discovery verified'
+
+      - name: Validate skills.sh registry config
+        run: |
+          python3 -c "
+          import json
+          cfg = json.load(open('skills.sh.json'))
+          listed = {s for g in cfg['groupings'] for s in g['skills']}
+          import os
+          actual = {d for d in os.listdir('skills') if os.path.isdir(f'skills/{d}')}
+          missing = actual - listed
+          if missing:
+              raise SystemExit(f'skills.sh.json is missing skills: {sorted(missing)}')
+          unknown = listed - actual
+          if unknown:
+              raise SystemExit(f'skills.sh.json lists unknown skills: {sorted(unknown)}')
+          print('skills.sh.json matches skills/')
+          "
