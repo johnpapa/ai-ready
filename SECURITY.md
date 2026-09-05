@@ -8,6 +8,7 @@ If you discover a security vulnerability in this project, please report it respo
 
 ## Scope
 
-This is a Copilot CLI skill that generates markdown, YAML, and JSON files. It does not execute code, access networks, or handle credentials. The primary security concerns are:
+This is an Agent Skill that generates markdown, YAML, and JSON files. The skill itself does not access networks or handle credentials. The primary security concerns are:
 
 - **Skill instructions that could cause harmful file modifications** in target repos
+- **`install.sh`** — the only executable in this repo. It clones this repository and creates symlinks or copies under `~/.agents/skills/`, `~/.claude/skills/`, `~/.cursor/skills/`, and `~/.codex/skills/`. Review it before piping it to a shell.

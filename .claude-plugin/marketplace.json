@@ -1,0 +1,30 @@
+{
+  "name": "johnpapa-ai-ready",
+  "owner": {
+    "name": "John Papa",
+    "url": "https://github.com/johnpapa"
+  },
+  "description": "Skills that make any repository ready for AI agent contributions.",
+  "plugins": [
+    {
+      "name": "ai-ready",
+      "source": "./",
+      "description": "Analyze any repository and generate AI-ready configuration — AGENTS.md, copilot-instructions.md, skills, CI workflows, issue templates.",
+      "version": "1.2.0",
+      "author": {
+        "name": "John Papa",
+        "url": "https://github.com/johnpapa"
+      },
+      "homepage": "https://github.com/johnpapa/ai-ready",
+      "repository": "https://github.com/johnpapa/ai-ready",
+      "license": "MIT",
+      "category": "productivity",
+      "tags": [
+        "ai-ready",
+        "agents",
+        "documentation",
+        "configuration"
+      ]
+    }
+  ]
+}

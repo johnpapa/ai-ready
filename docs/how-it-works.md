@@ -1,6 +1,6 @@
 # How It Works
 
-The AI-Ready skill prepares your repository for effective collaboration with GitHub Copilot by generating a set of structured assets. These assets work together through three complementary mechanisms — each serving a different purpose, read at a different time, and targeting a different aspect of how AI understands your project.
+The AI-Ready skill prepares your repository for effective collaboration with AI coding agents — GitHub Copilot, Claude Code, OpenAI Codex, and Cursor — by generating a set of structured assets. These assets work together through three complementary mechanisms — each serving a different purpose, read at a different time, and targeting a different aspect of how AI understands your project.
 
 ---
 

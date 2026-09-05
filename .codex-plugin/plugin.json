@@ -1,0 +1,6 @@
+{
+  "name": "ai-ready",
+  "version": "1.2.0",
+  "description": "Analyze any repository and generate AI-ready configuration — AGENTS.md, copilot-instructions.md, skills, CI workflows, issue templates.",
+  "skills": "./skills/"
+}

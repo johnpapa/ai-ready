@@ -84,16 +84,77 @@ jobs:
           if not skill_version:
               print('skills/ai-ready/SKILL.md: metadata.version missing')
               sys.exit(1)
-          plugin_version = json.load(open('.github/plugin/plugin.json')).get('version')
-          if not plugin_version:
-              print('.github/plugin/plugin.json: version missing')
+
+          manifests = {
+              '.github/plugin/plugin.json': lambda d: d.get('version'),
+              '.claude-plugin/plugin.json': lambda d: d.get('version'),
+              '.codex-plugin/plugin.json': lambda d: d.get('version'),
+              'plugin.json': lambda d: d.get('version'),
+              '.claude-plugin/marketplace.json': lambda d: d['plugins'][0].get('version'),
+          }
+          errors = []
+          for path, get_version in manifests.items():
+              try:
+                  version = get_version(json.load(open(path)))
+              except Exception as e:
+                  errors.append(f'{path}: unreadable ({e})')
+                  continue
+              if not version:
+                  errors.append(f'{path}: version missing')
+              elif version != skill_version:
+                  errors.append(f'{path}: {version} != SKILL.md {skill_version}')
+          if errors:
+              print('version mismatch:')
+              print('\n'.join('  ' + e for e in errors))
               sys.exit(1)
-          if skill_version != plugin_version:
-              print(
-                  f'version mismatch: '
-                  f'skills/ai-ready/SKILL.md={skill_version}, '
-                  f'.github/plugin/plugin.json={plugin_version}'
-              )
-              sys.exit(1)
-          print(f'Plugin manifest version matches skill version: {skill_version}')
+          print(f'All plugin manifests match skill version: {skill_version}')
           "
+
+      - name: Validate Agent Skills spec compliance
+        run: |
+          python3 -c "
+          import os, re, sys, yaml
+          errors = []
+          for root, dirs, files in os.walk('skills'):
+              if 'SKILL.md' not in files:
+                  continue
+              path = os.path.join(root, 'SKILL.md')
+              frontmatter = yaml.safe_load(open(path).read().split('---', 2)[1]) or {}
+              name = frontmatter.get('name')
+              directory = os.path.basename(root)
+              # The Agent Skills spec requires name to match the parent directory.
+              if name != directory:
+                  errors.append(f'{path}: name {name!r} must match directory {directory!r}')
+              if not re.fullmatch(r'(?!.*--)[a-z0-9](?:[a-z0-9-]*[a-z0-9])?', name or ''):
+                  errors.append(f'{path}: name {name!r} is not valid kebab-case')
+              description = frontmatter.get('description') or ''
+              if not 1 <= len(description) <= 1024:
+                  errors.append(f'{path}: description must be 1-1024 chars, got {len(description)}')
+              allowed = {'name', 'description', 'license', 'compatibility', 'metadata', 'allowed-tools'}
+              extra = set(frontmatter) - allowed
+              if extra:
+                  errors.append(f'{path}: non-portable frontmatter keys {sorted(extra)}')
+              metadata = frontmatter.get('metadata') or {}
+              non_strings = [k for k, v in metadata.items() if not isinstance(v, str)]
+              if non_strings:
+                  errors.append(f'{path}: metadata values must be strings: {non_strings}')
+              print(f'{path}: Agent Skills compliant')
+          if errors:
+              print('\n'.join(errors))
+              sys.exit(1)
+          "
+
+      - name: Validate installer
+        run: |
+          bash -n install.sh
+          test -x install.sh || { echo 'install.sh is not executable'; exit 1; }
+          SANDBOX="$(mktemp -d)"
+          HOME="$SANDBOX" bash ./install.sh --all --copy
+          for tool in .agents .claude .cursor .codex; do
+            test -f "$SANDBOX/$tool/skills/ai-ready/SKILL.md" \
+              || { echo "installer did not populate $tool"; exit 1; }
+          done
+          HOME="$SANDBOX" bash ./install.sh --uninstall
+          test ! -e "$SANDBOX/.agents/skills/ai-ready" \
+            || { echo 'uninstall left files behind'; exit 1; }
+          echo 'Installer install/uninstall verified'

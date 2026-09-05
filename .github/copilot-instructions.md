@@ -2,7 +2,10 @@
 
 ## Project Type
 
-This is a **Copilot CLI skill** containing only markdown, YAML, and JSON files. There is no source code, no build system, no test framework, and no runtime dependencies.
+This is an **Agent Skill** containing only markdown, YAML, and JSON files. There is no source code, no build system, no test framework, and no runtime dependencies.
+
+The skill targets GitHub Copilot, Claude Code, OpenAI Codex, and Cursor from one canonical
+`skills/ai-ready/SKILL.md`. Per-tool manifests are thin pointers — never copy skill content into them.
 
 **Do not** generate or suggest build commands, test commands, package installs, or runtime setup for this repo.
 
@@ -44,4 +47,7 @@ This is a **Copilot CLI skill** containing only markdown, YAML, and JSON files. 
 | `docs/how-it-works.md` | Verify consistency with `SKILL.md` steps and `README.md` |
 | `README.md` problem statement or architecture | Verify consistency with `docs/how-it-works.md` |
 | Repo structure changes (new dirs, moved files) | `AGENTS.md` (structure section), `CHANGELOG.md` |
-| Version bump (`SKILL.md` metadata, `plugin.json`) | `CHANGELOG.md`, GitHub Release |
+| Version bump (`SKILL.md` metadata) | **All** manifests — `.github/plugin/plugin.json`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json`, root `plugin.json` — plus `CHANGELOG.md` and GitHub Release |
+| Any plugin manifest | Keep `version` identical across all manifests and `SKILL.md`; CI fails on drift |
+| `install.sh` | `README.md` (install table), `AGENTS.md` (Build & Run), `CHANGELOG.md` |
+| New tool/platform supported | `install.sh`, `README.md` install table, `AGENTS.md` (packaging model), `.github/workflows/ci.yml` installer check |

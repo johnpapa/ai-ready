@@ -4,8 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Multi-tool support** — the skill now installs in Claude Code, OpenAI Codex, and Cursor in addition to GitHub
+  Copilot, via the vendor-neutral [Agent Skills](https://agentskills.io) standard. Added `.claude-plugin/plugin.json`,
+  `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json`, and an [Agent Plugins](https://agent-plugins.org)
+  `plugin.json` at the repo root. All manifests point at the same canonical `skills/ai-ready/` — no content is
+  duplicated.
+- **`install.sh`** — one-command installer that detects installed AI coding tools and symlinks (or copies) the
+  skill into `~/.agents/skills/`, `~/.claude/skills/`, `~/.cursor/skills/`, and `~/.codex/skills/`. Supports
+  `--all`, `--copy`, and `--uninstall`.
+
 ### Fixed
 
+- **Skill not discovered outside GitHub Copilot** — the repo previously shipped only a Copilot plugin manifest, so
+  Claude Code, Codex, and Cursor had nothing to discover and never invoked the skill.
 - **Marketplace install metadata** — aligned `.github/plugin/plugin.json` with the released `1.2.0` skill
   version and added a CI check that fails when the plugin manifest version drifts from
   `skills/ai-ready/SKILL.md`. Marketplace refs should use a release tag such as `v1.2.0`, not a commit SHA.
