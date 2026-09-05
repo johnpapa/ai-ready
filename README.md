@@ -38,7 +38,7 @@ plugin from it.
 `~/.agents/skills/` is the vendor-neutral [Agent Skills](https://agentskills.io) directory that Codex and Cursor
 both read, so the last row works for most tools.
 
-If a marketplace mirrors this skill, it should point to a release tag such as `v1.2.0`, not a raw commit SHA.
+If a marketplace mirrors this skill, it should point to a release tag such as `v1.3.0`, not a raw commit SHA.
 
 ### Then type
 
@@ -88,7 +88,7 @@ The skill is safe to re-run. On the first run, it creates missing assets. On sub
 
 The marketplace entry is pointing at a commit SHA. Plugin installs clone with `git clone --branch <ref>`, which
 only accepts a branch or tag, so a raw SHA always fails. The registry entry needs to use a release tag such as
-`v1.2.0`. See [#26](https://github.com/johnpapa/ai-ready/issues/26).
+`v1.3.0`. See [#26](https://github.com/johnpapa/ai-ready/issues/26).
 
 Installing directly from this repo (`copilot plugin install johnpapa/ai-ready`) avoids the problem entirely.
 
