@@ -26,7 +26,7 @@ Prefer your tool's own plugin system? Each of these installs the same skill.
 
 | Tool | Install |
 |---|---|
-| **GitHub Copilot CLI** | `copilot plugin install johnpapa/ai-ready` |
+| **GitHub Copilot CLI** | `copilot plugin install ai-ready@awesome-copilot` |
 | **Claude Code** | `/plugin marketplace add johnpapa/ai-ready`<br>`/plugin install ai-ready@johnpapa-ai-ready` |
 | **OpenAI Codex** | `codex plugin marketplace add johnpapa/ai-ready`<br>`codex plugin add ai-ready@johnpapa-ai-ready` |
 | **Cursor** | Copy `skills/ai-ready/` into `~/.cursor/skills/ai-ready/` |
@@ -34,6 +34,9 @@ Prefer your tool's own plugin system? Each of these installs the same skill.
 
 Claude and Codex each need **two** commands — the first registers the marketplace, the second installs the
 plugin from it.
+
+Copilot CLI installs from the built-in `awesome-copilot` marketplace. Installing straight from a repo
+(`copilot plugin install johnpapa/ai-ready`) still works but is deprecated, so prefer the marketplace form.
 
 `~/.agents/skills/` is the vendor-neutral [Agent Skills](https://agentskills.io) directory that Codex and Cursor
 both read, so the last row works for most tools.

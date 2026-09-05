@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- **Copilot install now uses the marketplace** — documented
+  `copilot plugin install ai-ready@awesome-copilot` instead of installing straight from the repo. Copilot CLI
+  reports direct repo, URL, and local-path installs as deprecated.
+
 ## [1.3.0] — 2026-09-05
 
 ### Added
