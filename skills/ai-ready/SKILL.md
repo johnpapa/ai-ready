@@ -148,6 +148,8 @@ Content: Language-Specific Conventions (separate subsections for multi-language 
 
 The maintenance matrix defines what must be updated when different parts of the codebase change. Populate with real file paths. Trace import chains and registration patterns — don't stop at top-level files.
 
+**Test Conventions — untestable claims:** if the repo has more than one test lane (e.g. a fast/mocked unit lane plus a slower lane with real framework access, or unit + integration + e2e), add a rule instructing agents not to accept a PR's "this can't be tested" claim at face value. Before agreeing, search the *other* lane(s) for existing precedent of mocking/stubbing the exact API or state the new code depends on — a claim that's true for one lane is often false once another lane is checked. Only include this rule when multiple lanes actually exist; skip it for single-lane test setups.
+
 **Monorepo:** Create `.github/instructions/{area-name}.instructions.md` with `applyTo` patterns for areas with different stacks.
 
 ---

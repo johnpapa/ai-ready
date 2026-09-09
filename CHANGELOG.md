@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Test Conventions rule for untestable claims** — when a repo has more than one test lane, the generated
+  `copilot-instructions.md` now includes a rule instructing agents to verify a PR's "this can't be tested"
+  claim against the *other* lane(s) before accepting it, since a claim that's true for one lane is often false
+  once another lane (with different mocking/stubbing capabilities) is checked.
+
 ### Changed
 
 - **Copilot install now uses the marketplace** — documented
