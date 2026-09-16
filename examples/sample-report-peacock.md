@@ -1,3 +1,11 @@
+> ⚠️ **This sample is from an older version.** It was generated on **April 28, 2026**, when the skill tracked
+> 12 assets. The counts below were later hand-adjusted to 14 and have not been regenerated, so this file does
+> **not** show what v1.4.0 produces today — it predates the security skill, the reviewer agents, the starter
+> skill, the score prerequisites, and the removal of the projected-time claims.
+>
+> Regenerating it against `vscode-peacock` for real is tracked as the first job for [`evals/`](../evals/).
+> It is kept as-is rather than hand-edited, because a report that claims to be a real run should be one.
+
 🎯 **AI-Readiness Report**
 
 Your repo is about to get a whole lot easier to contribute to — and
