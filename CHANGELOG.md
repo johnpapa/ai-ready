@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **The sample report is now labelled as stale instead of quietly misleading.**
+  `examples/sample-report-peacock.{md,html}` was generated on 28 April 2026 against a 12-asset version, then
+  hand-adjusted to 14 — so it shows neither a real run nor current output, and it predates the security skill,
+  the reviewer agents, the starter skill, and the score prerequisites. Both files now carry a banner saying
+  exactly that. Deliberately **not** hand-corrected to 15: a file that presents itself as the output of a real
+  run should be the output of a real run, and regenerating it against `vscode-peacock` is the first job queued
+  for the `evals/` harness.
+
 ## [1.4.0] — 2026-09-16
 
 The release that made `AGENTS.md` the only file that matters, gave agents a boundary they can't cross
