@@ -6,11 +6,11 @@ The AI-Ready skill prepares your repository for effective collaboration with AI 
 
 ## The Three Mechanisms
 
-### AGENTS.md — Project Context for the Coding Agent
+### AGENTS.md — The Single Source of Truth
 
-**What it is:** A markdown file placed at the root of your repository that is automatically read by the Copilot coding agent (cloud agent).
+**What it is:** A markdown file at the root of your repository. It is the one place your conventions live, and it is read across tools — GitHub Copilot, Claude Code, Codex, and Cursor all look for it.
 
-**When it's read:** Every time the cloud agent starts working on a pull request, issue, or task in your repository. The agent reads this file before it writes any code — it's the first thing it sees.
+**When it's read:** Before an agent writes any code. For the Copilot cloud agent, every time it starts on a pull request, issue, or task. It's the first thing it sees.
 
 **What it contains:**
 
@@ -20,6 +20,10 @@ The AI-Ready skill prepares your repository for effective collaboration with AI 
 - **Release process** — versioning strategy, deployment steps, CI/CD triggers
 - **Architectural patterns** — how components are structured, naming conventions, data flow
 - **Feature creation guides** — step-by-step instructions for adding new functionality
+- **Language and framework conventions** — idioms, import styles, component structure, state management
+- **Test conventions and code style** — naming, assertion style, mocking, formatting
+- **Conventions mined from your own PR reviews** — the feedback your reviewers keep repeating
+- **The maintenance matrix** — what must be updated when each part of the codebase changes
 
 **Think of it as:** The "new hire onboarding doc" for the AI. Just as you'd give a new developer a document explaining how the project works, what to build first, and how to ship code — AGENTS.md does the same for the coding agent.
 
@@ -27,23 +31,22 @@ The AI-Ready skill prepares your repository for effective collaboration with AI 
 
 ---
 
-### .github/copilot-instructions.md — Coding Conventions for All Copilot
+### Per-tool pointer files — One File, Many Doors
 
-**What it is:** A repository-level instructions file that is automatically injected into every Copilot interaction within the repository.
+**What they are:** Short files that exist only because different tools look for different filenames —
+`.github/copilot-instructions.md` for Copilot, `CLAUDE.md` for Claude Code, `.cursorrules` for Cursor. Each one
+is a pointer, not a copy.
 
-**When it's read:** Every time anyone uses Copilot in this repo — Chat, code completions, pull request reviews, CLI, or any other Copilot surface. It applies to all contributors, not just the coding agent.
+**What they contain:** Three lines directing the agent to `AGENTS.md`. Copilot's file is the one exception —
+because Copilot auto-loads it into context, anything genuinely Copilot-specific may follow the pointer line in
+that same file.
 
-**What it contains:**
+**Think of it as:** Signposts. The building is `AGENTS.md`; these just tell each visitor which door they came
+through and where to go.
 
-- **Language conventions** — preferred idioms, import styles, module patterns
-- **Framework patterns** — how to use the project's frameworks correctly (e.g., component structure, state management)
-- **Test conventions** — naming patterns, assertion style, mocking approach, what to test
-- **Code style** — formatting preferences, naming conventions, comment expectations
-- **Maintenance matrix** — a cross-reference of what to update when specific parts of the codebase change
-
-**Think of it as:** The "style guide" that is enforced automatically. Instead of hoping every developer reads the style guide, Copilot reads it every time and follows it in every suggestion.
-
-**Why it matters:** This ensures consistency across all AI-assisted code — whether it's an inline completion, a Chat response, or a full PR from the coding agent. Every Copilot interaction respects the same conventions.
+**Why it matters:** The moment the same convention lives in two files, they drift — and then two agents are
+working from two different versions of your standards, silently. Writing it once also means you can switch
+tools without rewriting anything, because the knowledge is in your repo rather than in a vendor's format.
 
 ---
 
@@ -97,9 +100,10 @@ Scans the local repository for languages, frameworks, test setup, CI configurati
 
 The project context file for the coding agent. Contains repository structure, build/test/release commands, architectural patterns, and contribution guides. Placed at the repo root.
 
-### 3. .github/copilot-instructions.md
+### 3. Per-tool pointer files
 
-The coding conventions file for all Copilot interactions. Includes language idioms, framework patterns, test conventions, code style rules, and the maintenance matrix. Lives in `.github/`.
+Short files for each tool that looks for its own filename — `.github/copilot-instructions.md`, `CLAUDE.md`,
+`.cursorrules`. Each points at `AGENTS.md` rather than restating it.
 
 ### 4. .github/workflows/copilot-setup-steps.yml
 
@@ -123,7 +127,7 @@ A contributing guide section for your README (or a standalone CONTRIBUTING.md) t
 
 ### 8. Maintenance Matrix
 
-A cross-reference table embedded in `copilot-instructions.md` that maps "when X changes, update Y." This is one of the most valuable assets — it ensures that when code changes, the related documentation, tests, templates, and CI configuration all stay in sync. See [The Maintenance Matrix](#the-maintenance-matrix) section below for details.
+A cross-reference table embedded in `AGENTS.md` that maps "when X changes, update Y." This is one of the most valuable assets — it ensures that when code changes, the related documentation, tests, templates, and CI configuration all stay in sync. See [The Maintenance Matrix](#the-maintenance-matrix) section below for details.
 
 ### 9. Changelog Evaluation
 

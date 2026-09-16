@@ -3,7 +3,7 @@ name: ai-ready
 license: MIT
 metadata:
   version: "1.3.0"
-description: "**ANALYSIS SKILL** — Analyze any repository and generate AI-ready configuration — AGENTS.md, copilot-instructions.md, skills, CI workflows, issue templates. WHEN: \"make this repo ai-ready\", \"set up AI config\", \"add copilot instructions\", \"prepare this repo for AI contributions\", \"generate AGENTS.md\". INVOKES: glob, grep, view, create, edit for repo analysis and file generation. FOR SINGLE OPERATIONS: use create/edit directly for individual config files."
+description: "**ANALYSIS SKILL** — Analyze any repository and generate AI-ready configuration — a canonical AGENTS.md, thin per-tool pointer files, skills, CI workflows, issue templates. WHEN: \"make this repo ai-ready\", \"set up AI config\", \"add copilot instructions\", \"prepare this repo for AI contributions\", \"generate AGENTS.md\". INVOKES: glob, grep, view, create, edit for repo analysis and file generation. FOR SINGLE OPERATIONS: use create/edit directly for individual config files."
 ---
 
 # AI-Ready Repo Skill
@@ -31,8 +31,8 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 | # | Asset | Generated in |
 |---|-------|-------------|
 | 1 | `AGENTS.md` | Step 2 |
-| 2 | `.github/copilot-instructions.md` | Step 3 |
-| 3 | Maintenance matrix (in `copilot-instructions.md`) | Step 8 |
+| 2 | Per-tool pointer files (`.github/copilot-instructions.md`, `CLAUDE.md`, …) | Step 3 |
+| 3 | Maintenance matrix (in `AGENTS.md`) | Step 8 |
 | 4 | `.mcp.json` | Step 4b |
 | 5 | `.github/workflows/copilot-setup-steps.yml` | Step 4 |
 
@@ -102,7 +102,13 @@ Check `.github/workflows/` for PR triggers. Check for other CI systems. Recogniz
 
 ### 1d. Check existing AI configuration
 
-Check for: `AGENTS.md`, `.github/copilot-instructions.md`, `.github/skills/`, `.github/agents/`, `.github/extensions/`, `.devcontainer/`.
+Check for: `AGENTS.md`, `.github/copilot-instructions.md`, `CLAUDE.md`, `.cursorrules`, `.cursor/rules/`,
+`.github/skills/`, `.github/agents/`, `.github/extensions/`, `.devcontainer/`.
+
+**Duplication is the failure mode to look for.** `AGENTS.md` is canonical; every other instruction file should
+be a short pointer to it. If a tool-specific file restates conventions that also live in `AGENTS.md`, flag it
+as **Could Be Better** — duplicated guidance drifts silently, and then two agents are working from two
+different versions of the same standard.
 
 **copilot-setup-steps.yml** — check ALL known locations: `.github/workflows/copilot-setup-steps.yml` (canonical), `.github/copilot-setup-steps.yml` (legacy), and repo root. If found in a non-canonical location, flag it for consolidation into `.github/workflows/` — do not create a duplicate.
 
@@ -136,19 +142,59 @@ If workspace config found, list areas with name, path glob, and primary stack. F
 
 If missing, create `AGENTS.md` at the repo root. If it exists, compare against analysis and flag drift. **Do not overwrite.**
 
-Sections: Project Overview (never hardcode versions — reference manifests), Repository Structure, Tech Stack, Build & Run, Testing, Key Patterns and Conventions, CI/CD, Adding a New [Feature/Module] (trace the full registration chain — enums, index re-exports, config declarations), Screen Size / Responsive Rules (UI projects only), Common Pitfalls.
+`AGENTS.md` is the **single source of truth** for how this repo works. Every other instruction file points at
+it. Never split conventions across files — see Step 3.
+
+Sections: Project Overview (never hardcode versions — reference manifests), Repository Structure, Tech Stack,
+Build & Run, Testing, Key Patterns and Conventions, CI/CD, Adding a New [Feature/Module] (trace the full
+registration chain — enums, index re-exports, config declarations), Screen Size / Responsive Rules (UI projects
+only), Common Pitfalls.
+
+Also include, moved here from the old Copilot-only file so every tool reads them:
+
+- **Language-Specific Conventions** (separate subsections for multi-language repos)
+- **Notebook Conventions** (if `.ipynb` detected) and **Course/Lesson Conventions** (if a course repo)
+- **Framework Patterns**, **Test Conventions**, **Code Style Notes** (reference linter configs)
+- **Conventions Mined from PR Reviews** (Step 0c)
+- **Asset/Content Rules** (if assets detected)
+- **Maintenance Matrix** — what must be updated when each part of the codebase changes. Populate with real file
+  paths; trace import chains and registration patterns rather than stopping at top-level files. This is the
+  most valuable section in the file.
 
 ---
 
-## Step 3 — Generate .github/copilot-instructions.md
+## Step 3 — Generate per-tool pointer files
 
-If missing, create it. If it exists, compare against analysis — especially new PR review patterns and maintenance matrix drift.
+Different tools look for different filenames. Rather than maintaining the same conventions in several places,
+generate a **short pointer** for each tool the repo targets. One file holds the content; everything else points
+at it.
 
-Content: Language-Specific Conventions (separate subsections for multi-language repos), Notebook Conventions (if `.ipynb` detected), Course/Lesson Conventions (if course repo), Framework Patterns, Conventions Mined from PR Reviews, Test Conventions, Code Style Notes (reference linter configs), Asset/Content Rules (if assets detected), **Maintenance Matrix** (trace dependency graphs — the most valuable section).
+Generate a pointer for each tool detected in Step 1d, plus `.github/copilot-instructions.md` by default:
 
-The maintenance matrix defines what must be updated when different parts of the codebase change. Populate with real file paths. Trace import chains and registration patterns — don't stop at top-level files.
+| Tool | File |
+|---|---|
+| GitHub Copilot | `.github/copilot-instructions.md` |
+| Claude Code | `CLAUDE.md` |
+| Cursor | `.cursorrules` |
 
-**Monorepo:** Create `.github/instructions/{area-name}.instructions.md` with `applyTo` patterns for areas with different stacks.
+Pointer content is three lines:
+
+```markdown
+# Conventions
+
+The conventions for this repository live in [`AGENTS.md`](../AGENTS.md). Read that file first.
+```
+
+**Copilot is the one exception worth a little more.** Copilot auto-loads `.github/copilot-instructions.md` into
+context, so anything genuinely Copilot-specific (and *only* that) may follow the pointer line in the same file.
+Never restate conventions that already live in `AGENTS.md`.
+
+**Never duplicate.** If an existing tool file restates `AGENTS.md`, do not silently rewrite it — flag it as
+drift in the report and let the user decide (see *Do No Harm*).
+
+**Monorepo:** Create `.github/instructions/{area-name}.instructions.md` with `applyTo` patterns for areas with
+different stacks. These may carry real content, since they are scoped to paths rather than duplicating the root
+conventions.
 
 ---
 
@@ -188,7 +234,7 @@ If README exists but has no Contributing section: link to `CONTRIBUTING.md` if i
 
 ## Step 8 — Verify maintenance matrix
 
-Verify the matrix in `copilot-instructions.md` covers file cross-references, change cascades, and cross-cutting concerns. Trace actual dependency graphs per language (`.csproj` ProjectReferences, import chains, `mod` declarations, `__init__.py` re-exports).
+Verify the matrix in `AGENTS.md` covers file cross-references, change cascades, and cross-cutting concerns. Trace actual dependency graphs per language (`.csproj` ProjectReferences, import chains, `mod` declarations, `__init__.py` re-exports).
 
 ---
 

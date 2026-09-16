@@ -123,7 +123,7 @@ make this repo ai-ready but skip CI and issue templates
 ```
 
 ```
-just generate AGENTS.md and copilot-instructions
+just generate AGENTS.md and the per-tool pointer files
 ```
 
 ### Report only
@@ -206,7 +206,7 @@ This is the highest-value thing the skill does. It reads your recent PR review t
 - _"Don't forget to update the changelog"_ → becomes a maintenance matrix entry
 - _"This breaks on mobile, check responsive layout"_ → becomes a screen size rule
 
-These mined conventions go directly into `copilot-instructions.md`. The next AI-generated PR follows those rules automatically. You stop repeating yourself.
+These mined conventions go directly into `AGENTS.md`, where every tool reads them. The next AI-generated PR follows those rules automatically. You stop repeating yourself.
 
 ### What Gets Generated
 
@@ -214,8 +214,8 @@ Every file is customized to your repo's actual language, framework, and patterns
 
 | File | What It Does |
 | --- | --- |
-| **`AGENTS.md`** | Project context for the coding agent — repo structure, build/test commands, architectural decisions, how to add features |
-| **`.github/copilot-instructions.md`** | Coding conventions for all Copilot interactions — Chat, completions, PR reviews, CLI. Includes a maintenance matrix of what to update when code changes |
+| **`AGENTS.md`** | **The single source of truth.** Repo structure, build/test commands, architectural decisions, how to add features, coding conventions, conventions mined from your PR reviews, and the maintenance matrix. Read by Copilot, Claude Code, Codex and Cursor alike |
+| **Per-tool pointer files** | `.github/copilot-instructions.md`, `CLAUDE.md`, `.cursorrules` — three lines each, pointing at `AGENTS.md`. One file holds the content; everything else points at it, so nothing drifts |
 | **`.github/workflows/copilot-setup-steps.yml`** | Cloud agent environment setup — runtime versions, dependencies, build steps |
 | **`.github/workflows/ci.yml`** | PR validation pipeline — build, test, lint, typecheck. Skips non-code changes (docs, images, etc.) |
 | **`.github/ISSUE_TEMPLATE/bug-report.yml`** | Structured bug report form with fields relevant to your project type |

@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **`AGENTS.md` is now the single source of truth** — conventions, mined PR-review rules, and the maintenance
+  matrix all move into `AGENTS.md`, which Copilot, Claude Code, Codex, and Cursor all read. Tool-specific files
+  become three-line pointers to it (`.github/copilot-instructions.md`, `CLAUDE.md`, `.cursorrules`), with
+  Copilot's file allowed to carry genuinely Copilot-only content after the pointer since Copilot auto-loads it.
+  Previously the most valuable section — the maintenance matrix — lived in a Copilot-specific file, so no other
+  tool read it. Step 1d now flags duplicated guidance as drift rather than letting two agents work from two
+  versions of the same standard.
+
 - **Copilot install now uses the marketplace** — documented
   `copilot plugin install ai-ready@awesome-copilot` instead of installing straight from the repo. Copilot CLI
   reports direct repo, URL, and local-path installs as deprecated.
