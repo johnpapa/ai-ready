@@ -41,7 +41,7 @@ Copilot CLI installs from the built-in `awesome-copilot` marketplace. Installing
 `~/.agents/skills/` is the vendor-neutral [Agent Skills](https://agentskills.io) directory that Codex and Cursor
 both read, so the last row works for most tools.
 
-If a marketplace mirrors this skill, it should point to a release tag such as `v1.3.0`, not a raw commit SHA.
+If a marketplace mirrors this skill, it should point to a release tag such as `v1.4.0`, not a raw commit SHA.
 
 ### Then type
 
