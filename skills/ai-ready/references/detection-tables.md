@@ -166,3 +166,21 @@ Order matters less than honesty — a section listing risks the repo does not ha
 | Infrastructure | `infra/**`, `**/*.tf`, `**/*.bicep`, `k8s/**`, `helm/**` | Blast radius is the whole environment, not one service |
 | Secrets & config | `**/*.env*` (tracked), secret managers, CI secret references | A leaked credential is not revertible in any useful sense |
 | Release plumbing | `.github/workflows/**`, publish and release scripts | A change here changes how every other change ships |
+
+## Security surface detection
+
+Used by Step 4e. **Generate a security skill only if at least one row matches.** As with risk paths, a glob
+match is a candidate — open it and confirm before writing a rule about it.
+
+| Surface | Look for | The rule worth capturing |
+|---|---|---|
+| Web views / embedded content | `webview`, `iframe`, `Content-Security-Policy`, `dangerouslySetInnerHTML`, `innerHTML` | What may be rendered, and what must be escaped or sandboxed |
+| Trust boundary input | HTTP handlers, message listeners, deserialization, file upload, CLI arg parsing | What is validated where, and what is never trusted |
+| Secrets | `.env` handling, key vaults, credential files, `process.env` reads near network calls | Where secrets come from and where they must never go |
+| Auth / permissions | auth middleware, scope and role checks, extension or OAuth permission manifests | Which paths require which check, and who may widen a scope |
+| Crypto | hashing, signing, token generation, random number use | Which primitives are approved here and which are banned |
+| Query construction | string-built SQL, raw query calls, ORM escape hatches | What must be parameterised |
+
+**When nothing matches**, say so explicitly rather than generating a placeholder:
+_"No repo-specific security surface detected — skipping the security skill. Generic security advice would add
+noise without adding knowledge."_
