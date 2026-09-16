@@ -138,9 +138,23 @@ If a workspace config was found in Step 1a, read it to find package/project path
 
 ## Risk path detection
 
-Used by Step 2 to seed the `## Never merges without a human` section of `AGENTS.md`. Glob the repo for each
-row; include only the ones that actually match. Order matters less than honesty — a section listing risks the
-repo does not have is worse than a short one.
+Used by Step 2 to seed the `## Never merges without a human` section of `AGENTS.md`.
+
+**A glob match is a candidate, not a conclusion.** Open what matched and confirm it does what the row claims
+before writing it into the boundary. A wrong entry is worse than a missing one: it puts a human back into
+merges that never needed one, and it teaches the reader the section can't be trusted.
+
+Known false positives, all seen in real repos:
+
+| Match | Often isn't |
+|---|---|
+| `notification`, `email` in a desktop or editor app | A message to a customer — usually a local toast or an in-app banner |
+| `auth` in a client library | A permission boundary — usually just reading a token somebody else issued |
+| `payment` in a sample or fixture directory | Real money — check whether it runs in production |
+| `*.sql` in a seeds or test-fixtures folder | Production data — seeds are recreated, not migrated |
+| `.github/workflows` in a docs-only repo | Release plumbing — nothing ships from it |
+
+Order matters less than honesty — a section listing risks the repo does not have is worse than a short one.
 
 | Risk | Look for | Why a human |
 |---|---|---|

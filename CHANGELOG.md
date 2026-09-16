@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Risk-path globs produced false positives** — found by running the skill against `vscode-peacock`, where
+  `src/notification.ts` matched the customer-contact row. In a VS Code extension that is an editor toast, not a
+  message to a customer, and it would have written a wrong line into `## Never merges without a human`. Glob
+  matches are now candidates to confirm rather than conclusions, with a table of the false positives seen in
+  real repos. A wrong entry is worse than a missing one: it puts a human back into merges that never needed
+  one, and it teaches the reader the section cannot be trusted.
+
+- **Step 1d only looked for duplication, and split is the common case** — also found against `vscode-peacock`,
+  whose `AGENTS.md` and `copilot-instructions.md` hold entirely different content with neither complete.
+  Nothing looks wrong in a split, which is what makes it worse: a tool reading only one file silently misses
+  half the repo's conventions. Step 1d now detects both and names which sections need absorbing.
+
 ### Changed
 
 - **This repo now eats its own dog food** — the writing conventions, skill-writing conventions, and the
