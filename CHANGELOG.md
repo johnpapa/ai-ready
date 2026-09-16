@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **`AGENTS.md` now gets two sections almost no repo has** — `## Done means` and
+  `## Never merges without a human`. The first states the conditions a change must meet; the second draws the
+  line agents may not cross alone. Every line in both must be decidable by a machine with nobody interpreting
+  it, so `npm run verify` exits 0 qualifies and "write clean code" does not. The boundary is seeded from risk
+  paths actually found in the repo — migrations, API contracts, auth, billing, customer messaging,
+  infrastructure, secrets, release plumbing — and lists nothing the repo does not have. `AGENTS.md` now counts
+  as Nailed It only when both sections are present.
+
 ### Changed
 
 - **`AGENTS.md` is now the single source of truth** — conventions, mined PR-review rules, and the maintenance
