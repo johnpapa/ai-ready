@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **This repo now eats its own dog food** — the writing conventions, skill-writing conventions, and the
+  maintenance matrix move from `.github/copilot-instructions.md` into `AGENTS.md`, and that file becomes a
+  pointer. Added `CLAUDE.md` and `.cursorrules` pointers so every tool lands in the same place. The skill tells
+  other repos that duplicated guidance drifts; it should not have been keeping its own most valuable section
+  somewhere only Copilot would read it.
+
 - **Review mining now reads agent comments and weights recency** — review threads are no longer only humans
   correcting humans, so coding-agent and review-agent comments are mined alongside human ones, and the source
   of each rule is recorded (an agent repeating itself means a rule is missing from `AGENTS.md`, which is a
