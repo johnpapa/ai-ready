@@ -6,6 +6,54 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **"Everything goes in `AGENTS.md`" was the wrong rule, and this repo was the worst offender.** The
+  single-source-of-truth change fixed a real problem — the same convention living in
+  `.github/copilot-instructions.md` and `CLAUDE.md` and `.cursorrules`, drifting apart. But it solved a
+  duplication problem by creating a context problem, and the context problem is worse because it is invisible.
+  `AGENTS.md` is read **before every agent task**, so every line is paid for on every run and competes with the
+  actual work for attention. This is the same argument made for `SKILL.md`'s 500-line budget, applied
+  inconsistently in the same release.
+
+  Corrected: **single source of truth means one canonical entry point, not one enormous file.** New
+  `references/agents-md.md` carries the policy, and Step 2 now applies two rules.
+
+  **The discoverability test** (Addy Osmani): *can the agent find this by reading the code?* If yes, do not
+  write it down. Directory trees, tech-stack inventories and architecture summaries all fail it — the agent can
+  list a directory and read `package.json`. Step 2 no longer asks for Repository Structure and Tech Stack by
+  default; it asks for what is **surprising** about the repo, and nothing when the layout is conventional.
+  Also new: the anchoring trap — naming a deprecated technology biases generation *even when forbidding it*, so
+  prefer stating the positive rule.
+
+  **Narrowest scope that fits.** Every task → root `AGENTS.md`. One area → a **nested `AGENTS.md`** in that
+  directory, which is part of the standard rather than a workaround, with the closest file winning. One
+  procedure → a skill. Lookup material → a linked doc. Target ~150 lines for the root.
+
+  "Never split conventions across files" was too strong and is now precise: never state the same convention
+  twice, but *do* split by scope.
+
+- **This repo's own `AGENTS.md` went from 310 lines to 176**, by moving rather than deleting. The 60-line ASCII
+  directory tree is gone — it failed the new test outright — replaced by the part that is genuinely not
+  guessable: the six files that carry a version and must agree. Skill-authoring conventions, the full CI check
+  table, and *Adding a New Skill* moved to a new `docs/authoring.md`; they are needed when changing the skill,
+  not on every task.
+
+- **`## Never merges without a human` asserted more than it meant, and would not have survived a question.**
+  Telling an agent "merge it when you're done" puts a human in the loop — at delegation time — so the heading
+  as written forbade something that is fine. Every generated file now carries the definition directly under the
+  heading:
+
+  > A person has to have **read this diff** before it lands. Telling an agent "merge it when you're done" is
+  > approving a goal, not this change — so it does not count for anything on this list. Everywhere else it
+  > counts fine, which is the point of having a list.
+
+  Three objections it answers, with the reasoning in `references/agents-md.md`: standing approval is fine and
+  the list is what makes it *safe* off the list; a human clicking merge is not the bar, because approving four
+  pull requests in ninety seconds satisfies "a human merged it" and nothing else; and it is about *when* the
+  decision is made, not who holds permissions — branch protection answers that one. `AGENTS.md` now counts as
+  Nailed It only when the definition line is present.
+
+### Fixed
+
 - **The 500-line budget is now sourced, and reframed as a target rather than a rule.** `AGENTS.md` carried a
   bare `(<500 lines)` with no origin and no reason, which is exactly the kind of unattributed number this
   project spent a release removing from its own output. It turns out to be real: Anthropic's `skill-creator`

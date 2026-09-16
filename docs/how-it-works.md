@@ -27,6 +27,12 @@ The AI-Ready skill prepares your repository for effective collaboration with AI 
 - **`## Done means`** — the conditions a change must meet to be finished, every line decidable by a machine
 - **`## Never merges without a human`** — the boundary, seeded from risk paths actually present in this repo
 
+**What does NOT belong in it:** anything the agent can find by reading the code. Directory trees, tech-stack
+inventories and architecture summaries all cost attention on every task and buy nothing — the agent can list a
+directory and read `package.json`. Content needed only in one area of the repo goes in a **nested `AGENTS.md`**
+in that directory (the closest file wins, which is how the standard means monorepos to scale); content needed
+only for one procedure goes in a skill. Target ~150 lines for the root file.
+
 **Think of it as:** The "new hire onboarding doc" for the AI. Just as you'd give a new developer a document explaining how the project works, what to build first, and how to ship code — AGENTS.md does the same for the coding agent.
 
 **Why it matters:** Without AGENTS.md, the coding agent has to infer project structure from file names and code alone. With it, the agent knows exactly how to build, test, and contribute to your project from the start.
