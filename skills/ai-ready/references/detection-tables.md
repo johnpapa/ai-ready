@@ -135,3 +135,60 @@ If a workspace config was found in Step 1a, read it to find package/project path
 - Detect **conditional modules** — JDK-specific modules (`jdk21`), platform-specific builds, or optional integrations that only build under certain conditions.
 
 *Why?*: A fix in `langchain4j-core` affects 30+ downstream modules. Without mapping cross-package dependencies, agents make changes to one package and miss the ripple effects.
+
+## Risk path detection
+
+Used by Step 2 to seed the `## Never merges without a human` section of `AGENTS.md`.
+
+**A glob match is a candidate, not a conclusion.** Open what matched and confirm it does what the row claims
+before writing it into the boundary. A wrong entry is worse than a missing one: it puts a human back into
+merges that never needed one, and it teaches the reader the section can't be trusted.
+
+<!-- BEGIN GENERATED: risk-paths -->
+<!-- Generated from skills/ai-ready/data/risk-paths.yml — edit that file, then run
+     python3 tools/gen_detection_tables.py -->
+
+Known false positives, every one of them seen in a real repo. When one of these matches, the
+confirm question is not optional:
+
+| Match | Looks like | Usually is | Seen in |
+|---|---|---|---|
+| `**/notification*.*` | Customer contact | An in-app or editor toast, not a message to a customer | johnpapa/vscode-peacock — src/notification.ts is window.showInformationMessage |
+| `**/auth/token*.*` | Auth / permissions | Reading or refreshing a token somebody else issued, not a permission decision | Client libraries and SDK wrappers |
+| `**/seeds/**/*.sql` | Schema / data loss | Seed data that is recreated, not migrated | Most application repos with a local dev database |
+| `**/fixtures/**` | Money | Test fixtures that never touch a payment provider | Any repo with payment tests |
+| `**/*.env.example` | Secrets & config | A placeholder template, committed on purpose | Nearly every repo that has a .env at all |
+
+Order matters less than honesty — a section listing risks the repo does not have is worse than a
+short one.
+
+| Risk | Look for | Why a human | Confirm by opening it |
+|---|---|---|---|
+| Schema / data loss | `**/migrations/**`, `**/*.sql`, `prisma/schema.prisma`, `alembic/**` | Dropped columns and destructive migrations cannot be reverted by reverting the commit | Does this run against a real database, or is it a seed or fixture that gets recreated? |
+| API contract | `**/openapi.*`, `**/swagger.*`, `**/*.proto`, `**/schema.graphql` | Other teams and released clients already depend on the current shape | Is this contract published to anyone outside this repo, or internal-only and versioned together? |
+| Auth / permissions | `**/auth/**`, `**/authz/**`, `**/*permission*`, `**/*role*`, `**/iam/**`, `**/*policy*.json` | Widening access is silent and rarely caught by tests | Does this code DECIDE what someone may do, or only carry a token somebody else issued? |
+| Money | `**/billing/**`, `**/payment*/**`, `**/checkout/**`, `**/invoice*/**` | Mistakes move real money and are visible to customers | Does this path run in production against a real payment provider? |
+| Customer contact | `**/email*/**`, `**/notification*/**`, `**/sms/**`, `**/templates/email/**` | Messages cannot be unsent | Does this send something to a person outside the team, or is it an in-app toast or log line? |
+| Infrastructure | `infra/**`, `**/*.tf`, `**/*.bicep`, `k8s/**`, `helm/**` | Blast radius is the whole environment, not one service | Is this applied to a shared or production environment, or only to a local or ephemeral one? |
+| Secrets & config | `**/*.env`, `**/*.env.*`, `**/secrets/**` | A leaked credential is not revertible in any useful sense | Is this file tracked in git, and does it hold a real value rather than a placeholder? |
+| Release plumbing | `.github/workflows/**`, `**/release*.sh`, `**/publish*.sh` | A change here changes how every other change ships | Does anything actually ship from this repo, or does the workflow only run checks? |
+
+<!-- END GENERATED: risk-paths -->
+
+## Security surface detection
+
+Used by Step 4e. **Generate a security skill only if at least one row matches.** As with risk paths, a glob
+match is a candidate — open it and confirm before writing a rule about it.
+
+| Surface | Look for | The rule worth capturing |
+|---|---|---|
+| Web views / embedded content | `webview`, `iframe`, `Content-Security-Policy`, `dangerouslySetInnerHTML`, `innerHTML` | What may be rendered, and what must be escaped or sandboxed |
+| Trust boundary input | HTTP handlers, message listeners, deserialization, file upload, CLI arg parsing | What is validated where, and what is never trusted |
+| Secrets | `.env` handling, key vaults, credential files, `process.env` reads near network calls | Where secrets come from and where they must never go |
+| Auth / permissions | auth middleware, scope and role checks, extension or OAuth permission manifests | Which paths require which check, and who may widen a scope |
+| Crypto | hashing, signing, token generation, random number use | Which primitives are approved here and which are banned |
+| Query construction | string-built SQL, raw query calls, ORM escape hatches | What must be parameterised |
+
+**When nothing matches**, say so explicitly rather than generating a placeholder:
+_"No repo-specific security surface detected — skipping the security skill. Generic security advice would add
+noise without adding knowledge."_

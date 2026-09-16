@@ -1,0 +1,23 @@
+description: >
+  A client SDK. It has an auth/ directory, but nothing in it decides what anyone
+  may do — it carries a token somebody else issued. Both of this fixture's
+  interesting paths match a row AND a known false positive, which is exactly the
+  state where the agent must open the file instead of writing a boundary line.
+expect_match:
+  auth-permissions:
+    - src/auth/token.ts
+    - src/auth/refresh.ts
+  release-plumbing:
+    - .github/workflows/ci.yml
+expect_no_match:
+  - schema-data-loss
+  - api-contract
+  - money
+  - customer-contact
+  - infrastructure
+  - secrets-config
+expect_false_positive:
+  token-not-permission:
+    - src/auth/token.ts
+  fixture-not-money:
+    - test/fixtures/payment-response.json

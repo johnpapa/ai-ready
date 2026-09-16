@@ -6,12 +6,165 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- **Test Conventions rule for untestable claims** — when a repo has more than one test lane, the generated
-  `copilot-instructions.md` now includes a rule instructing agents to verify a PR's "this can't be tested"
-  claim against the *other* lane(s) before accepting it, since a claim that's true for one lane is often false
-  once another lane (with different mocking/stubbing capabilities) is checked.
+- **A Test Conventions rule for "this can't be tested" claims.** When a repo has more than one test lane,
+  `AGENTS.md` now gets a rule telling agents to check the *other* lane for precedent before accepting that a
+  change is uncoverable. A claim that is true for one lane is often false once another is checked, and
+  "untestable" is the easiest way for a change to land with no coverage and nobody arguing. Skipped for
+  single-lane repos. From a real case: `vscode-peacock#757` claimed a `vscode.env.remoteName` feature couldn't
+  be covered because the mocked unit lane has no `env.remoteName` to toggle — while the host lane was already
+  stubbing exactly that in another file.
+
+### Fixed
+
+- **`docs/how-it-works.md` had drifted out from under the rest of this release, and one line of it was simply
+  wrong.** The mechanisms table still described `.github/copilot-instructions.md` as holding "coding
+  conventions", which stopped being true the moment that file became a three-line pointer — a reader following
+  the docs would have put conventions in the one file most tools never read. Fixed, along with everything else
+  the release changed and the docs didn't:
+
+  - `.github/agents/` is documented as a **fourth mechanism**. It earns the slot on timing: it is the only one
+    that runs *after* code exists rather than before it, so folding it into the skills section would have lost
+    the thing that makes it useful.
+  - The skills section said skills are read "only when a user explicitly invokes" one. They load when their
+    `description` matches the work. That distinction — context is read at the start, procedure loads when it
+    becomes relevant — is the entire argument for generating a starter skill, and the docs contradicted it.
+  - "The 12 Steps" is now "The Steps", and 4c, 4d and 4e are described, with their skip conditions. Several
+    steps can correctly end in doing nothing, which the page now says out loud.
+  - The `AGENTS.md` mechanism lists `## Done means` and `## Never merges without a human`.
+
+  Worth naming how this happened: this repo's own maintenance matrix says that changing `SKILL.md` means
+  updating `docs/how-it-works.md`. Every PR in this stack ticked that box as "no change to the three
+  mechanisms". That judgment was wrong four times in a row, and the matrix was right — which is a fair argument
+  that a matrix row a person can wave off is worth less than one a machine can check.
+
+### Added
+
+- **The detection data is now testable, and tested.** `skills/ai-ready/data/risk-paths.yml` holds the risk
+  globs, the reason each one needs a human, the question to answer by opening the file, and — new — a list of
+  **known false positives**, every entry a line this skill actually got wrong in a real repo. The table in
+  `references/detection-tables.md` is generated from that file, and CI fails if the two drift.
+
+- **Fixture repos with known-correct answers** (`tests/fixtures/`). Four fake repo trees — a VS Code extension,
+  a SaaS app, a docs site, a client SDK — each with an `expected.yml` naming which rows must match, which must
+  produce **nothing**, and which false positives must fire. `tests/test_detection.py` runs them in CI. Putting
+  the Peacock bug back fails the build with the exact line it wrote:
+  `customer-contact: expected NO matches, got ['src/notification.ts', ...]`.
+
+- **`evals/` — a manual eval harness for the part no script can judge.** A 24-check binary rubric across
+  Truthfulness, Groundedness, The boundary, Restraint and Fit, plus a results template and the honest
+  instruction to commit runs that go badly. The Peacock run is recorded as `evals/results/`'s first entry,
+  labelled a partial run, because it predates the rubric and was done by hand rather than by installing the
+  skill. Deliberately not scored as a single number — averaging the sections would be the exact dishonesty the
+  rubric exists to catch.
 
 ### Changed
+
+- **The score is now a ceiling, not just a count.** Equal weighting was quietly dishonest: a repo can reach
+  nine nailed assets on a changelog, docs, issue templates, a PR template, `dependabot.yml`, CI and a README
+  contributing section — with no `AGENTS.md` at all. That repo is well maintained and not remotely AI-ready,
+  and a plain count handed it 🥇. Two prerequisites fix it without inventing weights: 🥇 requires `AGENTS.md`
+  nailed, 🏆 requires every 🤖 AI Context asset nailed. When a prerequisite caps the medal the report says so
+  on the score line and names what would lift it, because a capped medal with no explanation reads like a bug.
+
+- **Medal descriptions describe the repo, not a prediction about agents.** "AI agents contribute like your best
+  team members" was a claim about an outcome nobody has measured. 🏆 now reads "Conventions, boundaries,
+  reviewers and procedures all live in the repo" — which is simply what a 🏆 repo contains, and is checkable.
+
+- **The report no longer opens with a promise it can't keep.** "AI agents will know your conventions, follow
+  your patterns, and deliver PRs that are ready to merge" became "here's what an AI agent can learn about this
+  repo from the repo itself today — and what it still has to guess."
+
+- **`AGENTS.md` now documents exactly what CI enforces** — and, more usefully, what it doesn't. CI validates
+  the skill's *packaging*: frontmatter, YAML syntax, version parity across all six manifests, Agent Skills spec
+  compliance, CLI discovery, `skills.sh.json` parity. Every one of those passes on a `SKILL.md` whose
+  instructions are wrong. The only thing that catches a bad instruction is running it against a real repo,
+  which is why the PR template asks which one.
+
+### Removed
+
+- **The "45-minute review becomes a 5-minute review" claim.** Nobody measured it. The skill now states plainly
+  that the score measures what is in place, not whether agents write better pull requests, and the report
+  template forbids quoting any time saving — no percentage, no multiplier. A maintainer who does track review
+  time will spot an invented number and stop trusting everything around it.
+
+- **"The Killer Feature"** as a heading, and "this is the highest-value thing the skill does" as its opening
+  line. PR review mining is still the most interesting thing here; it can say what it does and let the reader
+  decide that.
+
+### Added
+
+- **A security skill is now generated, but only when there is real surface** (`.github/skills/security-review/`)
+  — populated from what the repo actually has: an existing `SECURITY.md`, a checklist already sitting in
+  `AGENTS.md`, the real trust boundaries, and security questions reviewers keep repeating. A generic security
+  skill is explicitly refused: "don't hardcode secrets" is already in every model's weights, and a security file
+  that reads like a blog post dilutes the rules that actually matter until people stop reading it. When no
+  surface is detected the skill says so in one line instead of emitting a placeholder. New detection table
+  covers web views, trust-boundary input, secrets, auth and permissions, crypto, and query construction.
+  Tracked assets go from 14 to 15.
+
+### Fixed
+
+- **Risk-path globs produced false positives** — found by running the skill against `vscode-peacock`, where
+  `src/notification.ts` matched the customer-contact row. In a VS Code extension that is an editor toast, not a
+  message to a customer, and it would have written a wrong line into `## Never merges without a human`. Glob
+  matches are now candidates to confirm rather than conclusions, with a table of the false positives seen in
+  real repos. A wrong entry is worse than a missing one: it puts a human back into merges that never needed
+  one, and it teaches the reader the section cannot be trusted.
+
+- **Step 1d only looked for duplication, and split is the common case** — also found against `vscode-peacock`,
+  whose `AGENTS.md` and `copilot-instructions.md` hold entirely different content with neither complete.
+  Nothing looks wrong in a split, which is what makes it worse: a tool reading only one file silently misses
+  half the repo's conventions. Step 1d now detects both and names which sections need absorbing.
+
+### Changed
+
+- **This repo now eats its own dog food** — the writing conventions, skill-writing conventions, and the
+  maintenance matrix move from `.github/copilot-instructions.md` into `AGENTS.md`, and that file becomes a
+  pointer. Added `CLAUDE.md` and `.cursorrules` pointers so every tool lands in the same place. The skill tells
+  other repos that duplicated guidance drifts; it should not have been keeping its own most valuable section
+  somewhere only Copilot would read it.
+
+- **Review mining now reads agent comments and weights recency** — review threads are no longer only humans
+  correcting humans, so coding-agent and review-agent comments are mined alongside human ones, and the source
+  of each rule is recorded (an agent repeating itself means a rule is missing from `AGENTS.md`, which is a
+  different signal than a human repeating themselves). History is read as an evolution rather than a flat list:
+  recent comments count double, patterns that appear early and then stop are flagged as possibly superseded
+  instead of being written up as current rules, recent-but-infrequent patterns are captured because new
+  conventions are exactly the ones nobody has written down, and human/agent disagreements are surfaced rather
+  than silently resolved.
+
+### Added
+
+- **A starter skill is now generated** (`.github/skills/shipping-a-change/SKILL.md`) — built from the
+  maintenance matrix and the registration chain, so the repo's hardest-won knowledge ("when you touch this you
+  also have to update that") lives somewhere an agent loads automatically when it becomes relevant, rather than
+  in a document somebody has to remember to read. Skipped when the matrix is thin, because a one-row skill is
+  noise. Tracked assets go from 13 to 14.
+
+- **Reviewer agents are now generated** (`.github/agents/`) — `spec-conformance` asks whether the diff does what
+  the issue asked for, `test-integrity` asks whether the tests would have failed against the old code and
+  whether any were weakened or skipped, and `blast-radius` asks how hard the change is to undo and checks the
+  diff against the `## Never merges without a human` boundary. Each is narrow by design and told to ignore
+  everything the others own. Step 1d has always *checked* for `.github/agents/`; nothing ever generated one.
+  Tracked assets go from 12 to 13 and the medal bands shift accordingly.
+
+- **`AGENTS.md` now gets two sections almost no repo has** — `## Done means` and
+  `## Never merges without a human`. The first states the conditions a change must meet; the second draws the
+  line agents may not cross alone. Every line in both must be decidable by a machine with nobody interpreting
+  it, so `npm run verify` exits 0 qualifies and "write clean code" does not. The boundary is seeded from risk
+  paths actually found in the repo — migrations, API contracts, auth, billing, customer messaging,
+  infrastructure, secrets, release plumbing — and lists nothing the repo does not have. `AGENTS.md` now counts
+  as Nailed It only when both sections are present.
+
+### Changed
+
+- **`AGENTS.md` is now the single source of truth** — conventions, mined PR-review rules, and the maintenance
+  matrix all move into `AGENTS.md`, which Copilot, Claude Code, Codex, and Cursor all read. Tool-specific files
+  become three-line pointers to it (`.github/copilot-instructions.md`, `CLAUDE.md`, `.cursorrules`), with
+  Copilot's file allowed to carry genuinely Copilot-only content after the pointer since Copilot auto-loads it.
+  Previously the most valuable section — the maintenance matrix — lived in a Copilot-specific file, so no other
+  tool read it. Step 1d now flags duplicated guidance as drift rather than letting two agents work from two
+  versions of the same standard.
 
 - **Copilot install now uses the marketplace** — documented
   `copilot plugin install ai-ready@awesome-copilot` instead of installing straight from the repo. Copilot CLI

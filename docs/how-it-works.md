@@ -4,13 +4,13 @@ The AI-Ready skill prepares your repository for effective collaboration with AI 
 
 ---
 
-## The Three Mechanisms
+## The Four Mechanisms
 
-### AGENTS.md — Project Context for the Coding Agent
+### AGENTS.md — The Single Source of Truth
 
-**What it is:** A markdown file placed at the root of your repository that is automatically read by the Copilot coding agent (cloud agent).
+**What it is:** A markdown file at the root of your repository. It is the one place your conventions live, and it is read across tools — GitHub Copilot, Claude Code, Codex, and Cursor all look for it.
 
-**When it's read:** Every time the cloud agent starts working on a pull request, issue, or task in your repository. The agent reads this file before it writes any code — it's the first thing it sees.
+**When it's read:** Before an agent writes any code. For the Copilot cloud agent, every time it starts on a pull request, issue, or task. It's the first thing it sees.
 
 **What it contains:**
 
@@ -20,6 +20,12 @@ The AI-Ready skill prepares your repository for effective collaboration with AI 
 - **Release process** — versioning strategy, deployment steps, CI/CD triggers
 - **Architectural patterns** — how components are structured, naming conventions, data flow
 - **Feature creation guides** — step-by-step instructions for adding new functionality
+- **Language and framework conventions** — idioms, import styles, component structure, state management
+- **Test conventions and code style** — naming, assertion style, mocking, formatting
+- **Conventions mined from your own PR reviews** — the feedback your reviewers keep repeating
+- **The maintenance matrix** — what must be updated when each part of the codebase changes
+- **`## Done means`** — the conditions a change must meet to be finished, every line decidable by a machine
+- **`## Never merges without a human`** — the boundary, seeded from risk paths actually present in this repo
 
 **Think of it as:** The "new hire onboarding doc" for the AI. Just as you'd give a new developer a document explaining how the project works, what to build first, and how to ship code — AGENTS.md does the same for the coding agent.
 
@@ -27,37 +33,36 @@ The AI-Ready skill prepares your repository for effective collaboration with AI 
 
 ---
 
-### .github/copilot-instructions.md — Coding Conventions for All Copilot
+### Per-tool pointer files — One File, Many Doors
 
-**What it is:** A repository-level instructions file that is automatically injected into every Copilot interaction within the repository.
+**What they are:** Short files that exist only because different tools look for different filenames —
+`.github/copilot-instructions.md` for Copilot, `CLAUDE.md` for Claude Code, `.cursorrules` for Cursor. Each one
+is a pointer, not a copy.
 
-**When it's read:** Every time anyone uses Copilot in this repo — Chat, code completions, pull request reviews, CLI, or any other Copilot surface. It applies to all contributors, not just the coding agent.
+**What they contain:** Three lines directing the agent to `AGENTS.md`. Copilot's file is the one exception —
+because Copilot auto-loads it into context, anything genuinely Copilot-specific may follow the pointer line in
+that same file.
 
-**What it contains:**
+**Think of it as:** Signposts. The building is `AGENTS.md`; these just tell each visitor which door they came
+through and where to go.
 
-- **Language conventions** — preferred idioms, import styles, module patterns
-- **Framework patterns** — how to use the project's frameworks correctly (e.g., component structure, state management)
-- **Test conventions** — naming patterns, assertion style, mocking approach, what to test
-- **Code style** — formatting preferences, naming conventions, comment expectations
-- **Maintenance matrix** — a cross-reference of what to update when specific parts of the codebase change
-
-**Think of it as:** The "style guide" that is enforced automatically. Instead of hoping every developer reads the style guide, Copilot reads it every time and follows it in every suggestion.
-
-**Why it matters:** This ensures consistency across all AI-assisted code — whether it's an inline completion, a Chat response, or a full PR from the coding agent. Every Copilot interaction respects the same conventions.
+**Why it matters:** The moment the same convention lives in two files, they drift — and then two agents are
+working from two different versions of your standards, silently. Writing it once also means you can switch
+tools without rewriting anything, because the knowledge is in your repo rather than in a vendor's format.
 
 ---
 
-### .github/skills/ — On-Demand Task Recipes
+### .github/skills/ — Procedures, Loaded When Relevant
 
 **What it is:** A directory of markdown files, each containing a step-by-step procedure that can be invoked by name during a Copilot interaction.
 
-**When it's read:** Only when a user explicitly invokes a skill (e.g., "use the add-feature skill" or "follow the scaffolding skill"). Skills are not read automatically — they are pulled in on demand.
+**When it's read:** When its `description` matches what the agent is about to do — or when a user invokes it by name. That distinction is the whole point of a skill: `AGENTS.md` is read at the *start* of the work, while a skill loads at the *moment it becomes relevant*. Context is the first kind; procedure is the second.
 
 **What it contains:**
 
-- **Procedural recipes** for common tasks — adding a new feature, scaffolding a module, setting up a new service
+- **A starter skill built from your maintenance matrix** (Step 4d) — the registration chain for whatever this repo adds most often, the change cascades, and the `## Done means` list from `AGENTS.md` verbatim
+- **A security skill, only where there is real surface** (Step 4e) — populated from your `SECURITY.md`, your own review comments, and your actual trust boundaries. Never a generic checklist
 - **Step-by-step instructions** with specific file paths, commands, and patterns to follow
-- **Project-specific workflows** tailored to your repository's conventions and structure
 
 **Think of it as:** A "runbook" the AI follows. Rather than explaining a multi-step process every time, you codify it once as a skill and invoke it whenever needed.
 
@@ -65,25 +70,58 @@ The AI-Ready skill prepares your repository for effective collaboration with AI 
 
 ---
 
-## How the Three Mechanisms Work Together
+### .github/agents/ — Reviewers You Assign
 
-| Mechanism | Scope | Trigger | Audience |
-|---|---|---|---|
-| `AGENTS.md` | Whole project context | Automatic (every coding agent task) | Coding agent only |
-| `copilot-instructions.md` | Coding conventions | Automatic (every Copilot interaction) | All Copilot users |
-| `.github/skills/` | Task-specific procedures | Manual (user invokes by name) | Whoever invokes the skill |
+**What it is:** A directory of agent definitions, each a reviewer with one question and an instruction to
+ignore everything else. Generated in Step 4c.
 
-Together, they form a layered system:
+**When it's read:** When you assign one to a pull request. This is the only mechanism that runs *after* code
+exists rather than before it.
 
-1. **AGENTS.md** gives the AI the big picture — what the project is and how it works.
-2. **copilot-instructions.md** defines the rules — how code should be written here.
-3. **Skills** provide the playbooks — how to execute specific tasks step by step.
+**What it contains:** Three reviewers that work in any repo, regardless of language or stack.
+
+| Agent | The one question it answers |
+|---|---|
+| `spec-conformance` | Did we build the thing that was asked for? |
+| `test-integrity` | Do the tests actually prove this change works? |
+| `blast-radius` | How hard is this to undo if it's wrong? |
+
+**Think of it as:** Three colleagues with narrow, non-overlapping remits. They're separate files rather than one
+agent with three checklists so each gets its own context and its own verdict, and can't trade one concern off
+against another. A reviewer with a broad remit gets muted — the same way a human who comments on everything
+gets muted.
+
+**Why it matters:** `spec-conformance` catches the failure mode that reading code never does — building the
+wrong thing correctly. And `blast-radius` reads the `## Never merges without a human` section from Step 2,
+which is what turns that boundary from a document into something that runs.
 
 ---
 
-## The 12 Steps
+## How the Four Mechanisms Work Together
 
-The skill performs up to 12 steps, each serving a specific purpose:
+| Mechanism | Scope | Trigger | Runs |
+|---|---|---|---|
+| `AGENTS.md` | Whole project context and conventions | Automatic, before any work | Before code |
+| Per-tool pointer files | Nothing of their own — they point at `AGENTS.md` | Automatic, per tool | Before code |
+| `.github/skills/` | Task-specific procedures | When the description matches the task | During the work |
+| `.github/agents/` | One review question each | When you assign one to a PR | After code exists |
+
+Together, they form a layered system:
+
+1. **AGENTS.md** gives the agent the big picture and the rules — what the project is, how it works, what
+   "done" means, and what never merges without a person.
+2. **Pointer files** make sure every tool finds it, whichever filename that tool happens to look for.
+3. **Skills** provide the playbooks, loaded at the moment the work calls for them.
+4. **Reviewer agents** ask the questions afterward that the first three can't — because they need a diff to
+   look at.
+
+---
+
+## The Steps
+
+The skill performs up to 16 steps, each serving a specific purpose. Several of them can end
+in *doing nothing*, which is a result rather than a gap — a generated file nobody needs is worse than a
+missing one.
 
 ### 0. GitHub Auto-Discovery
 
@@ -97,9 +135,10 @@ Scans the local repository for languages, frameworks, test setup, CI configurati
 
 The project context file for the coding agent. Contains repository structure, build/test/release commands, architectural patterns, and contribution guides. Placed at the repo root.
 
-### 3. .github/copilot-instructions.md
+### 3. Per-tool pointer files
 
-The coding conventions file for all Copilot interactions. Includes language idioms, framework patterns, test conventions, code style rules, and the maintenance matrix. Lives in `.github/`.
+Short files for each tool that looks for its own filename — `.github/copilot-instructions.md`, `CLAUDE.md`,
+`.cursorrules`. Each points at `AGENTS.md` rather than restating it.
 
 ### 4. .github/workflows/copilot-setup-steps.yml
 
@@ -108,6 +147,27 @@ Configuration for the Copilot coding agent's environment. Defines the setup step
 ### 4b. .mcp.json
 
 MCP server configuration connecting AI agents to your project's databases, APIs, and tools. Generated at the repo root (`.mcp.json`). Uses environment variable placeholders for secrets so the config is safe to commit.
+
+### 4c. Reviewer agents (.github/agents/)
+
+Three reviewers — `spec-conformance`, `test-integrity`, `blast-radius` — that apply to any repo regardless of
+stack. Each answers exactly one question and is told to ignore everything else. Frontmatter is `name` and
+`description` only; `tools`, `model` and `mcp-servers` are left for you to pin, because their accepted values
+move between tool versions.
+
+### 4d. Starter skill (.github/skills/)
+
+Turns the maintenance matrix into a skill an agent loads when it's about to make the kind of change the matrix
+covers. **Skipped when the matrix has fewer than three real cascades** — a one-row skill looks authoritative
+and teaches nothing.
+
+### 4e. Security skill (.github/skills/), when there is surface
+
+Generated only if the repo has real security surface — web views and CSP, input crossing a trust boundary,
+secrets handling, auth and permissions, crypto, query construction. **A generic security skill is explicitly
+refused:** "don't hardcode secrets" is already in every model's weights, and a security file that reads like a
+blog post dilutes the rules that actually matter until people stop reading it. When nothing matches, the skill
+says so in one line instead of emitting a placeholder.
 
 ### 5. CI Workflow (.github/workflows/ci.yml)
 
@@ -123,7 +183,7 @@ A contributing guide section for your README (or a standalone CONTRIBUTING.md) t
 
 ### 8. Maintenance Matrix
 
-A cross-reference table embedded in `copilot-instructions.md` that maps "when X changes, update Y." This is one of the most valuable assets — it ensures that when code changes, the related documentation, tests, templates, and CI configuration all stay in sync. See [The Maintenance Matrix](#the-maintenance-matrix) section below for details.
+A cross-reference table embedded in `AGENTS.md` that maps "when X changes, update Y." This is one of the most valuable assets — it ensures that when code changes, the related documentation, tests, templates, and CI configuration all stay in sync. See [The Maintenance Matrix](#the-maintenance-matrix) section below for details.
 
 ### 9. Changelog Evaluation
 
@@ -203,7 +263,7 @@ Maps the layout of the repository:
 
 ### What's Missing
 
-Based on all of the above, the analysis identifies gaps — which of the 12 assets are missing, incomplete, or could be improved.
+Based on all of the above, the analysis identifies gaps — which of the 15 assets are missing, incomplete, or could be improved.
 
 ### Customized Output
 

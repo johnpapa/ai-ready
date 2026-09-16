@@ -1,0 +1,34 @@
+description: >
+  A SaaS web app with genuine surface in most categories. This fixture is the
+  positive control: if a glob edit silently stops matching, this is where it shows.
+expect_match:
+  schema-data-loss:
+    - prisma/schema.prisma
+    - db/migrations/0001_init.sql
+    - db/migrations/0002_drop_legacy_email.sql
+    - db/seeds/users.sql
+  api-contract:
+    - openapi.yaml
+  auth-permissions:
+    - src/auth/guard.ts
+    - src/auth/roles.ts
+  money:
+    - src/billing/invoice.ts
+    - src/checkout/session.ts
+  customer-contact:
+    - src/email/welcome.ts
+    - src/templates/email/receipt.hbs
+  infrastructure:
+    - infra/main.tf
+    - k8s/deployment.yaml
+  secrets-config:
+    - .env
+    - .env.example
+  release-plumbing:
+    - .github/workflows/ci.yml
+expect_no_match: []
+expect_false_positive:
+  seed-not-migration:
+    - db/seeds/users.sql
+  example-not-secret:
+    - .env.example
