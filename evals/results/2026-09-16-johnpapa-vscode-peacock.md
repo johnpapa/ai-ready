@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Date** | 2026-09-16 |
-| **Skill version** | 1.3.0 (unreleased) |
+| **Skill version** | 1.3.0 — the in-development state that shipped as 1.4.0 |
 | **Commit** | `890931f` — the state before the fixes this run produced |
 | **Agent / model** | Claude Opus 5 |
 | **How it was run** | **Instructions applied by hand, not installed and invoked.** The skill's steps were read and executed against the repo's files directly. This is weaker than a real run: it tests the instructions, not the instructions-plus-an-agent-interpreting-them. |
