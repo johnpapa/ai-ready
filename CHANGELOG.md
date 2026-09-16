@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **The score is now a ceiling, not just a count.** Equal weighting was quietly dishonest: a repo can reach
+  nine nailed assets on a changelog, docs, issue templates, a PR template, `dependabot.yml`, CI and a README
+  contributing section — with no `AGENTS.md` at all. That repo is well maintained and not remotely AI-ready,
+  and a plain count handed it 🥇. Two prerequisites fix it without inventing weights: 🥇 requires `AGENTS.md`
+  nailed, 🏆 requires every 🤖 AI Context asset nailed. When a prerequisite caps the medal the report says so
+  on the score line and names what would lift it, because a capped medal with no explanation reads like a bug.
+
+- **Medal descriptions describe the repo, not a prediction about agents.** "AI agents contribute like your best
+  team members" was a claim about an outcome nobody has measured. 🏆 now reads "Conventions, boundaries,
+  reviewers and procedures all live in the repo" — which is simply what a 🏆 repo contains, and is checkable.
+
+- **The report no longer opens with a promise it can't keep.** "AI agents will know your conventions, follow
+  your patterns, and deliver PRs that are ready to merge" became "here's what an AI agent can learn about this
+  repo from the repo itself today — and what it still has to guess."
+
+- **`AGENTS.md` now documents exactly what CI enforces** — and, more usefully, what it doesn't. CI validates
+  the skill's *packaging*: frontmatter, YAML syntax, version parity across all six manifests, Agent Skills spec
+  compliance, CLI discovery, `skills.sh.json` parity. Every one of those passes on a `SKILL.md` whose
+  instructions are wrong. The only thing that catches a bad instruction is running it against a real repo,
+  which is why the PR template asks which one.
+
+### Removed
+
+- **The "45-minute review becomes a 5-minute review" claim.** Nobody measured it. The skill now states plainly
+  that the score measures what is in place, not whether agents write better pull requests, and the report
+  template forbids quoting any time saving — no percentage, no multiplier. A maintainer who does track review
+  time will spot an invented number and stop trusting everything around it.
+
+- **"The Killer Feature"** as a heading, and "this is the highest-value thing the skill does" as its opening
+  line. PR review mining is still the most interesting thing here; it can say what it does and let the reader
+  decide that.
+
 ### Added
 
 - **A security skill is now generated, but only when there is real surface** (`.github/skills/security-review/`)

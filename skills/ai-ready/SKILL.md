@@ -58,12 +58,28 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 
 **Scoring:** 🟩 Nailed It (counted) · 🟨 Could Be Better (not counted) · ⬜ Missing (not counted)
 
-| Medal | Name | Count | What it means |
-|-------|------|-------|---------------|
-| 🥉 | **Getting Started** | 1–4 | Basics in place but AI agents are mostly guessing |
-| 🥈 | **On Track** | 5–8 | AI agents can help but miss your conventions |
-| 🥇 | **Solid** | 9–12 | AI agents follow your patterns and catch most expectations |
-| 🏆 | **AI-Ready** | 13–15 | AI agents contribute like your best team members |
+| Medal | Name | Count | Also required | What it means |
+|-------|------|-------|---------------|---------------|
+| 🥉 | **Getting Started** | 1–4 | — | A few of the files exist. Nothing in the repo tells an agent how it works |
+| 🥈 | **On Track** | 5–8 | — | Real scaffolding is in place, but the conventions are still in people's heads |
+| 🥇 | **Solid** | 9–12 | `AGENTS.md` nailed | The conventions are written down, in the one file every tool reads |
+| 🏆 | **AI-Ready** | 13–15 | every 🤖 AI Context asset nailed | Conventions, boundaries, reviewers and procedures all live in the repo |
+
+**The prerequisites are not decoration.** A repo can reach nine nailed assets on a changelog, docs, issue
+templates, a PR template, `dependabot.yml`, CI and a README contributing section — with no `AGENTS.md` at all.
+That repo is well maintained. It is not AI-ready, and a plain count would hand it 🥇. So the count is a ceiling,
+not a score: if `AGENTS.md` is not nailed the repo stops at 🥈 however high the count goes, and if any
+🤖 AI Context asset is short it stops at 🥇.
+
+**Say so when the cap applies**, and say what would lift it:
+
+> 11 of 15 nailed — 🥈 **On Track**, held below 🥇 because `AGENTS.md` is missing its
+> `## Never merges without a human` section.
+
+**What the score does not measure.** It measures what is *in place*. It does not measure whether agents write
+better pull requests in this repo, because nothing here has measured that. Never tell the user their review
+time will drop by some amount. You have no way to know, and an invented number is the fastest way to lose a
+maintainer who does know.
 
 ---
 

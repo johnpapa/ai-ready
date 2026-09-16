@@ -4,16 +4,30 @@ Display format for the AI-Readiness Report (Step 11), HTML report, badge, and PR
 
 ## AI-Readiness Report format
 
-Calculate the score by counting how many assets have **Nailed It** status. Determine the maturity level from the count. Build the progress bar using 🟩 for nailed, 🟨 for could-be-better, and ⬜ for missing — always 15 squares.
+Calculate the score by counting how many assets have **Nailed It** status. Determine the maturity level from
+the count, then **apply the prerequisites** (see SKILL.md § The 15 tracked assets): without `AGENTS.md` nailed
+the medal stops at 🥈, and without every 🤖 AI Context asset nailed it stops at 🥇. Build the progress bar
+using 🟩 for nailed, 🟨 for could-be-better, and ⬜ for missing — always 15 squares.
+
+**When a prerequisite caps the medal, say so on the score line** and name what would lift it — a capped medal
+with no explanation reads like a bug. For example:
+
+```
+📊 **Your Repo Today** · 🥈 **On Track** · 🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟨⬜⬜⬜ · 11 of 15 nailed
+↳ held below 🥇 — `AGENTS.md` has no `## Never merges without a human` section
+```
+
+**Never quote a time saving.** No "45-minute review becomes 5 minutes", no percentage, no multiplier. Nothing
+in this skill measures review time, and a maintainer who does track it will spot the invented number and stop
+trusting the rest of the report.
 
 Display this report:
 
 ```
 🎯 **AI-Readiness Report**
 
-Your repo is about to get a whole lot easier to contribute to — and
-a whole lot faster to review. AI agents will know your conventions,
-follow your patterns, and deliver PRs that are ready to merge.
+Here's what an AI agent can learn about this repo from the repo
+itself today — and what it still has to guess.
 
 **{repo-name}**
 
