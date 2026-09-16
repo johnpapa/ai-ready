@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **A Test Conventions rule for "this can't be tested" claims.** When a repo has more than one test lane,
+  `AGENTS.md` now gets a rule telling agents to check the *other* lane for precedent before accepting that a
+  change is uncoverable. A claim that is true for one lane is often false once another is checked, and
+  "untestable" is the easiest way for a change to land with no coverage and nobody arguing. Skipped for
+  single-lane repos. From a real case: `vscode-peacock#757` claimed a `vscode.env.remoteName` feature couldn't
+  be covered because the mocked unit lane has no `env.remoteName` to toggle — while the host lane was already
+  stubbing exactly that in another file.
+
 ### Fixed
 
 - **The generated pointer files could link outside the repository.** The Step 3 template hardcoded

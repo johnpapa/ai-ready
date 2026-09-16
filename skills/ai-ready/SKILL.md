@@ -188,6 +188,20 @@ Also include, moved here from the old Copilot-only file so every tool reads them
   paths; trace import chains and registration patterns rather than stopping at top-level files. This is the
   most valuable section in the file.
 
+**Test Conventions — untestable claims.** If the repo has more than one test lane — a fast mocked unit lane
+plus a slower one with real framework access, or unit plus integration plus e2e — add a rule telling agents not
+to take a pull request's *"this can't be tested"* at face value. Before agreeing, search the **other** lane for
+existing precedent of stubbing the exact API or state the new code depends on. A claim that is true for one
+lane is often false once another is checked, and "untestable" is the easiest way for a change to arrive with no
+coverage and nobody arguing.
+
+This came out of a real case: `vscode-peacock#757` claimed a `vscode.env.remoteName` feature couldn't be
+covered, because the mocked unit lane's `vscode` stub has no `env.remoteName` to toggle. True for that lane.
+The host lane was already stubbing `vscode.env.remoteName` in another file.
+
+Only generate this rule when multiple lanes actually exist — skip it for a single-lane setup, where it would be
+advice about a situation the repo doesn't have.
+
 ### Two sections almost no repo has — generate both
 
 Agents now open pull requests faster than anyone reads them. These two sections are what let a repo decide
