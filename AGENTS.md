@@ -38,7 +38,7 @@ ai-ready/
 │           ├── report-template.md    # Report format, HTML spec, badge, PR flow
 │           └── training-repos.md     # Repos used to validate skill heuristics
 ├── docs/
-│   └── how-it-works.md             # Detailed explanation of the 3 mechanisms + 14 assets
+│   └── how-it-works.md             # Detailed explanation of the 3 mechanisms + 15 assets
 ├── examples/
 │   ├── sample-report-peacock.html  # Sample HTML report (GitHub Pages)
 │   └── sample-report-peacock.md    # Sample markdown report

@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **A security skill is now generated, but only when there is real surface** (`.github/skills/security-review/`)
+  — populated from what the repo actually has: an existing `SECURITY.md`, a checklist already sitting in
+  `AGENTS.md`, the real trust boundaries, and security questions reviewers keep repeating. A generic security
+  skill is explicitly refused: "don't hardcode secrets" is already in every model's weights, and a security file
+  that reads like a blog post dilutes the rules that actually matter until people stop reading it. When no
+  surface is detected the skill says so in one line instead of emitting a placeholder. New detection table
+  covers web views, trust-boundary input, secrets, auth and permissions, crypto, and query construction.
+  Tracked assets go from 14 to 15.
+
 ### Fixed
 
 - **Risk-path globs produced false positives** — found by running the skill against `vscode-peacock`, where

@@ -22,7 +22,7 @@ Follow these steps in order to analyze the current repository and generate all m
 
 **Report-only mode:** If the user asks for a report without generating files (e.g., "how ai-ready is this repo?", "score this repo"), run the full analysis (Steps 0–1) and display the report (Step 11) — but skip all generation steps (Steps 2–10).
 
-### The 14 tracked assets
+### The 15 tracked assets
 
 Assets are grouped into three categories. Count assets with **Nailed It** status for the score.
 
@@ -37,23 +37,24 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 | 5 | `.github/workflows/copilot-setup-steps.yml` | Step 4 |
 | 6 | Reviewer agents (`.github/agents/`) | Step 4c |
 | 7 | Starter skill (`.github/skills/`) | Step 4d |
+| 8 | Security skill (`.github/skills/`, when there is surface) | Step 4e |
 
 **🔧 Dev Workflow** — what keeps PRs clean and contributors on track
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 8 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
-| 9 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
-| 10 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
-| 11 | `.github/dependabot.yml` | (checked, not generated) |
+| 9 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
+| 10 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
+| 11 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
+| 12 | `.github/dependabot.yml` | (checked, not generated) |
 
 **📖 Onboarding** — what helps new contributors get started
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 12 | README Contributing section | Step 7 |
-| 13 | Changelog (`CHANGELOG.md`) | Step 9 |
-| 14 | Documentation (or explicit "not needed" note) | Step 10 |
+| 13 | README Contributing section | Step 7 |
+| 14 | Changelog (`CHANGELOG.md`) | Step 9 |
+| 15 | Documentation (or explicit "not needed" note) | Step 10 |
 
 **Scoring:** 🟩 Nailed It (counted) · 🟨 Could Be Better (not counted) · ⬜ Missing (not counted)
 
@@ -62,7 +63,7 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 | 🥉 | **Getting Started** | 1–4 | Basics in place but AI agents are mostly guessing |
 | 🥈 | **On Track** | 5–8 | AI agents can help but miss your conventions |
 | 🥇 | **Solid** | 9–12 | AI agents follow your patterns and catch most expectations |
-| 🏆 | **AI-Ready** | 13–14 | AI agents contribute like your best team members |
+| 🏆 | **AI-Ready** | 13–15 | AI agents contribute like your best team members |
 
 ---
 
@@ -140,7 +141,7 @@ List top-level directories and immediate children (skip `node_modules`, `.git`, 
 
 Produce a structured findings table combining GitHub context and codebase analysis with file-path evidence. See [references/detection-tables.md](references/detection-tables.md) for the full findings table template.
 
-List which of the 14 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
+List which of the 15 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
 
 ### 1j. Detect monorepo areas
 
@@ -321,6 +322,52 @@ and unlike an instructions file, a skill travels to any tool that follows the Ag
 
 **Never overwrite** an existing skill. If `.github/skills/` already has one covering this, flag drift instead.
 If the matrix is thin — fewer than three real cascades — skip generation and say why; a one-row skill is noise.
+
+---
+
+## Step 4e — Generate a security skill, only if there is surface
+
+**Do not generate a generic security skill.** "Don't hardcode secrets" is already in every model's weights;
+writing it to a file adds noise and teaches nothing. This step exists to capture the security knowledge that is
+specific to *this* repo and exists nowhere else.
+
+Scan for security surface (see [references/detection-tables.md](references/detection-tables.md) § Security
+surface detection). **If none is found, do not generate the skill** — say so in the report in one line, the same
+way Step 4d skips a thin matrix.
+
+If surface is found, generate `.github/skills/security-review/SKILL.md`, populated from what the repo actually
+has. Sources, in priority order:
+
+1. **Security notes already written down** — a `SECURITY.md`, a checklist inside `AGENTS.md`, comments near the
+   sensitive code. This is the highest-value input and it is usually already there. Move it, don't invent
+   alongside it.
+2. **The surface itself** — the real handlers, the real trust boundary, named with real paths.
+3. **PR review comments about security** (Step 0c) — a reviewer who keeps asking the same security question has
+   written your skill for you.
+
+```markdown
+---
+name: security-review
+description: The security rules specific to this repo — trust boundaries, what must never be trusted, and what to check before merging. Use when touching <the real surfaces found>.
+---
+
+# Security review
+
+## Trust boundaries in this repo
+<real paths, and what crosses them>
+
+## Never
+<the repo's real invariants — from SECURITY.md, AGENTS.md, or reviewer comments>
+
+## Before merging a change to <real path>
+<the actual checklist>
+```
+
+**Every line must name something real in this repo.** If a section would only restate general good practice,
+drop the section. A security skill that reads like a blog post is worse than none — it dilutes the rules that
+actually matter here, and people stop reading it.
+
+**Never overwrite** an existing security skill or `SECURITY.md`. Propose the move and let the user decide.
 
 ---
 
