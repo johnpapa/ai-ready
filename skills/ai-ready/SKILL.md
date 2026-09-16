@@ -107,10 +107,18 @@ Check `.github/workflows/` for PR triggers. Check for other CI systems. Recogniz
 Check for: `AGENTS.md`, `.github/copilot-instructions.md`, `CLAUDE.md`, `.cursorrules`, `.cursor/rules/`,
 `.github/skills/`, `.github/agents/`, `.github/extensions/`, `.devcontainer/`.
 
-**Duplication is the failure mode to look for.** `AGENTS.md` is canonical; every other instruction file should
-be a short pointer to it. If a tool-specific file restates conventions that also live in `AGENTS.md`, flag it
-as **Could Be Better** — duplicated guidance drifts silently, and then two agents are working from two
-different versions of the same standard.
+**Two failure modes, and the second is the common one.** `AGENTS.md` is canonical; every other instruction
+file should be a short pointer to it.
+
+1. **Duplication** — a tool file restates conventions that also live in `AGENTS.md`. Flag as
+   **Could Be Better**: duplicated guidance drifts silently, and then two agents work from two versions of the
+   same standard.
+2. **Split** — each file holds *different* content and neither is complete. This is what most repos actually
+   have, and it is worse than duplication because nothing looks wrong. A tool reading only `AGENTS.md` never
+   sees the conventions; a tool reading only the Copilot file never sees the build and test commands.
+
+For a split, list specifically **which sections exist in the tool file but not in `AGENTS.md`** — those are
+what Step 2 needs to absorb. Do not rewrite the tool file here; propose the move and let the user decide.
 
 **copilot-setup-steps.yml** — check ALL known locations: `.github/workflows/copilot-setup-steps.yml` (canonical), `.github/copilot-setup-steps.yml` (legacy), and repo root. If found in a non-canonical location, flag it for consolidation into `.github/workflows/` — do not create a duplicate.
 
