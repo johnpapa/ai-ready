@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **A starter skill is now generated** (`.github/skills/shipping-a-change/SKILL.md`) — built from the
+  maintenance matrix and the registration chain, so the repo's hardest-won knowledge ("when you touch this you
+  also have to update that") lives somewhere an agent loads automatically when it becomes relevant, rather than
+  in a document somebody has to remember to read. Skipped when the matrix is thin, because a one-row skill is
+  noise. Tracked assets go from 13 to 14.
+
 - **Reviewer agents are now generated** (`.github/agents/`) — `spec-conformance` asks whether the diff does what
   the issue asked for, `test-integrity` asks whether the tests would have failed against the old code and
   whether any were weakened or skipped, and `blast-radius` asks how hard the change is to undo and checks the
