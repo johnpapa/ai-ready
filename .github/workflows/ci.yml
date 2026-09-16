@@ -8,6 +8,7 @@ on:
       - "docs/**"
       - "images/**"
       - "examples/**"
+      - "evals/**"
       - "LICENSE"
       - "README.md"
       - "CHANGELOG.md"
@@ -50,7 +51,7 @@ jobs:
           python3 -c "
           import yaml, glob, sys
           errors = []
-          for pattern in ['.github/**/*.yml', '.github/**/*.yaml']:
+          for pattern in ['.github/**/*.yml', '.github/**/*.yaml', 'skills/**/*.yml', 'tests/**/*.yml']:
               for f in glob.glob(pattern, recursive=True):
                   try:
                       yaml.safe_load(open(f))
@@ -135,6 +136,15 @@ jobs:
               print('\n'.join(errors))
               sys.exit(1)
           "
+
+      - name: Install test dependencies
+        run: pip install --quiet pyyaml
+
+      - name: Check detection tables match their data
+        run: python3 tools/gen_detection_tables.py --check
+
+      - name: Test risk-path detection against fixtures
+        run: python3 tests/test_detection.py
 
       - name: Validate skills CLI discovery
         run: |

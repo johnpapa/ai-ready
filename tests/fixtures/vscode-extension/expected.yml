@@ -1,0 +1,20 @@
+description: >
+  A VS Code extension. This is the johnpapa/vscode-peacock shape, and it is the
+  fixture that exists because of a real bug: src/notification.ts was written into
+  `## Never merges without a human` as customer contact. It is an editor toast.
+expect_match:
+  release-plumbing:
+    - .github/workflows/build.yml
+    - .github/workflows/release.yml
+expect_no_match:
+  - schema-data-loss
+  - api-contract
+  - auth-permissions
+  - money
+  - customer-contact
+  - infrastructure
+  - secrets-config
+expect_false_positive:
+  toast-not-customer:
+    - src/notification.ts
+    - test/suite/notification.test.ts

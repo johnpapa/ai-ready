@@ -1,0 +1,128 @@
+# Risk paths that seed `## Never merges without a human` in a generated AGENTS.md.
+#
+# This file is the source of truth. The table in
+# references/detection-tables.md is GENERATED from it by tools/gen_detection_tables.py,
+# and CI fails if the two drift apart.
+#
+# Read `confirm` as the question you must answer by OPENING the file. A glob match
+# is a candidate, never a conclusion. A wrong entry in the boundary is worse than a
+# missing one: it puts a human back into merges that never needed one, and the first
+# time a reader spots an obviously-wrong line they stop trusting the whole section.
+
+version: 1
+
+rows:
+  - id: schema-data-loss
+    label: Schema / data loss
+    globs:
+      - "**/migrations/**"
+      - "**/*.sql"
+      - "prisma/schema.prisma"
+      - "alembic/**"
+    why: Dropped columns and destructive migrations cannot be reverted by reverting the commit
+    confirm: Does this run against a real database, or is it a seed or fixture that gets recreated?
+
+  - id: api-contract
+    label: API contract
+    globs:
+      - "**/openapi.*"
+      - "**/swagger.*"
+      - "**/*.proto"
+      - "**/schema.graphql"
+    why: Other teams and released clients already depend on the current shape
+    confirm: Is this contract published to anyone outside this repo, or internal-only and versioned together?
+
+  - id: auth-permissions
+    label: Auth / permissions
+    globs:
+      - "**/auth/**"
+      - "**/authz/**"
+      - "**/*permission*"
+      - "**/*role*"
+      - "**/iam/**"
+      - "**/*policy*.json"
+    why: Widening access is silent and rarely caught by tests
+    confirm: Does this code DECIDE what someone may do, or only carry a token somebody else issued?
+
+  - id: money
+    label: Money
+    globs:
+      - "**/billing/**"
+      - "**/payment*/**"
+      - "**/checkout/**"
+      - "**/invoice*/**"
+    why: Mistakes move real money and are visible to customers
+    confirm: Does this path run in production against a real payment provider?
+
+  - id: customer-contact
+    label: Customer contact
+    globs:
+      - "**/email*/**"
+      - "**/notification*/**"
+      - "**/sms/**"
+      - "**/templates/email/**"
+    why: Messages cannot be unsent
+    confirm: Does this send something to a person outside the team, or is it an in-app toast or log line?
+
+  - id: infrastructure
+    label: Infrastructure
+    globs:
+      - "infra/**"
+      - "**/*.tf"
+      - "**/*.bicep"
+      - "k8s/**"
+      - "helm/**"
+    why: Blast radius is the whole environment, not one service
+    confirm: Is this applied to a shared or production environment, or only to a local or ephemeral one?
+
+  - id: secrets-config
+    label: Secrets & config
+    globs:
+      - "**/*.env"
+      - "**/*.env.*"
+      - "**/secrets/**"
+    why: A leaked credential is not revertible in any useful sense
+    confirm: Is this file tracked in git, and does it hold a real value rather than a placeholder?
+
+  - id: release-plumbing
+    label: Release plumbing
+    globs:
+      - ".github/workflows/**"
+      - "**/release*.sh"
+      - "**/publish*.sh"
+    why: A change here changes how every other change ships
+    confirm: Does anything actually ship from this repo, or does the workflow only run checks?
+
+# Globs that LOOK like a row above and usually aren't. When one of these matches,
+# the `confirm` question is not optional — open the file before writing anything.
+# Every entry here was a real false positive in a real repo.
+false_positives:
+  - id: toast-not-customer
+    glob: "**/notification*.*"
+    looks_like: customer-contact
+    usually_is: An in-app or editor toast, not a message to a customer
+    seen_in: johnpapa/vscode-peacock — src/notification.ts is window.showInformationMessage
+
+  - id: token-not-permission
+    glob: "**/auth/token*.*"
+    looks_like: auth-permissions
+    usually_is: Reading or refreshing a token somebody else issued, not a permission decision
+    seen_in: Client libraries and SDK wrappers
+
+  - id: seed-not-migration
+    glob: "**/seeds/**/*.sql"
+    looks_like: schema-data-loss
+    usually_is: Seed data that is recreated, not migrated
+    seen_in: Most application repos with a local dev database
+
+  - id: fixture-not-money
+    glob: "**/fixtures/**"
+    looks_like: money
+    usually_is: Test fixtures that never touch a payment provider
+    seen_in: Any repo with payment tests
+
+  - id: example-not-secret
+    glob: "**/*.env.example"
+    looks_like: secrets-config
+    usually_is: A placeholder template, committed on purpose
+    seen_in: Nearly every repo that has a .env at all

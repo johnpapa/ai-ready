@@ -1,0 +1,17 @@
+description: >
+  A docs-only site. Nothing here is risky, but the deploy workflow still matches
+  release plumbing — the glob cannot tell "publishes a product" from "publishes a
+  static site". That is the point of this fixture: it pins the one match a human
+  has to dismiss, so nobody "fixes" it by loosening the pattern.
+expect_match:
+  release-plumbing:
+    - .github/workflows/deploy-docs.yml
+expect_no_match:
+  - schema-data-loss
+  - api-contract
+  - auth-permissions
+  - money
+  - customer-contact
+  - infrastructure
+  - secrets-config
+expect_false_positive: {}

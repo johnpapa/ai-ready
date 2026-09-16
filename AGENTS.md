@@ -16,7 +16,7 @@ ai-ready/
 │   │   └── plugin.json             # Plugin manifest for copilot plugin install
 │   ├── workflows/copilot-setup-steps.yml  # Cloud agent setup (checkout only — no build)
 │   ├── dependabot.yml              # GitHub Actions dependency updates
-│   ├── workflows/ci.yml            # PR validation (skill integrity checks)
+│   ├── workflows/ci.yml            # PR validation (packaging + detection tests)
 │   ├── ISSUE_TEMPLATE/             # Bug reports, feature requests, new skill ideas
 │   ├── PULL_REQUEST_TEMPLATE.md    # PR checklist (integrity checks, test evidence)
 │   └── CODEOWNERS                  # @johnpapa owns all paths
@@ -31,12 +31,25 @@ ai-ready/
 ├── skills.sh.json                  # skills.sh registry page config
 ├── skills/
 │   └── ai-ready/
-│       ├── SKILL.md                   # The 12-step skill procedure (<500 lines)
+│       ├── SKILL.md                   # The skill procedure, Steps 0-11 (<500 lines)
+│       ├── data/                     # Machine-readable detection data (source of truth)
+│       │   └── risk-paths.yml        # Risk globs + known false positives; tested in CI
 │       └── references/               # Detailed reference material (loaded on demand)
 │           ├── github-discovery.md   # GitHub API tables, PR mining, health gaps
-│           ├── detection-tables.md   # Manifest detection, course/monorepo heuristics
+│           ├── detection-tables.md   # Manifest detection, heuristics; risk table GENERATED
+│           ├── reviewer-agents.md    # The three .github/agents/ reviewers (Step 4c)
 │           ├── report-template.md    # Report format, HTML spec, badge, PR flow
 │           └── training-repos.md     # Repos used to validate skill heuristics
+├── tools/
+│   ├── globmatch.py                # Glob semantics the detection tables assume
+│   └── gen_detection_tables.py     # Regenerates the risk table from data/risk-paths.yml
+├── tests/
+│   ├── test_detection.py           # Runs the globs against fixtures; CI blocks on failure
+│   └── fixtures/                   # Fake repo trees + expected.yml (the known-correct answers)
+├── evals/
+│   ├── README.md                   # How to run a manual eval, and how to pick a target repo
+│   ├── rubric.md                   # 24 binary checks across Truthfulness/Groundedness/…
+│   └── results/                    # One file per run, committed — including the bad ones
 ├── docs/
 │   └── how-it-works.md             # Detailed explanation of the 3 mechanisms + 15 assets
 ├── examples/
@@ -128,11 +141,36 @@ python3 -c "import yaml,glob;[yaml.safe_load(open(f)) for f in glob.glob('.githu
 npx -y skills@latest add ./ --list
 ```
 
+### Detection tests
+
+`tests/test_detection.py` checks the risk-path globs in `skills/ai-ready/data/risk-paths.yml` against fixture
+repos in `tests/fixtures/`, each carrying an `expected.yml` that states which rows must match, which must
+produce nothing, and which known false positives must fire. It runs in CI.
+
+```bash
+python3 tests/test_detection.py            # the fixtures
+python3 tools/gen_detection_tables.py      # regenerate the markdown table from the data
+python3 tools/gen_detection_tables.py --check   # what CI runs
+```
+
+`data/risk-paths.yml` is the **source of truth**. The table in `references/detection-tables.md` is generated
+from it between `<!-- BEGIN GENERATED -->` markers, and CI fails if they drift. Edit the YAML, run the
+generator, commit both.
+
+When you fix a bad detection, add the case to a fixture in the same PR. That is what turns a one-off fix into a
+regression test — `tests/fixtures/vscode-extension/` exists because `src/notification.ts` was once written into
+a boundary as customer contact, and it now fails the build if that comes back.
+
 ### What CI does not enforce
 
-**CI validates the skill's packaging, not the skill's behavior.** Every check above passes on a `SKILL.md`
-whose instructions are wrong, contradictory, or produce broken output — the frontmatter would still be valid
-and the versions would still match.
+**CI validates the skill's packaging and its detection data — not the skill's judgment.** Every check passes on
+a `SKILL.md` whose instructions are wrong, contradictory, or produce broken output. The globs can be perfect
+while the step that reads them still writes nonsense, because an agent does not run the globs literally; it
+reads the table and pattern-matches.
+
+That gap is what [`evals/`](evals/) is for: a fixed rubric, run by a person against a real repo, recorded in
+`evals/results/`. It is not automated and it does not pretend to be. Run one before shipping a release, and
+commit the result even when it goes badly — a results directory with only good runs in it is not evidence.
 
 The only thing that catches a bad *instruction* today is a manual smoke test: install the skill, invoke it on a
 real repo, and read what it generated. Nothing records that this happened, which is why the PR template asks
@@ -197,6 +235,9 @@ So before opening a PR that changes skill behavior:
 | `skills.sh.json` | Must list every directory under `skills/`; CI fails on drift |
 | New tool/platform supported | `README.md` install table, `AGENTS.md` (packaging model); add a manifest only if the tool cannot use `npx skills` |
 | `.github/workflows/ci.yml` | `AGENTS.md` (§ Testing — *What CI enforces*) and the CI summary in `README.md` § Contributing. A check nobody documented is a check contributors work around |
+| `skills/ai-ready/data/*.yml` | Run `python3 tools/gen_detection_tables.py` and commit the regenerated `references/detection-tables.md`; add or update a fixture in `tests/fixtures/` covering the change |
+| A detection bug found in a real repo | Add the case to a fixture in `tests/fixtures/` in the same PR, and add the pattern to `false_positives` in `data/risk-paths.yml` if it is one |
+| `evals/rubric.md` | `evals/results/TEMPLATE.md` if the sections changed; previous results keep their original rubric version |
 | Scoring, medals, or the tracked asset list | `SKILL.md` (asset table + medal table), `references/report-template.md` (square count, category indicators, cap wording), `README.md` § Scoring, `docs/how-it-works.md`, `CHANGELOG.md` |
 
 ## Adding a New Skill

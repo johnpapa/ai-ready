@@ -207,8 +207,15 @@ commands and real conventions:
 ```
 
 **`## Never merges without a human`** — the boundary. Seed it from the risk paths actually present in this
-repo (see [references/detection-tables.md](references/detection-tables.md) § Risk path detection), then state
-each as a path or a condition rather than a category:
+repo (see [references/detection-tables.md](references/detection-tables.md) § Risk path detection, generated
+from [data/risk-paths.yml](data/risk-paths.yml)), then state each as a path or a condition rather than a
+category.
+
+**Before you write a line, check it against `data/risk-paths.yml` § `false_positives`.** Those are not
+hypothetical — every entry is a line this skill actually got wrong in a real repo. If what you matched appears
+there, answer the row's `confirm` question by opening the file, and drop the line unless the answer holds up.
+That list is the one part of this step with a regression test behind it
+(`tests/fixtures/`), so treat a match as a stop sign rather than a hint:
 
 ```markdown
 ## Never merges without a human
