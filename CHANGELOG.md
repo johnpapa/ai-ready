@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **`docs/how-it-works.md` had drifted out from under the rest of this release, and one line of it was simply
+  wrong.** The mechanisms table still described `.github/copilot-instructions.md` as holding "coding
+  conventions", which stopped being true the moment that file became a three-line pointer — a reader following
+  the docs would have put conventions in the one file most tools never read. Fixed, along with everything else
+  the release changed and the docs didn't:
+
+  - `.github/agents/` is documented as a **fourth mechanism**. It earns the slot on timing: it is the only one
+    that runs *after* code exists rather than before it, so folding it into the skills section would have lost
+    the thing that makes it useful.
+  - The skills section said skills are read "only when a user explicitly invokes" one. They load when their
+    `description` matches the work. That distinction — context is read at the start, procedure loads when it
+    becomes relevant — is the entire argument for generating a starter skill, and the docs contradicted it.
+  - "The 12 Steps" is now "The Steps", and 4c, 4d and 4e are described, with their skip conditions. Several
+    steps can correctly end in doing nothing, which the page now says out loud.
+  - The `AGENTS.md` mechanism lists `## Done means` and `## Never merges without a human`.
+
+  Worth naming how this happened: this repo's own maintenance matrix says that changing `SKILL.md` means
+  updating `docs/how-it-works.md`. Every PR in this stack ticked that box as "no change to the three
+  mechanisms". That judgment was wrong four times in a row, and the matrix was right — which is a fair argument
+  that a matrix row a person can wave off is worth less than one a machine can check.
+
 ### Added
 
 - **The detection data is now testable, and tested.** `skills/ai-ready/data/risk-paths.yml` holds the risk
