@@ -26,6 +26,12 @@ This is the **highest-value** GitHub-native insight. Look at the 5-10 most recen
 
 *Why?*: If a maintainer leaves the same review comment on 5 different PRs, that's a convention waiting to be documented. Mining PR reviews turns reviewer fatigue into automated guidance.
 
+**Mine agent review comments too, not just human ones.** Review threads are no longer only humans correcting
+humans. Coding agents open pull requests and review agents comment on them, and both are part of how this
+repo's standards actually get applied now. Treat every reviewer as a source, and record which kind each rule
+came from — an agent repeating itself means a rule is missing from `AGENTS.md`, which is a slightly different
+signal than a human repeating themselves.
+
 1. Use `github-mcp-server-list_pull_requests` (state: closed, sort: updated) to find recent merged PRs
 2. For each, use `github-mcp-server-pull_request_read` (method: get_review_comments) to read review threads
 3. Look for **repeated patterns** — the same feedback given across multiple PRs becomes a convention:
@@ -34,9 +40,20 @@ This is the **highest-value** GitHub-native insight. Look at the 5-10 most recen
    - "Update the docs when you change this" → add to maintenance matrix
    - "Don't forget to update the changelog" → add to maintenance matrix
 
+4. **Read the history as an evolution, not a flat list.** Conventions change, and a rule mined from two years
+   ago may have been deliberately abandoned. Weight what you find:
+   - Comments from the **most recent third** of the PRs you read count double.
+   - A pattern that appears **early and then stops** is a candidate for *superseded* — do not write it as a
+     current rule. Note it in the findings so the user can confirm, e.g. _"Reviewers asked for X until
+     March and stopped — dropped, confirm if still wanted."_
+   - A pattern that appears **only recently** is worth capturing even with fewer occurrences. New conventions
+     are exactly the ones nobody has written down yet.
+   - If human and agent reviewers **disagree** on the same point, surface it rather than picking a side — an
+     unresolved disagreement is a convention that was never actually settled.
+
 **If few or no review comments are found** (e.g., PRs are self-merged or auto-merged), expand the search to up to 20 merged PRs. If there are still no review patterns, note this in the findings: _"No PR review patterns found — consider adding conventions as the team grows."_ Never silently skip this section.
 
-These mined conventions go directly into `copilot-instructions.md` — turning repeated human review feedback into automated AI guidance.
+These mined conventions go into `AGENTS.md`, where every tool reads them — turning repeated review feedback, from humans and agents alike, into guidance that applies before the next pull request is written instead of after.
 
 ## 0d. Community health gap mapping
 

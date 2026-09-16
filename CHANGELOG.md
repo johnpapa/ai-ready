@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **Review mining now reads agent comments and weights recency** — review threads are no longer only humans
+  correcting humans, so coding-agent and review-agent comments are mined alongside human ones, and the source
+  of each rule is recorded (an agent repeating itself means a rule is missing from `AGENTS.md`, which is a
+  different signal than a human repeating themselves). History is read as an evolution rather than a flat list:
+  recent comments count double, patterns that appear early and then stop are flagged as possibly superseded
+  instead of being written up as current rules, recent-but-infrequent patterns are captured because new
+  conventions are exactly the ones nobody has written down, and human/agent disagreements are surfaced rather
+  than silently resolved.
+
 ### Added
 
 - **A starter skill is now generated** (`.github/skills/shipping-a-change/SKILL.md`) — built from the

@@ -78,7 +78,7 @@ Run `git remote -v` to extract the GitHub `owner/repo`. If not GitHub, fall back
 
 Use GitHub MCP tools or `gh` CLI to auto-discover repo metadata, PR review patterns, and community health gaps. See [references/github-discovery.md](references/github-discovery.md) for the full API table, PR mining technique, and health gap mapping.
 
-Key insight: **PR review mining is the highest-value step.** Repeated reviewer feedback becomes conventions in `copilot-instructions.md`.
+Key insight: **PR review mining is the highest-value step.** Repeated reviewer feedback — from humans *and* from review agents — becomes conventions in `AGENTS.md`, weighted so recent patterns count for more and abandoned ones are flagged rather than resurrected.
 
 ---
 
