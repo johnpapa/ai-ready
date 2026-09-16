@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Reviewer agents are now generated** (`.github/agents/`) — `spec-conformance` asks whether the diff does what
+  the issue asked for, `test-integrity` asks whether the tests would have failed against the old code and
+  whether any were weakened or skipped, and `blast-radius` asks how hard the change is to undo and checks the
+  diff against the `## Never merges without a human` boundary. Each is narrow by design and told to ignore
+  everything the others own. Step 1d has always *checked* for `.github/agents/`; nothing ever generated one.
+  Tracked assets go from 12 to 13 and the medal bands shift accordingly.
+
 - **`AGENTS.md` now gets two sections almost no repo has** — `## Done means` and
   `## Never merges without a human`. The first states the conditions a change must meet; the second draws the
   line agents may not cross alone. Every line in both must be decidable by a machine with nobody interpreting

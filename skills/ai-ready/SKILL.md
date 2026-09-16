@@ -22,7 +22,7 @@ Follow these steps in order to analyze the current repository and generate all m
 
 **Report-only mode:** If the user asks for a report without generating files (e.g., "how ai-ready is this repo?", "score this repo"), run the full analysis (Steps 0–1) and display the report (Step 11) — but skip all generation steps (Steps 2–10).
 
-### The 12 tracked assets
+### The 13 tracked assets
 
 Assets are grouped into three categories. Count assets with **Nailed It** status for the score.
 
@@ -35,32 +35,33 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 | 3 | Maintenance matrix (in `AGENTS.md`) | Step 8 |
 | 4 | `.mcp.json` | Step 4b |
 | 5 | `.github/workflows/copilot-setup-steps.yml` | Step 4 |
+| 6 | Reviewer agents (`.github/agents/`) | Step 4c |
 
 **🔧 Dev Workflow** — what keeps PRs clean and contributors on track
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 6 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
-| 7 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
-| 8 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
-| 9 | `.github/dependabot.yml` | (checked, not generated) |
+| 7 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
+| 8 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
+| 9 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
+| 10 | `.github/dependabot.yml` | (checked, not generated) |
 
 **📖 Onboarding** — what helps new contributors get started
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 10 | README Contributing section | Step 7 |
-| 11 | Changelog (`CHANGELOG.md`) | Step 9 |
-| 12 | Documentation (or explicit "not needed" note) | Step 10 |
+| 11 | README Contributing section | Step 7 |
+| 12 | Changelog (`CHANGELOG.md`) | Step 9 |
+| 13 | Documentation (or explicit "not needed" note) | Step 10 |
 
 **Scoring:** 🟩 Nailed It (counted) · 🟨 Could Be Better (not counted) · ⬜ Missing (not counted)
 
 | Medal | Name | Count | What it means |
 |-------|------|-------|---------------|
 | 🥉 | **Getting Started** | 1–4 | Basics in place but AI agents are mostly guessing |
-| 🥈 | **On Track** | 5–7 | AI agents can help but miss your conventions |
-| 🥇 | **Solid** | 8–10 | AI agents follow your patterns and catch most expectations |
-| 🏆 | **AI-Ready** | 11–12 | AI agents contribute like your best team members |
+| 🥈 | **On Track** | 5–8 | AI agents can help but miss your conventions |
+| 🥇 | **Solid** | 9–11 | AI agents follow your patterns and catch most expectations |
+| 🏆 | **AI-Ready** | 12–13 | AI agents contribute like your best team members |
 
 ---
 
@@ -130,7 +131,7 @@ List top-level directories and immediate children (skip `node_modules`, `.git`, 
 
 Produce a structured findings table combining GitHub context and codebase analysis with file-path evidence. See [references/detection-tables.md](references/detection-tables.md) for the full findings table template.
 
-List which of the 12 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
+List which of the 13 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
 
 ### 1j. Detect monorepo areas
 
@@ -249,6 +250,24 @@ If truly missing from all locations, create `.github/workflows/copilot-setup-ste
 If missing, generate `.mcp.json` at the repo root based on detected dependencies (databases, APIs, cloud platforms, browser automation, DevOps tools). Use `${VAR}` for secrets. Only include servers the project actually needs — do not speculatively add servers.
 
 *Why?*: Copilot CLI no longer supports `.vscode/mcp.json` — the correct location is `.mcp.json` at the repo root. If `.vscode/mcp.json` exists, flag it as "Could Be Better" and suggest migrating to `.mcp.json`.
+
+---
+
+## Step 4c — Generate reviewer agents
+
+If `.github/agents/` is missing or contains no reviewers, generate three agents that apply to any repository:
+`spec-conformance`, `test-integrity`, and `blast-radius`. Full bodies and generation rules in
+[references/reviewer-agents.md](references/reviewer-agents.md).
+
+Each answers one question and is told to ignore everything else — a reviewer with a broad remit gets muted, the
+same way a human who comments on everything gets muted. They are separate agents rather than one agent with
+three checklists, so each gets its own context and its own verdict.
+
+`blast-radius` reads the `## Never merges without a human` section written in Step 2, which is what connects
+the boundary to something that actually runs.
+
+**Never overwrite** an existing reviewer. If the repo already has agents covering these concerns, leave them and
+flag drift instead.
 
 ---
 
