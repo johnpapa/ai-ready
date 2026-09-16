@@ -6,6 +6,24 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **The generated pointer files could link outside the repository.** The Step 3 template hardcoded
+  `[AGENTS.md](../AGENTS.md)`, which is right from `.github/copilot-instructions.md` and wrong from `CLAUDE.md`
+  or `.cursorrules` at the repo root. It fails quietly — the file still renders, the link just goes nowhere.
+  The template now says the path is relative to the pointer file, with a table covering `.github/`, the root,
+  and `.github/instructions/`. Found by GitHub Copilot reviewing the open stack.
+
+- **Two instructions still routed content into a pointer file.** Step 10 said to record docs status "in
+  AGENTS.md and copilot-instructions.md", and a general rule said to turn mined PR review feedback into
+  "`copilot-instructions.md` rules". Both predate the single-source model and both contradict it — a pointer
+  holds no content of its own, so anything written there is invisible to every tool that reads `AGENTS.md`.
+  Both now target `AGENTS.md`.
+
+- **Contributor docs said this repo has no code.** `AGENTS.md` opened with "it contains no source code to build
+  or test" and listed "no runtime, build system, or test framework" — true until the detection harness landed.
+  It now names Python 3 with `pyyaml`, points at `tools/` and `tests/`, and lists the two commands to run
+  before pushing. `README.md`'s CI summary picks up the fixture tests and the generated-table drift check.
+
+
 - **`docs/how-it-works.md` had drifted out from under the rest of this release, and one line of it was simply
   wrong.** The mechanisms table still described `.github/copilot-instructions.md` as holding "coding
   conventions", which stopped being true the moment that file became a three-line pointer — a reader following
