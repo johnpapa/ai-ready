@@ -161,6 +161,44 @@ Also include, moved here from the old Copilot-only file so every tool reads them
   paths; trace import chains and registration patterns rather than stopping at top-level files. This is the
   most valuable section in the file.
 
+### Two sections almost no repo has — generate both
+
+Agents now open pull requests faster than anyone reads them. These two sections are what let a repo decide
+which of those changes actually need a person. **Every line in both must be decidable by a machine with nobody
+interpreting it** — "write clean code" fails that test; `npm run verify` exits 0 passes it.
+
+**`## Done means`** — the conditions a change must meet before it is finished. Derive from the repo's real
+commands and real conventions:
+
+```markdown
+## Done means
+- `npm run verify` exits 0
+- Any behavior change ships with a test that fails without the change
+- Public API changes update `openapi.yaml` in the same pull request
+- No new runtime dependency without a linked issue
+- Generated files are never hand-edited
+```
+
+**`## Never merges without a human`** — the boundary. Seed it from the risk paths actually present in this
+repo (see [references/detection-tables.md](references/detection-tables.md) § Risk path detection), then state
+each as a path or a condition rather than a category:
+
+```markdown
+## Never merges without a human
+- Anything under `db/migrations/`
+- Anything that changes the shape of an existing API response
+- Anything that sends messages to customers
+- Anything that grants or changes permissions
+```
+
+Only list risk paths this repo actually has — a static site has no migrations, and inventing categories to
+fill the section is the noise this skill exists to avoid. If the analysis finds none, say so explicitly in one
+line rather than omitting the heading.
+
+**Scoring:** `AGENTS.md` counts as **Nailed It** only when both sections are present and every line in them is
+machine-checkable. An `AGENTS.md` without them is **Could Be Better** — it tells an agent how to work, but
+nothing about what it may finish on its own.
+
 ---
 
 ## Step 3 — Generate per-tool pointer files

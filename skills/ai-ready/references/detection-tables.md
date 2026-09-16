@@ -135,3 +135,20 @@ If a workspace config was found in Step 1a, read it to find package/project path
 - Detect **conditional modules** — JDK-specific modules (`jdk21`), platform-specific builds, or optional integrations that only build under certain conditions.
 
 *Why?*: A fix in `langchain4j-core` affects 30+ downstream modules. Without mapping cross-package dependencies, agents make changes to one package and miss the ripple effects.
+
+## Risk path detection
+
+Used by Step 2 to seed the `## Never merges without a human` section of `AGENTS.md`. Glob the repo for each
+row; include only the ones that actually match. Order matters less than honesty — a section listing risks the
+repo does not have is worse than a short one.
+
+| Risk | Look for | Why a human |
+|---|---|---|
+| Schema / data loss | `**/migrations/**`, `**/*.sql`, `prisma/schema.prisma`, `alembic/` | Dropped columns and destructive migrations cannot be reverted by reverting the commit |
+| API contract | `openapi.*`, `swagger.*`, `**/*.proto`, `schema.graphql` | Other teams and released clients already depend on the current shape |
+| Auth / permissions | `**/auth/**`, `**/authz/**`, `**/*permission*`, `**/*role*`, IAM and policy files | Widening access is silent and rarely caught by tests |
+| Money | `**/billing/**`, `**/payment*/**`, `**/checkout/**` | Mistakes move real money and are visible to customers |
+| Customer contact | `**/email*/**`, `**/notification*/**`, `**/sms/**`, template directories | Messages cannot be unsent |
+| Infrastructure | `infra/**`, `**/*.tf`, `**/*.bicep`, `k8s/**`, `helm/**` | Blast radius is the whole environment, not one service |
+| Secrets & config | `**/*.env*` (tracked), secret managers, CI secret references | A leaked credential is not revertible in any useful sense |
+| Release plumbing | `.github/workflows/**`, publish and release scripts | A change here changes how every other change ships |
