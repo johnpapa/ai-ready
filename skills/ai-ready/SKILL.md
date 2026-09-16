@@ -35,7 +35,7 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 | 3 | Maintenance matrix (in `AGENTS.md`) | Step 8 |
 | 4 | `.mcp.json` | Step 4b |
 | 5 | `.github/workflows/copilot-setup-steps.yml` | Step 4 |
-| 6 | Reviewer agents (`.github/agents/`) | Step 4c |
+| 6 | Adversarial reviewers (`.github/agents/`) | Step 4c |
 | 7 | Starter skill (`.github/skills/`) | Step 4d |
 | 8 | Security skill (`.github/skills/`, when there is surface) | Step 4e |
 
@@ -312,15 +312,20 @@ If missing, generate `.mcp.json` at the repo root based on detected dependencies
 
 ---
 
-## Step 4c — Generate reviewer agents
+## Step 4c — Generate adversarial reviewers
 
-If `.github/agents/` is missing or contains no reviewers, generate three agents that apply to any repository:
-`spec-conformance`, `test-integrity`, and `blast-radius`. Full bodies and generation rules in
-[references/reviewer-agents.md](references/reviewer-agents.md).
+If `.github/agents/` is missing or contains no reviewers, generate three **adversarial reviewers** that apply to
+any repository: `spec-conformance`, `test-integrity`, and `blast-radius`. Full bodies, the design rules, and
+how to write a fourth are in [references/reviewer-agents.md](references/reviewer-agents.md).
 
-Each answers one question and is told to ignore everything else — a reviewer with a broad remit gets muted, the
-same way a human who comments on everything gets muted. They are separate agents rather than one agent with
-three checklists, so each gets its own context and its own verdict.
+**Adversarial means a different objective from the author, not a harsher tone.** Ask an agent to "review this
+pull request" and it will find it good — you handed it the author's goal, so it completes the author's work.
+Each of these instead asks a question that can come back *no*, works from the diff alone, has no way to say
+*ship it*, and owns exactly one concern so it cannot trade concerns off against each other. The reference file
+has all four mechanics and the tests for writing a fourth reviewer.
+
+**Tell the user to spread them across models** where their tool supports pinning one. Adversaries on a single
+model largely miss the same things; three on one model is one adversary with three prompts.
 
 `blast-radius` reads the `## Never merges without a human` section written in Step 2, which is what connects
 the boundary to something that actually runs.
@@ -394,23 +399,8 @@ has. Sources, in priority order:
 3. **PR review comments about security** (Step 0c) — a reviewer who keeps asking the same security question has
    written your skill for you.
 
-```markdown
----
-name: security-review
-description: The security rules specific to this repo — trust boundaries, what must never be trusted, and what to check before merging. Use when touching <the real surfaces found>.
----
-
-# Security review
-
-## Trust boundaries in this repo
-<real paths, and what crosses them>
-
-## Never
-<the repo's real invariants — from SECURITY.md, AGENTS.md, or reviewer comments>
-
-## Before merging a change to <real path>
-<the actual checklist>
-```
+The skeleton to fill is in [references/detection-tables.md](references/detection-tables.md) § Security
+surface detection.
 
 **Every line must name something real in this repo.** If a section would only restate general good practice,
 drop the section. A security skill that reads like a blog post is worse than none — it dilutes the rules that
