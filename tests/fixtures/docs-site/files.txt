@@ -1,0 +1,6 @@
+package.json
+docs/index.md
+docs/getting-started.md
+docs/_sidebar.md
+images/logo.png
+.github/workflows/deploy-docs.yml

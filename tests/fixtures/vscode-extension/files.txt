@@ -1,0 +1,9 @@
+package.json
+src/extension.ts
+src/notification.ts
+src/commands/enterColor.ts
+src/configuration.ts
+test/suite/notification.test.ts
+.github/workflows/build.yml
+.github/workflows/release.yml
+docs/guide.md

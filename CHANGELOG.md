@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **The detection data is now testable, and tested.** `skills/ai-ready/data/risk-paths.yml` holds the risk
+  globs, the reason each one needs a human, the question to answer by opening the file, and — new — a list of
+  **known false positives**, every entry a line this skill actually got wrong in a real repo. The table in
+  `references/detection-tables.md` is generated from that file, and CI fails if the two drift.
+
+- **Fixture repos with known-correct answers** (`tests/fixtures/`). Four fake repo trees — a VS Code extension,
+  a SaaS app, a docs site, a client SDK — each with an `expected.yml` naming which rows must match, which must
+  produce **nothing**, and which false positives must fire. `tests/test_detection.py` runs them in CI. Putting
+  the Peacock bug back fails the build with the exact line it wrote:
+  `customer-contact: expected NO matches, got ['src/notification.ts', ...]`.
+
+- **`evals/` — a manual eval harness for the part no script can judge.** A 24-check binary rubric across
+  Truthfulness, Groundedness, The boundary, Restraint and Fit, plus a results template and the honest
+  instruction to commit runs that go badly. The Peacock run is recorded as `evals/results/`'s first entry,
+  labelled a partial run, because it predates the rubric and was done by hand rather than by installing the
+  skill. Deliberately not scored as a single number — averaging the sections would be the exact dishonesty the
+  rubric exists to catch.
+
 ### Changed
 
 - **The score is now a ceiling, not just a count.** Equal weighting was quietly dishonest: a repo can reach

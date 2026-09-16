@@ -144,28 +144,36 @@ Used by Step 2 to seed the `## Never merges without a human` section of `AGENTS.
 before writing it into the boundary. A wrong entry is worse than a missing one: it puts a human back into
 merges that never needed one, and it teaches the reader the section can't be trusted.
 
-Known false positives, all seen in real repos:
+<!-- BEGIN GENERATED: risk-paths -->
+<!-- Generated from skills/ai-ready/data/risk-paths.yml — edit that file, then run
+     python3 tools/gen_detection_tables.py -->
 
-| Match | Often isn't |
-|---|---|
-| `notification`, `email` in a desktop or editor app | A message to a customer — usually a local toast or an in-app banner |
-| `auth` in a client library | A permission boundary — usually just reading a token somebody else issued |
-| `payment` in a sample or fixture directory | Real money — check whether it runs in production |
-| `*.sql` in a seeds or test-fixtures folder | Production data — seeds are recreated, not migrated |
-| `.github/workflows` in a docs-only repo | Release plumbing — nothing ships from it |
+Known false positives, every one of them seen in a real repo. When one of these matches, the
+confirm question is not optional:
 
-Order matters less than honesty — a section listing risks the repo does not have is worse than a short one.
+| Match | Looks like | Usually is | Seen in |
+|---|---|---|---|
+| `**/notification*.*` | Customer contact | An in-app or editor toast, not a message to a customer | johnpapa/vscode-peacock — src/notification.ts is window.showInformationMessage |
+| `**/auth/token*.*` | Auth / permissions | Reading or refreshing a token somebody else issued, not a permission decision | Client libraries and SDK wrappers |
+| `**/seeds/**/*.sql` | Schema / data loss | Seed data that is recreated, not migrated | Most application repos with a local dev database |
+| `**/fixtures/**` | Money | Test fixtures that never touch a payment provider | Any repo with payment tests |
+| `**/*.env.example` | Secrets & config | A placeholder template, committed on purpose | Nearly every repo that has a .env at all |
 
-| Risk | Look for | Why a human |
-|---|---|---|
-| Schema / data loss | `**/migrations/**`, `**/*.sql`, `prisma/schema.prisma`, `alembic/` | Dropped columns and destructive migrations cannot be reverted by reverting the commit |
-| API contract | `openapi.*`, `swagger.*`, `**/*.proto`, `schema.graphql` | Other teams and released clients already depend on the current shape |
-| Auth / permissions | `**/auth/**`, `**/authz/**`, `**/*permission*`, `**/*role*`, IAM and policy files | Widening access is silent and rarely caught by tests |
-| Money | `**/billing/**`, `**/payment*/**`, `**/checkout/**` | Mistakes move real money and are visible to customers |
-| Customer contact | `**/email*/**`, `**/notification*/**`, `**/sms/**`, template directories | Messages cannot be unsent |
-| Infrastructure | `infra/**`, `**/*.tf`, `**/*.bicep`, `k8s/**`, `helm/**` | Blast radius is the whole environment, not one service |
-| Secrets & config | `**/*.env*` (tracked), secret managers, CI secret references | A leaked credential is not revertible in any useful sense |
-| Release plumbing | `.github/workflows/**`, publish and release scripts | A change here changes how every other change ships |
+Order matters less than honesty — a section listing risks the repo does not have is worse than a
+short one.
+
+| Risk | Look for | Why a human | Confirm by opening it |
+|---|---|---|---|
+| Schema / data loss | `**/migrations/**`, `**/*.sql`, `prisma/schema.prisma`, `alembic/**` | Dropped columns and destructive migrations cannot be reverted by reverting the commit | Does this run against a real database, or is it a seed or fixture that gets recreated? |
+| API contract | `**/openapi.*`, `**/swagger.*`, `**/*.proto`, `**/schema.graphql` | Other teams and released clients already depend on the current shape | Is this contract published to anyone outside this repo, or internal-only and versioned together? |
+| Auth / permissions | `**/auth/**`, `**/authz/**`, `**/*permission*`, `**/*role*`, `**/iam/**`, `**/*policy*.json` | Widening access is silent and rarely caught by tests | Does this code DECIDE what someone may do, or only carry a token somebody else issued? |
+| Money | `**/billing/**`, `**/payment*/**`, `**/checkout/**`, `**/invoice*/**` | Mistakes move real money and are visible to customers | Does this path run in production against a real payment provider? |
+| Customer contact | `**/email*/**`, `**/notification*/**`, `**/sms/**`, `**/templates/email/**` | Messages cannot be unsent | Does this send something to a person outside the team, or is it an in-app toast or log line? |
+| Infrastructure | `infra/**`, `**/*.tf`, `**/*.bicep`, `k8s/**`, `helm/**` | Blast radius is the whole environment, not one service | Is this applied to a shared or production environment, or only to a local or ephemeral one? |
+| Secrets & config | `**/*.env`, `**/*.env.*`, `**/secrets/**` | A leaked credential is not revertible in any useful sense | Is this file tracked in git, and does it hold a real value rather than a placeholder? |
+| Release plumbing | `.github/workflows/**`, `**/release*.sh`, `**/publish*.sh` | A change here changes how every other change ships | Does anything actually ship from this repo, or does the workflow only run checks? |
+
+<!-- END GENERATED: risk-paths -->
 
 ## Security surface detection
 
