@@ -51,7 +51,7 @@ ai-ready/
 │   ├── rubric.md                   # 24 binary checks across Truthfulness/Groundedness/…
 │   └── results/                    # One file per run, committed — including the bad ones
 ├── docs/
-│   └── how-it-works.md             # Detailed explanation of the 3 mechanisms + 15 assets
+│   └── how-it-works.md             # Detailed explanation of the 4 mechanisms + 15 assets
 ├── examples/
 │   ├── sample-report-peacock.html  # Sample HTML report (GitHub Pages)
 │   └── sample-report-peacock.md    # Sample markdown report
