@@ -36,7 +36,7 @@ ai-ready/
 ├── skills.sh.json                  # skills.sh registry page config
 ├── skills/
 │   └── ai-ready/
-│       ├── SKILL.md                   # The skill procedure, Steps 0-11 (<500 lines)
+│       ├── SKILL.md                   # The skill procedure, Steps 0-11 (see Skill Writing Conventions)
 │       ├── data/                     # Machine-readable detection data (source of truth)
 │       │   └── risk-paths.yml        # Risk globs + known false positives; tested in CI
 │       └── references/               # Detailed reference material (loaded on demand)
@@ -229,6 +229,34 @@ So before opening a PR that changes skill behavior:
 
 ## Skill Writing Conventions
 
+### Why SKILL.md length matters
+
+A skill loads in three levels, and the middle one is the expensive one:
+
+| Level | When it is in context | Cost |
+|---|---|---|
+| `name` + `description` | Always | ~100 words |
+| **SKILL.md body** | **Every time the skill triggers** | **The whole file** |
+| `references/`, `scripts/`, `assets/` | Only when something reads them | None until then |
+
+So every line in `SKILL.md` is paid for on every invocation, whether or not that run needs it. A line only
+Step 11 uses is still loaded on a run that stops at Step 1.
+
+Anthropic's own skill-authoring guidance puts the target at **under 500 lines**, and names the remedy:
+
+> Keep SKILL.md under 500 lines; if you're approaching this limit, add an additional layer of hierarchy along
+> with clear pointers about where the model using the skill should go next to follow up.
+>
+> — [`skill-creator`](https://github.com/anthropics/skills), Anthropic
+
+**Treat it as a target, not a limit.** The same guidance calls the counts approximate and says you may go
+longer if needed. 501 lines is not a failure; 600 lines of material that three-quarters of runs never use is.
+
+When the file grows, move content to `references/` and leave a pointer saying when to read it — do not delete
+something load-bearing to hit a number. Content that only one step needs is the first thing to move.
+
+### Conventions
+
 - Each step should be independently actionable — the AI should be able to execute it without context from other steps
 - Include explicit "check if exists" guards before creating files
 - Use real file paths and real commands, not placeholders
@@ -240,6 +268,7 @@ So before opening a PR that changes skill behavior:
 | When this changes... | Also update... |
 |---|---|
 | `skills/ai-ready/SKILL.md` | `README.md` (if skill behavior changed), `docs/how-it-works.md`, `AGENTS.md`, `CHANGELOG.md` |
+| `SKILL.md` grows past ~500 lines | Move single-step content to `references/` with a pointer — see Skill Writing Conventions. Do not cut something load-bearing to hit the number |
 | `skills/ai-ready/references/*` | Verify consistency with `SKILL.md` steps that reference them |
 | New skill added to `skills/` | `README.md`, `AGENTS.md` (structure section), `CHANGELOG.md` |
 | `docs/how-it-works.md` | Verify consistency with `SKILL.md` steps and `README.md` |
