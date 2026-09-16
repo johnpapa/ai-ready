@@ -22,7 +22,7 @@ Follow these steps in order to analyze the current repository and generate all m
 
 **Report-only mode:** If the user asks for a report without generating files (e.g., "how ai-ready is this repo?", "score this repo"), run the full analysis (Steps 0–1) and display the report (Step 11) — but skip all generation steps (Steps 2–10).
 
-### The 13 tracked assets
+### The 14 tracked assets
 
 Assets are grouped into three categories. Count assets with **Nailed It** status for the score.
 
@@ -36,23 +36,24 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 | 4 | `.mcp.json` | Step 4b |
 | 5 | `.github/workflows/copilot-setup-steps.yml` | Step 4 |
 | 6 | Reviewer agents (`.github/agents/`) | Step 4c |
+| 7 | Starter skill (`.github/skills/`) | Step 4d |
 
 **🔧 Dev Workflow** — what keeps PRs clean and contributors on track
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 7 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
-| 8 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
-| 9 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
-| 10 | `.github/dependabot.yml` | (checked, not generated) |
+| 8 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
+| 9 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
+| 10 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
+| 11 | `.github/dependabot.yml` | (checked, not generated) |
 
 **📖 Onboarding** — what helps new contributors get started
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 11 | README Contributing section | Step 7 |
-| 12 | Changelog (`CHANGELOG.md`) | Step 9 |
-| 13 | Documentation (or explicit "not needed" note) | Step 10 |
+| 12 | README Contributing section | Step 7 |
+| 13 | Changelog (`CHANGELOG.md`) | Step 9 |
+| 14 | Documentation (or explicit "not needed" note) | Step 10 |
 
 **Scoring:** 🟩 Nailed It (counted) · 🟨 Could Be Better (not counted) · ⬜ Missing (not counted)
 
@@ -60,8 +61,8 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 |-------|------|-------|---------------|
 | 🥉 | **Getting Started** | 1–4 | Basics in place but AI agents are mostly guessing |
 | 🥈 | **On Track** | 5–8 | AI agents can help but miss your conventions |
-| 🥇 | **Solid** | 9–11 | AI agents follow your patterns and catch most expectations |
-| 🏆 | **AI-Ready** | 12–13 | AI agents contribute like your best team members |
+| 🥇 | **Solid** | 9–12 | AI agents follow your patterns and catch most expectations |
+| 🏆 | **AI-Ready** | 13–14 | AI agents contribute like your best team members |
 
 ---
 
@@ -131,7 +132,7 @@ List top-level directories and immediate children (skip `node_modules`, `.git`, 
 
 Produce a structured findings table combining GitHub context and codebase analysis with file-path evidence. See [references/detection-tables.md](references/detection-tables.md) for the full findings table template.
 
-List which of the 13 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
+List which of the 14 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
 
 ### 1j. Detect monorepo areas
 
@@ -268,6 +269,50 @@ the boundary to something that actually runs.
 
 **Never overwrite** an existing reviewer. If the repo already has agents covering these concerns, leave them and
 flag drift instead.
+
+---
+
+## Step 4d — Generate a starter skill from the maintenance matrix
+
+The maintenance matrix written in Step 2 already encodes the repo's hardest-won knowledge: *when you touch this,
+you also have to update that.* Today it sits in a document somebody has to read. A skill is the portable
+container for it — named and described, so any agent loads it when it becomes relevant.
+
+Generate `.github/skills/shipping-a-change/SKILL.md` from the matrix plus the *Adding a New [Feature/Module]*
+registration chain:
+
+```markdown
+---
+name: shipping-a-change
+description: What to update when you change something in this repo, and what "done" requires. Use before opening a pull request.
+---
+
+# Shipping a change
+
+## Add a new <thing this repo adds most often>
+1. <real path> — create it
+2. <real path> — register it
+3. <real path> — export or declare it
+4. <real command> — verify
+
+## When you change this, also change that
+| Change | Also update |
+|---|---|
+| <real path> | <real paths> |
+
+## Done
+<the `## Done means` list from AGENTS.md, verbatim>
+```
+
+**Use real paths and real commands.** A skill full of placeholders is worse than no skill — it looks
+authoritative and teaches nothing.
+
+**Why a skill rather than another document:** `AGENTS.md` is read at the start of the work. A skill is loaded
+when its description matches what the agent is about to do. Procedural knowledge belongs in the second kind —
+and unlike an instructions file, a skill travels to any tool that follows the Agent Skills standard.
+
+**Never overwrite** an existing skill. If `.github/skills/` already has one covering this, flag drift instead.
+If the matrix is thin — fewer than three real cascades — skip generation and say why; a one-row skill is noise.
 
 ---
 
