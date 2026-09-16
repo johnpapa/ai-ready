@@ -105,13 +105,45 @@ Use `npx skills add ./ --list` to confirm the skill is discoverable without inst
 
 ## Testing
 
-There is no automated test suite. Validation is:
+### What CI enforces
 
-1. **Skill integrity** — SKILL.md exists and frontmatter is valid Agent Skills
-2. **Manifest integrity** — all plugin manifests are valid JSON and agree on `version`
-3. **Discovery** — `npx skills add ./ --list` finds `ai-ready`
-4. **Smoke test** — install the skill, invoke it on a sample repo, verify the analysis is correct and files are generated properly
-5. **CI** — the workflow validates YAML syntax, skill frontmatter, manifest versions, and skills CLI discovery on every PR
+`.github/workflows/ci.yml` runs on every pull request and on pushes to `main`. It blocks the merge on any of
+these, so you don't have to remember them:
+
+| Check | What it rejects |
+|---|---|
+| **SKILL.md frontmatter** | Any `SKILL.md` under `skills/` with no frontmatter, malformed delimiters, or a missing `name` or `description` |
+| **YAML syntax** | Any `.yml`/`.yaml` under `.github/` that doesn't parse |
+| **Manifest version parity** | `metadata.version` in `SKILL.md` disagreeing with any of `plugin.json`, `.github/plugin/plugin.json`, `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, or `.claude-plugin/marketplace.json` — all six must match |
+| **Agent Skills spec compliance** | `name` not matching its directory, a name that isn't kebab-case, a `description` outside 1–1024 characters, non-portable frontmatter keys (only `name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools`), or non-string `metadata` values |
+| **skills CLI discovery** | A repo state where `npx skills add ./ --list` can't find `ai-ready` |
+| **`skills.sh.json` parity** | A skill directory missing from `skills.sh.json`, or a listed skill that doesn't exist |
+
+Version parity is the one that bites most often: bumping `SKILL.md` without the five manifests fails the build.
+
+Run the whole set locally before pushing:
+
+```bash
+python3 -c "import yaml,glob;[yaml.safe_load(open(f)) for f in glob.glob('.github/**/*.y*ml',recursive=True)]"
+npx -y skills@latest add ./ --list
+```
+
+### What CI does not enforce
+
+**CI validates the skill's packaging, not the skill's behavior.** Every check above passes on a `SKILL.md`
+whose instructions are wrong, contradictory, or produce broken output — the frontmatter would still be valid
+and the versions would still match.
+
+The only thing that catches a bad *instruction* today is a manual smoke test: install the skill, invoke it on a
+real repo, and read what it generated. Nothing records that this happened, which is why the PR template asks
+you to name the repo you ran it against.
+
+So before opening a PR that changes skill behavior:
+
+1. Install the skill locally — copy `skills/ai-ready/SKILL.md` to `~/.copilot/skills/ai-ready/SKILL.md`
+2. Run it against a repo that actually exercises the path you changed
+3. Read the generated files, not just the report
+4. Put the repo and the result in the **Tested On** table in your PR
 
 ## Key Patterns and Conventions
 
@@ -164,6 +196,8 @@ There is no automated test suite. Validation is:
 | Any plugin manifest | Keep `version` identical across all manifests and `SKILL.md`; CI fails on drift |
 | `skills.sh.json` | Must list every directory under `skills/`; CI fails on drift |
 | New tool/platform supported | `README.md` install table, `AGENTS.md` (packaging model); add a manifest only if the tool cannot use `npx skills` |
+| `.github/workflows/ci.yml` | `AGENTS.md` (§ Testing — *What CI enforces*) and the CI summary in `README.md` § Contributing. A check nobody documented is a check contributors work around |
+| Scoring, medals, or the tracked asset list | `SKILL.md` (asset table + medal table), `references/report-template.md` (square count, category indicators, cap wording), `README.md` § Scoring, `docs/how-it-works.md`, `CHANGELOG.md` |
 
 ## Adding a New Skill
 
