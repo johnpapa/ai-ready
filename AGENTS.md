@@ -1,6 +1,11 @@
 # AI-Ready Repo — Agent Guide
 
-This is an **Agent Skill** — not a traditional application. It contains no source code to build or test. The deliverable is a skill definition (`SKILL.md`) that teaches an AI coding agent how to make any repository AI-ready.
+This is an **Agent Skill** — not a traditional application. The deliverable is a skill definition
+(`SKILL.md`) that teaches an AI coding agent how to make any repository AI-ready. There is nothing to compile
+and nothing to ship a binary from.
+
+There *is* code, though, and it has to pass before you push: a small Python validation harness under `tools/`
+and `tests/` that checks the skill's detection data against fixture repos. See [§ Testing](#testing).
 
 The skill follows the vendor-neutral [Agent Skills](https://agentskills.io) standard, so one canonical
 `skills/ai-ready/SKILL.md` is consumed by GitHub Copilot, Claude Code, OpenAI Codex, and Cursor. Each tool gets
@@ -93,12 +98,22 @@ The `version` field must be identical in all five plugin manifests and in `SKILL
 
 ## Tech Stack
 
-- **Content format:** Markdown, YAML, JSON
-- **No runtime, build system, or test framework** — this is a documentation-driven project
+- **Content format:** Markdown, YAML, JSON — this is a documentation-driven project
+- **No build system and nothing to compile.** The repo ships files agents read directly
+- **Validation harness:** Python 3 with `pyyaml`, under `tools/` and `tests/`. Dependency-free otherwise — no
+  framework, no test runner. `tests/test_detection.py` is a plain script that exits non-zero
 
 ## Build & Run
 
-There is no build step. This repo ships markdown and JSON files that agents read directly.
+There is no build step. This repo ships markdown, YAML and JSON files that agents read directly.
+
+Before pushing, run what CI runs:
+
+```bash
+pip install pyyaml
+python3 tests/test_detection.py               # risk-path globs against fixtures
+python3 tools/gen_detection_tables.py --check # generated tables match their data
+```
 
 **To test the skill locally in every installed tool:**
 

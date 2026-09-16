@@ -268,8 +268,20 @@ Pointer content is three lines:
 ```markdown
 # Conventions
 
-The conventions for this repository live in [`AGENTS.md`](../AGENTS.md). Read that file first.
+The conventions for this repository live in [`AGENTS.md`](<relative path>). Read that file first.
 ```
+
+**The link is relative to the pointer file, not to the repo root.** `AGENTS.md` sits at the root, so the path
+depends on where the pointer lives:
+
+| Pointer file | Link |
+|---|---|
+| `.github/copilot-instructions.md` | `../AGENTS.md` |
+| `CLAUDE.md`, `.cursorrules` (repo root) | `./AGENTS.md` |
+| `.github/instructions/*.instructions.md` | `../../AGENTS.md` |
+
+Getting this wrong points the reader outside the repository, and it fails quietly — the file still renders, the
+link just goes nowhere.
 
 **Copilot is the one exception worth a little more.** Copilot auto-loads `.github/copilot-instructions.md` into
 context, so anything genuinely Copilot-specific (and *only* that) may follow the pointer line in the same file.
@@ -440,7 +452,7 @@ If missing, create `CHANGELOG.md` with Keep a Changelog format. If a pointer fil
 
 ## Step 10 — Evaluate and improve documentation
 
-If docs exist, add to AGENTS.md and copilot-instructions.md. If missing, assess whether needed by project type. Always document docs status in AGENTS.md.
+If docs exist, record their location, framework, and conventions in `AGENTS.md` — not in a pointer file, which holds no content of its own. If missing, assess whether they are needed by project type. Always document docs status in `AGENTS.md`.
 
 ---
 
@@ -471,7 +483,7 @@ This skill's first obligation is to leave the repo in a **better state than it f
 - **ALWAYS customize to the repo's actual stack** — never produce generic boilerplate.
 - **Self-consistency** — every generated file must follow the conventions you establish. Cross-check before finalizing.
 - **GitHub-native by default** — auto-discover via MCP tools and `gh` CLI. Fall back to local analysis.
-- **Mine PR reviews** — turn repeated review feedback into `copilot-instructions.md` rules.
+- **Mine PR reviews** — turn repeated review feedback into `AGENTS.md` conventions, where every tool reads them.
 - **Be specific** — real file paths, real commands, real patterns.
 - **Use `create` to write new files** — never `edit` from scratch.
 - **Run full analysis first (Steps 0–1)** — never guess.
