@@ -2,12 +2,28 @@
 
 Display format for the AI-Readiness Report (Step 11), HTML report, badge, and PR creation.
 
-## AI-Readiness Report format
+## Scoring
 
-Calculate the score by counting how many assets have **Nailed It** status. Determine the maturity level from
-the count, then **apply the prerequisites** (see SKILL.md § The 15 tracked assets): without `AGENTS.md` nailed
-the medal stops at 🥈, and without every 🤖 AI Context asset nailed it stops at 🥇. Build the progress bar
-using 🟩 for nailed, 🟨 for could-be-better, and ⬜ for missing — always 15 squares.
+Count how many of the 15 assets (SKILL.md § The 15 tracked assets) have **Nailed It** status. That count sets
+the medal — then **apply the prerequisites**, which can only lower it.
+
+| Medal | Name | Count | Also required | What it means |
+|-------|------|-------|---------------|---------------|
+| 🥉 | **Getting Started** | 1–4 | — | A few of the files exist. Nothing in the repo tells an agent how it works |
+| 🥈 | **On Track** | 5–8 | — | Real scaffolding is in place, but the conventions are still in people's heads |
+| 🥇 | **Solid** | 9–12 | `AGENTS.md` nailed | The conventions are written down, in the one file every tool reads |
+| 🏆 | **AI-Ready** | 13–15 | every 🤖 AI Context asset nailed | Conventions, boundaries, reviewers and procedures all live in the repo |
+
+**The prerequisites are not decoration.** A repo can reach nine nailed assets on a changelog, docs, issue
+templates, a PR template, `dependabot.yml`, CI and a README contributing section — with no `AGENTS.md` at all.
+That repo is well maintained. It is not AI-ready, and a plain count would hand it 🥇. So the count is a ceiling,
+not a score: without `AGENTS.md` nailed the repo stops at 🥈 however high the count goes, and if any 🤖 AI
+Context asset is short it stops at 🥇.
+
+**What the score does not measure.** It measures what is *in place*. It does not measure whether agents write
+better pull requests in this repo, because nothing here has measured that.
+
+Build the progress bar using 🟩 for nailed, 🟨 for could-be-better, and ⬜ for missing — always 15 squares.
 
 **When a prerequisite caps the medal, say so on the score line** and name what would lift it — a capped medal
 with no explanation reads like a bug. For example:
@@ -20,6 +36,8 @@ with no explanation reads like a bug. For example:
 **Never quote a time saving.** No "45-minute review becomes 5 minutes", no percentage, no multiplier. Nothing
 in this skill measures review time, and a maintainer who does track it will spot the invented number and stop
 trusting the rest of the report.
+
+## AI-Readiness Report format
 
 Display this report:
 

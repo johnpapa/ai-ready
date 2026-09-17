@@ -56,30 +56,9 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 | 14 | Changelog (`CHANGELOG.md`) | Step 9 |
 | 15 | Documentation (or explicit "not needed" note) | Step 10 |
 
-**Scoring:** 🟩 Nailed It (counted) · 🟨 Could Be Better (not counted) · ⬜ Missing (not counted)
-
-| Medal | Name | Count | Also required | What it means |
-|-------|------|-------|---------------|---------------|
-| 🥉 | **Getting Started** | 1–4 | — | A few of the files exist. Nothing in the repo tells an agent how it works |
-| 🥈 | **On Track** | 5–8 | — | Real scaffolding is in place, but the conventions are still in people's heads |
-| 🥇 | **Solid** | 9–12 | `AGENTS.md` nailed | The conventions are written down, in the one file every tool reads |
-| 🏆 | **AI-Ready** | 13–15 | every 🤖 AI Context asset nailed | Conventions, boundaries, reviewers and procedures all live in the repo |
-
-**The prerequisites are not decoration.** A repo can reach nine nailed assets on a changelog, docs, issue
-templates, a PR template, `dependabot.yml`, CI and a README contributing section — with no `AGENTS.md` at all.
-That repo is well maintained. It is not AI-ready, and a plain count would hand it 🥇. So the count is a ceiling,
-not a score: if `AGENTS.md` is not nailed the repo stops at 🥈 however high the count goes, and if any
-🤖 AI Context asset is short it stops at 🥇.
-
-**Say so when the cap applies**, and say what would lift it:
-
-> 11 of 15 nailed — 🥈 **On Track**, held below 🥇 because `AGENTS.md` is missing its
-> `## Never merges without a human` section.
-
-**What the score does not measure.** It measures what is *in place*. It does not measure whether agents write
-better pull requests in this repo, because nothing here has measured that. Never tell the user their review
-time will drop by some amount. You have no way to know, and an invented number is the fastest way to lose a
-maintainer who does know.
+**Scoring:** 🟩 Nailed It (counted) · 🟨 Could Be Better (not counted) · ⬜ Missing (not counted).
+Medals, the two prerequisites that cap them, and what the score may never claim are in
+[references/report-template.md](references/report-template.md) — read it in Step 11.
 
 ---
 
@@ -106,8 +85,6 @@ GitHub context tells you *what* the repo is. Local analysis tells you *how* it w
 ### 1a. Detect languages, frameworks, and repo type
 
 Find manifest files and extract details. See [references/detection-tables.md](references/detection-tables.md) for the full manifest table, VS Code extension detection, multi-app collections, demo app patterns, and course/tutorial repo detection.
-
-Key detections: lockfiles, runtime version files, monorepo markers, notebooks, VS Code extensions, multi-app collections, demo apps.
 
 **Course repos** (3+ signals: numbered folders, lesson keywords, no primary app) adapt Steps 2–5. See detection-tables.md for the full signal list and step adaptations.
 
@@ -138,8 +115,6 @@ For a split, list specifically **which sections exist in the tool file but not i
 what Step 2 needs to absorb. Do not rewrite the tool file here; propose the move and let the user decide.
 
 **copilot-setup-steps.yml** — check ALL known locations: `.github/workflows/copilot-setup-steps.yml` (canonical), `.github/copilot-setup-steps.yml` (legacy), and repo root. If found in a non-canonical location, flag it for consolidation into `.github/workflows/` — do not create a duplicate.
-
-If multiple instruction files exist, check for duplicates, contradictions, stale references, and scope clarity. See [references/detection-tables.md](references/detection-tables.md) for drift detection details.
 
 ### 1e. Check repo configuration
 
@@ -480,7 +455,7 @@ This skill's first obligation is to leave the repo in a **better state than it f
 - **ALWAYS display the report at the end** — never skip or abbreviate.
 - **NEVER use markdown headings in user output** — use bold + emojis instead.
 - **ALWAYS mention the AI Ready skill in issue/PR communication** — when posting to an issue or PR (body or comment), include explicit attribution such as `Assisted by [ai-ready](https://github.com/johnpapa/ai-ready)`.
-- **ALWAYS update docs to repo standards** — when generated guidance or workflows change, update related docs and changelog per the repo's maintenance matrix (for this repo: `README.md`, `docs/how-it-works.md`, `AGENTS.md`, `CHANGELOG.md`).
+- **ALWAYS update docs to repo standards** — when generated guidance or workflows change, update the docs and changelog that *this* repo's maintenance matrix names. Do not assume a file exists because another repo has one.
 - **ALWAYS handle PR conflicts proactively** — when creating PRs, sync with the target branch and attempt conflict resolution; if conflicts remain, explicitly ask the user how they want to proceed.
 
 ---

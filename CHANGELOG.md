@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **The 500-line budget is now sourced, and reframed as a target rather than a rule.** `AGENTS.md` carried a
+  bare `(<500 lines)` with no origin and no reason, which is exactly the kind of unattributed number this
+  project spent a release removing from its own output. It turns out to be real: Anthropic's `skill-creator`
+  guidance says *"Keep SKILL.md under 500 lines; if you're approaching this limit, add an additional layer of
+  hierarchy along with clear pointers"* — and the mechanism is the useful part, so it is written down too. A
+  skill loads in three levels and the SKILL.md body is in context **every time the skill triggers**, so a line
+  only Step 11 uses is still paid for on a run that stops at Step 1. The same guidance calls the counts
+  approximate, so the note now says 501 lines is not a failure — 600 lines of material three-quarters of runs
+  never touch is. New maintenance matrix row points at `references/` as the remedy.
+
+- **A generated rule named this repo's own files.** *"ALWAYS update docs to repo standards"* ended with
+  *"(for this repo: `README.md`, `docs/how-it-works.md`, `AGENTS.md`, `CHANGELOG.md`)"* — inside the skill that
+  gets installed into **other people's** repositories. Run against a Phaser game, it told the agent to update a
+  `docs/how-it-works.md` that does not exist there. The rule now points at whatever the target repo's own
+  maintenance matrix names.
+
+### Changed
+
+- **`SKILL.md` trimmed from 490 to 465 lines**, by moving content rather than deleting it:
+  - **The medal table, the prerequisites and the "what the score doesn't measure" rule moved to
+    `references/report-template.md`.** They are report rules, only needed at Step 11 — and `report-template.md`
+    had been pointing *back* at `SKILL.md` for them, which is backwards ownership. `SKILL.md` keeps the 15-asset
+    table, which Step 1i genuinely needs mid-run.
+  - Cut a "Key detections" list in Step 1a that restated the sentence directly above it.
+  - Cut a line at the end of Step 1d telling the agent to check instruction files for "duplicates,
+    contradictions, stale references" — superseded by the two-failure-modes block above it, and left behind
+    when split detection was added.
+
 ### Changed
 
 - **The three generated reviewers are now called what they are: adversarial reviewers** — and the principle
