@@ -35,12 +35,8 @@ trade one concern off against another to reach a comfortable overall opinion.
 
 **Three is a starting set, not a principle.** The principle is that each reviewer answers **one** question — a
 reviewer with a broad remit gets muted, the same way a human who comments on everything gets muted. The count
-follows from how many questions this repo actually needs answered.
-
-Three is the default because these three questions apply to any repo regardless of language or stack. A repo
-with no tests does not need `test-integrity`. A repo where nothing is hard to undo does not need
-`blast-radius`. **Generate only the ones that can come back *no* in this repo, and say which you skipped and
-why.**
+follows from how many questions this repo actually needs answered — see SKILL.md Step 4c for the skip
+conditions.
 
 Each maps to a question a repo has to answer before a change merges without a person:
 
@@ -133,10 +129,8 @@ Do not comment on correctness, style, or test coverage.
 
 ## Generation rules
 
-- **Never overwrite.** If `.github/agents/` already contains an agent with the same purpose, leave it and flag
-  drift in the report.
-- **Keep them narrow.** Do not merge these into one reviewer, and do not add repo-specific concerns to them —
-  a repo-specific reviewer is a fourth, separate file.
+- **Keep them narrow.** Do not merge these into one reviewer. A repo-specific concern is a fourth, separate
+  file — see *Writing a fourth one* below.
 - **Tailor the examples, not the remit.** `blast-radius` may name this repo's real risk paths; its question
   stays the same.
 
