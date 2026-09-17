@@ -4,6 +4,44 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Removed
+
+- **Five instructions that a competent agent already follows.** "Customize to the repo's actual stack" and "be
+  specific — real file paths, real commands" both restated the Persona's own last sentence. "Run full analysis
+  first, never guess" is what a numbered step list already means. "Use `create` to write new files, never
+  `edit` from scratch" is generic tool behavior. "Self-consistency" was too soft to change anything. Each line
+  in `SKILL.md` is paid for on every invocation and competes with the lines that do change behavior, so an
+  instruction that does not change behavior is a net loss.
+
+### Changed
+
+- **Steps 1b–1h compressed from a list of things agents do by default to the judgments they don't.** "Identify
+  the test runner", "check for `CODEOWNERS`", and "list top-level directories, skipping `node_modules`" are all
+  default behavior. What is left is what an agent gets wrong: community workflows like a stale-bot are valid
+  automation rather than missing CI, a changelog may live in a docs site so pointer files must be followed
+  before reporting one missing, and freshness is measured against the latest git tag rather than the file date.
+
+- **`## Done means` no longer ships an example that reads like a default.** The old template listed five
+  conditions including `openapi.yaml` and a dependency policy, and only one of them generalizes. The template
+  is now three lines with a table saying where each came from — the repo's real script, the one line that
+  applies anywhere, and the one included only because that example repo publishes a contract. Three to five
+  lines is stated as the right size, since a longer list is a checklist nobody finishes.
+
+- **Step 2 now says what *not* to put in a generated `AGENTS.md`.** A project overview, a CI/CD section, a
+  repository structure section, and a tech stack list are all things the agent can see. A *Key Patterns and
+  Conventions* heading is usually the conventions bullet under a second name.
+
+- **The `## Never merges without a human` rationale halved.** The agent needs four lines; the three objections
+  are for a human reader and did not need three paragraphs.
+
+### Fixed
+
+- **The false-positive check moved back into `SKILL.md`.** Moving it to a reference in the previous change was
+  wrong: `SKILL.md` is guaranteed context and a reference is conditional, so the rule is *move what degrades
+  gracefully, keep what fails silently and confidently*. A wrong line in `## Never merges without a human` is
+  worse than a missing one, which makes it exactly the wrong thing to put behind a pointer the model may skim
+  past.
+
 ### Added
 
 - **CI now enforces the context-file line budgets** — `SKILL.md` at 500 lines, `AGENTS.md` at 150. Both files
