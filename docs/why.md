@@ -88,7 +88,7 @@ Three fair objections, answered:
 Running the same prompt through two models is not redundancy — it is coverage. In practice a review agent on
 one model catches things an agent on another model walks straight past, and the reverse, on the same diff.
 
-So where the tool supports pinning a model per agent, **spread them**. Three adversarial reviewers on one model
+So where the tool supports pinning a model per agent, **spread them**. Three reviewer agents on one model
 is one reviewer with three prompts. Say this in the report; do not generate the `model` key (see *Frontmatter*).
 
 ## Why adding to SKILL.md requires naming a cut
