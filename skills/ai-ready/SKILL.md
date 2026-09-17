@@ -161,7 +161,7 @@ line competes with the ones already there.
 - **Conventions that are not inferable** — language, framework, test and style rules a reader could not derive
   from the code and its linter config. If the linter already enforces it, link the config instead of restating
   it.
-- **Conventions Mined from PR Reviews** (Step 0c) — the highest-value content in the file
+- **Conventions Mined from PR Reviews** (Step 0c)
 - **Adding a New [Feature/Module]** — the full registration chain: enums, index re-exports, config
   declarations. Nobody infers a registration chain by reading one file
 - **Common Pitfalls** — what people get wrong here. This is experience, and it is not in the code
@@ -170,9 +170,9 @@ line competes with the ones already there.
   chains, `mod` declarations, `__init__.py` re-exports. Keep it a table; Step 4d turns it into the *procedure*,
   so do not write the procedure here as well.
 
-**Do not generate these unless the repo makes them surprising:** a project overview (the README has one), a
-CI/CD section (the workflow files are right there), a repository structure section, or a tech stack list. Each
-costs attention on every task and tells the agent something it can see.
+**Do not generate these unless the repo makes them surprising:** a project overview, a CI/CD section, a
+repository structure section, or a tech stack list. Each costs attention on every task and tells the agent
+something it can see.
 
 A *Key Patterns and Conventions* heading is usually the conventions bullet above under a second name. Pick one.
 
@@ -188,10 +188,8 @@ advice about a situation the repo doesn't have.
 
 ### Two sections almost no repo has — generate both
 
-Agents now open pull requests faster than anyone reads them. These two sections are what let a repo decide
-which of those changes actually need a person. **Every line in both must be decidable by a machine with nobody
-interpreting it.** A command that exits non-zero on failure passes the test. "Write clean code" does not,
-because two people reading the same diff will disagree about whether it did.
+**Every line in both must be decidable by a machine with nobody interpreting it.** A command that exits
+non-zero on failure passes the test. "Write clean code" does not.
 
 **`## Done means`** — the conditions a change must meet before it is finished, derived from the repo's real
 commands.
@@ -215,11 +213,8 @@ nothing about what it may finish on its own.
 
 ## Step 3 — Generate per-tool pointer files
 
-Different tools look for different filenames. Rather than maintaining the same conventions in several places,
-generate a **short pointer** for each tool the repo targets. One file holds the content; everything else points
-at it.
-
-Generate a pointer for each tool detected in Step 1d, plus `.github/copilot-instructions.md` by default:
+Generate a **short pointer** for each tool detected in Step 1d, plus `.github/copilot-instructions.md` by
+default.
 
 | Tool | File |
 |---|---|
@@ -235,17 +230,13 @@ Pointer content is three lines:
 The conventions for this repository live in [`AGENTS.md`](<relative path>). Read that file first.
 ```
 
-**The link is relative to the pointer file, not to the repo root.** `AGENTS.md` sits at the root, so the path
-depends on where the pointer lives:
+**The link is relative to the pointer file, not to the repo root:**
 
 | Pointer file | Link |
 |---|---|
 | `.github/copilot-instructions.md` | `../AGENTS.md` |
 | `CLAUDE.md`, `.cursorrules` (repo root) | `./AGENTS.md` |
 | `.github/instructions/*.instructions.md` | `../../AGENTS.md` |
-
-Getting this wrong points the reader outside the repository, and it fails quietly — the file still renders, the
-link just goes nowhere.
 
 **Copilot is the one exception worth a little more.** Copilot auto-loads `.github/copilot-instructions.md` into
 context, so anything genuinely Copilot-specific (and *only* that) may follow the pointer line in the same file.
@@ -264,7 +255,7 @@ conventions.
 
 If missing, generate `.mcp.json` at the repo root based on detected dependencies (databases, APIs, cloud platforms, browser automation, DevOps tools). Use `${VAR}` for secrets. Only include servers the project actually needs — do not speculatively add servers.
 
-*Why?*: Copilot CLI no longer supports `.vscode/mcp.json` — the correct location is `.mcp.json` at the repo root. If `.vscode/mcp.json` exists, flag it as "Could Be Better" and suggest migrating to `.mcp.json`.
+If `.vscode/mcp.json` exists, flag it as "Could Be Better" and suggest migrating to `.mcp.json`.
 
 ---
 
@@ -275,12 +266,6 @@ Three cover most repos — `spec-conformance`, `test-integrity`, `blast-radius` 
 repo, not a rule.** Generate only the ones whose question can come back *no* here: skip `test-integrity` in a
 repo with no tests, skip `blast-radius` where nothing is hard to undo. Say what you skipped and why. Full
 bodies and how to add one are in [references/reviewer-agents.md](references/reviewer-agents.md).
-
-**Each one has a different objective from the author, not a harsher tone.** Ask an agent to "review this pull
-request" and it will find it good — you handed it the author's goal, so it completes the author's work. Each of
-these instead asks a question that can come back *no*, works from the diff alone, has no way to say *ship it*,
-and owns exactly one concern so it cannot trade concerns off against each other. The reference file has all
-four mechanics and the tests for writing a fourth reviewer.
 
 **Tell the user to spread them across models** where their tool supports pinning one. Reviewer agents on a
 single model largely miss the same things; three on one model is one reviewer with three prompts.
