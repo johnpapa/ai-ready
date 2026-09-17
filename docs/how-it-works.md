@@ -81,6 +81,10 @@ tools without rewriting anything, because the knowledge is in your repo rather t
 **What it is:** A directory of agent definitions, each an **adversarial reviewer** with one question and an
 instruction to ignore everything else. Generated in Step 4c.
 
+**The pattern:** an agent produces something, and a *different* agent attacks it before anyone trusts it. A
+pull request is the case this directory handles, but the same shape applies to a security review, a migration
+plan, or a root-cause analysis — and a clean result is a claim rather than a conclusion.
+
 **What "adversarial" means here:** a different objective from the author, not a harsher tone. Ask an agent to
 "review this pull request" and it will find it good — you have handed it the author's goal, so it completes the
 author's work. These each ask a question that can come back *no*, start from the diff rather than from the

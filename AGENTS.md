@@ -26,27 +26,8 @@ way to fail the build.
 
 ## Packaging Model
 
-Distribution follows existing ecosystem conventions — **nothing bespoke**. The canonical
-`skills/ai-ready/SKILL.md` follows the [Agent Skills](https://agentskills.io) standard, which is all the
-[skills CLI](https://github.com/vercel-labs/skills) (`npx skills add`) needs to install into 70+ agents.
-
-The native plugin manifests are additive, for users who prefer their tool's own plugin system. All of them
-describe the **same** `skills/ai-ready/` directory. The repo root doubles as the plugin root, which is why no
-manifest needs to copy or relocate skill content.
-
-| File | Consumed by | How it finds the skill |
-|---|---|---|
-| *(none — convention)* | `npx skills add johnpapa/ai-ready` | scans `skills/*/SKILL.md` |
-| `.github/plugin/plugin.json` | GitHub Copilot CLI | explicit `"skills": ["./skills/ai-ready"]` |
-| `.claude-plugin/plugin.json` | Claude Code | convention — `skills/` in plugin root |
-| `.claude-plugin/marketplace.json` | Claude Code `/plugin marketplace add` | plugin `source: "./"` |
-| `.codex-plugin/plugin.json` | OpenAI Codex | explicit `"skills": "./skills/"` |
-| `.agents/plugins/marketplace.json` | Codex `plugin marketplace add` | plugin `source.path: "./"` |
-| `plugin.json` | Cursor and Agent Plugins clients | convention — `skills/` in plugin root |
-| `skills.sh.json` | skills.sh registry page | groups skills for display |
-
-The `version` field must be identical in all five plugin manifests and in `SKILL.md` frontmatter
-`metadata.version`. CI enforces this.
+One canonical `skills/ai-ready/SKILL.md`; every tool gets a thin manifest pointing at that same directory.
+**Never duplicate the skill content.** Details of each tool's manifest: [docs/authoring.md](docs/authoring.md).
 
 ## Tech Stack
 
@@ -117,23 +98,13 @@ repo you ran against. See [docs/authoring.md](docs/authoring.md) before changing
 
 ## Writing Conventions
 
-### Markdown
+Match the surrounding files for anything not listed here — indentation, heading style and code-fence language
+tags are all visible in any file you open.
 
-- Use ATX-style headings (`#`, `##`, `###`)
-- Use fenced code blocks with language identifiers (```yaml, ```bash, ```json)
-- Use tables for structured data — always include a header row
-- Keep lines under 120 characters where practical
-- Use `**bold**` for emphasis, `_italic_` for terms, `` `backticks` `` for file paths and commands
-
-### YAML (skill frontmatter, workflows, issue templates)
-
-- Use 2-space indentation
-- Quote strings that contain special YAML characters
-- Always include `name` and `description` in skill frontmatter
-
-### JSON
-
-- Use 2-space indentation
+- **Wrap markdown at 120 characters.** Not inferable; the existing files are inconsistent
+- **Tables for structured data**, always with a header row. Prefer them over prose for anything comparative
+- `**bold**` for emphasis, `_italic_` for terms, `` `backticks` `` for file paths and commands
+- Quote YAML strings containing special characters
 
 ## Skill Writing Conventions
 

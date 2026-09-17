@@ -125,3 +125,28 @@ So before opening a PR that changes skill behavior:
 3. Read the generated files, not just the report
 4. Put the repo and the result in the **Tested On** table in your PR
 
+
+## Packaging model
+
+Distribution follows existing ecosystem conventions — **nothing bespoke**. The canonical
+`skills/ai-ready/SKILL.md` follows the [Agent Skills](https://agentskills.io) standard, which is all the
+[skills CLI](https://github.com/vercel-labs/skills) (`npx skills add`) needs to install into 70+ agents.
+
+The native plugin manifests are additive, for users who prefer their tool's own plugin system. All of them
+describe the **same** `skills/ai-ready/` directory. The repo root doubles as the plugin root, which is why no
+manifest needs to copy or relocate skill content.
+
+| File | Consumed by | How it finds the skill |
+|---|---|---|
+| *(none — convention)* | `npx skills add johnpapa/ai-ready` | scans `skills/*/SKILL.md` |
+| `.github/plugin/plugin.json` | GitHub Copilot CLI | explicit `"skills": ["./skills/ai-ready"]` |
+| `.claude-plugin/plugin.json` | Claude Code | convention — `skills/` in plugin root |
+| `.claude-plugin/marketplace.json` | Claude Code `/plugin marketplace add` | plugin `source: "./"` |
+| `.codex-plugin/plugin.json` | OpenAI Codex | explicit `"skills": "./skills/"` |
+| `.agents/plugins/marketplace.json` | Codex `plugin marketplace add` | plugin `source.path: "./"` |
+| `plugin.json` | Cursor and Agent Plugins clients | convention — `skills/` in plugin root |
+| `skills.sh.json` | skills.sh registry page | groups skills for display |
+
+The `version` field must be identical in all five plugin manifests and in `SKILL.md` frontmatter
+`metadata.version`. CI enforces this.
+
