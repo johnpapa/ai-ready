@@ -58,15 +58,16 @@ be agreeable.
 everything gets muted. Each answers one question and is explicitly told to ignore everything else, so it cannot
 trade one concern off against another to reach a comfortable overall opinion.
 
-## Different models miss different things
+## Why three, and when it should not be three
 
-Running the same prompt through two models is not redundancy — it is coverage. In practice a review agent on
-one model catches things an agent on another model walks straight past, and the reverse, on the same diff.
+**Three is a starting set, not a principle.** The principle is that each reviewer answers **one** question — a
+reviewer with a broad remit gets muted, the same way a human who comments on everything gets muted. The count
+follows from how many questions this repo actually needs answered.
 
-So where the tool supports pinning a model per agent, **spread them**. Three adversarial reviewers on one model
-is one reviewer with three prompts. Say this in the report; do not generate the `model` key (see *Frontmatter*).
-
-## The three
+Three is the default because these three questions apply to any repo regardless of language or stack. A repo
+with no tests does not need `test-integrity`. A repo where nothing is hard to undo does not need
+`blast-radius`. **Generate only the ones that can come back *no* in this repo, and say which you skipped and
+why.**
 
 Each maps to a question a repo has to answer before a change merges without a person:
 

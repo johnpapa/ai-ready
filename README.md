@@ -253,7 +253,7 @@ To enable Copilot code review: go to your repo's **Settings → Copilot → Code
 
 ## Tested Against
 
-This skill has been validated against a diverse set of repos — courses, applications, VS Code extensions, monorepos, and more. See [skills/ai-ready/references/training-repos.md](skills/ai-ready/references/training-repos.md) for the full list.
+This skill has been validated against a diverse set of repos — courses, applications, VS Code extensions, monorepos, and more. See [docs/training-repos.md](docs/training-repos.md) for the full list.
 
 ## Contributing
 

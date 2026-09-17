@@ -32,9 +32,9 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 |---|-------|-------------|
 | 1 | `AGENTS.md` | Step 2 |
 | 2 | Per-tool pointer files (`.github/copilot-instructions.md`, `CLAUDE.md`, …) | Step 3 |
-| 3 | Maintenance matrix (in `AGENTS.md`) | Step 8 |
+| 3 | Maintenance matrix (in `AGENTS.md`) | Step 2 |
 | 4 | `.mcp.json` | Step 4b |
-| 5 | `.github/workflows/copilot-setup-steps.yml` | Step 4 |
+| 5 | `.github/workflows/copilot-setup-steps.yml` (N/A without Copilot cloud agent) | Step 4 |
 | 6 | Adversarial reviewers (`.github/agents/`) | Step 4c |
 | 7 | Starter skill (`.github/skills/`) | Step 4d |
 | 8 | Security skill (`.github/skills/`, when there is surface) | Step 4e |
@@ -171,9 +171,10 @@ line competes with the ones already there.
 - **Adding a New [Feature/Module]** — the full registration chain: enums, index re-exports, config
   declarations. Nobody infers a registration chain by reading one file
 - **Common Pitfalls** — what people get wrong here. This is experience, and it is not in the code
-- **Maintenance Matrix** — what must be updated when each part of the codebase changes. Real file paths; trace
-  import chains rather than stopping at top-level files. Keep it a table; Step 4d turns it into the
-  *procedure*, so do not write the procedure here as well.
+- **Maintenance Matrix** — what must be updated when each part of the codebase changes. Real file paths. Trace
+  the actual dependency graph rather than stopping at top-level files: `.csproj` ProjectReferences, import
+  chains, `mod` declarations, `__init__.py` re-exports. Keep it a table; Step 4d turns it into the *procedure*,
+  so do not write the procedure here as well.
 
 **Do not generate these unless the repo makes them surprising:** a project overview (the README has one), a
 CI/CD section (the workflow files are right there), a repository structure section, or a tech stack list. Each
@@ -266,6 +267,11 @@ conventions.
 
 ## Step 4 — Generate copilot-setup-steps.yml
 
+**Only applies to repos that use GitHub Copilot's cloud coding agent.** This file tells that agent how to build
+the repo before it starts work; nothing else reads it. If Step 0 found no Copilot-authored pull requests and the
+file does not already exist, mark the asset **N/A** and say why in one line — do not score the repo down for
+missing a file for a product it does not use.
+
 Check ALL locations first: `.github/workflows/copilot-setup-steps.yml`, `.github/copilot-setup-steps.yml`, and repo root. If one exists anywhere, do NOT create another — consolidate into `.github/workflows/` if at a legacy location.
 
 If truly missing from all locations, create `.github/workflows/copilot-setup-steps.yml`, deriving the steps from
@@ -284,9 +290,11 @@ If missing, generate `.mcp.json` at the repo root based on detected dependencies
 
 ## Step 4c — Generate adversarial reviewers
 
-If `.github/agents/` is missing or contains no reviewers, generate three **adversarial reviewers** that apply to
-any repository: `spec-conformance`, `test-integrity`, and `blast-radius`. Full bodies, the design rules, and
-how to write a fourth are in [references/reviewer-agents.md](references/reviewer-agents.md).
+If `.github/agents/` is missing or contains no reviewers, generate a starting set of **adversarial reviewers**.
+Three cover most repos — `spec-conformance`, `test-integrity`, `blast-radius` — but **the count follows the
+repo, not a rule.** Generate only the ones whose question can come back *no* here: skip `test-integrity` in a
+repo with no tests, skip `blast-radius` where nothing is hard to undo. Say what you skipped and why. Full
+bodies and how to add one are in [references/reviewer-agents.md](references/reviewer-agents.md).
 
 These are one instance of a general pattern worth naming for the user: **an agent produces something, and a
 different agent attacks it before anyone trusts it** — a code change, a security review, a migration plan
@@ -402,12 +410,6 @@ If README exists but has no Contributing section: link to `CONTRIBUTING.md` if i
 
 ---
 
-## Step 8 — Verify maintenance matrix
-
-Verify the matrix in `AGENTS.md` covers file cross-references, change cascades, and cross-cutting concerns. Trace actual dependency graphs per language (`.csproj` ProjectReferences, import chains, `mod` declarations, `__init__.py` re-exports).
-
----
-
 ## Step 9 — Evaluate and improve changelog
 
 If missing, create `CHANGELOG.md` with Keep a Changelog format. If a pointer file, verify the target. If stale, flag with dates. Document non-standard locations in AGENTS.md.
@@ -454,6 +456,3 @@ This skill's first obligation is to leave the repo in a **better state than it f
 
 ---
 
-## Training Repos
-
-See [references/training-repos.md](references/training-repos.md) for the full list of repos used to validate this skill's heuristics.
