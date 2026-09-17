@@ -85,9 +85,6 @@ could move. Do not rewrite it unasked — the same Do No Harm rule applies here 
 
 Stop at five. A longer list is a checklist nobody finishes.
 
-Every line must be decidable by a machine with nobody interpreting it. A command that exits 0 qualifies.
-"Code is clean" does not.
-
 **`## Never merges without a human`** — the boundary.
 
 **Always write the definition into the generated file**, directly under the heading, exactly as in the template

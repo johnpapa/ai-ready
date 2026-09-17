@@ -10,19 +10,19 @@ description: "**ANALYSIS SKILL** — Analyze any repository and generate AI-read
 
 ## Persona
 
-Adopt the perspective of an experienced repo maintainer who has managed high-traffic repos and reviewed thousands of PRs. Prioritize what **reduces review burden and contributor friction**. Every file you generate should earn its place — generic boilerplate creates noise.
+Adopt the perspective of an experienced repo maintainer. Prioritize what **reduces review burden and contributor friction**. Every file you generate should earn its place — generic boilerplate creates noise.
 
 ---
 
 Follow these steps in order to analyze the current repository and generate all missing AI-ready configuration assets.
 
-**First run vs. re-run:** On the first run, most assets will be missing — the skill creates them. On re-runs, it **audits** existing assets against the current codebase, checking for drift, stale content, and new conventions from recent PR reviews. The skill **never overwrites existing files without user approval**.
+**First run vs. re-run:** On the first run, most assets will be missing — the skill creates them. On re-runs, it **audits** existing assets against the current codebase, checking for drift, stale content, and new conventions from recent PR reviews.
 
-**Skipping assets:** If the user's prompt mentions skipping specific assets (e.g., "skip CI and issue templates"), respect those exclusions. Still run the full analysis, but skip generation for the excluded assets.
+**Skipping assets:** If the user's prompt mentions skipping specific assets, respect those exclusions. Still run the full analysis, but skip generation for the excluded assets.
 
 **Report-only mode:** If the user asks for a report without generating files (e.g., "how ai-ready is this repo?", "score this repo"), run the full analysis (Steps 0–1) and display the report (Step 11) — but skip all generation steps (Steps 2–10).
 
-### The 14 tracked assets
+### The 11 tracked assets
 
 Assets are grouped into three categories. Count assets with **Nailed It** status for the score.
 
@@ -33,27 +33,24 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 | 1 | `AGENTS.md` | Step 2 |
 | 2 | Per-tool pointer files (`.github/copilot-instructions.md`, `CLAUDE.md`, …) | Step 3 |
 | 3 | Maintenance matrix (in `AGENTS.md`) | Step 2 |
-| 4 | `.mcp.json` | Step 4b |
-| 5 | Reviewer agents (`.github/agents/`) | Step 4c |
-| 6 | Starter skill (`.github/skills/`) | Step 4d |
-| 7 | Security skill (`.github/skills/`, when there is surface) | Step 4e |
+| 4 | Reviewer agents (`.github/agents/`) | Step 4c |
+| 5 | Starter skill (`.github/skills/`) | Step 4d |
+| 6 | Security skill (`.github/skills/`, when there is surface) | Step 4e |
 
 **🔧 Dev Workflow** — what keeps PRs clean and contributors on track
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 8 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
-| 9 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
-| 10 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
-| 11 | `.github/dependabot.yml` | (checked, not generated) |
+| 7 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
+| 8 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
+| 9 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
 
 **📖 Onboarding** — what helps new contributors get started
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 12 | README Contributing section | Step 7 |
-| 13 | Changelog (`CHANGELOG.md`) | Step 9 |
-| 14 | Documentation (or explicit "not needed" note) | Step 10 |
+| 10 | Changelog (`CHANGELOG.md`) | Step 9 |
+| 11 | Documentation (or explicit "not needed" note) | Step 10 |
 
 **Scoring:** 🟩 Nailed It (counted) · 🟨 Could Be Better (not counted) · ⬜ Missing (not counted).
 Medals, the two prerequisites that cap them, and what the score may never claim are in
@@ -63,7 +60,7 @@ Medals, the two prerequisites that cap them, and what the score may never claim 
 
 ## Step 0 — Detect GitHub context automatically
 
-**Zero user input required.** The skill is GitHub-native — it discovers everything from GitHub's tools.
+The skill is GitHub-native — it discovers everything from GitHub's tools.
 
 ### 0a. Identify the repo
 
@@ -73,7 +70,7 @@ Run `git remote -v` to extract the GitHub `owner/repo`. If not GitHub, fall back
 
 Use GitHub MCP tools or `gh` CLI to auto-discover repo metadata, PR review patterns, and community health gaps. See [references/github-discovery.md](references/github-discovery.md) for the full API table, PR mining technique, and health gap mapping.
 
-Key insight: **PR review mining is the highest-value step.** Repeated reviewer feedback — from humans *and* from review agents — becomes conventions in `AGENTS.md`, weighted so recent patterns count for more and abandoned ones are flagged rather than resurrected.
+Repeated reviewer feedback — from humans *and* from review agents — becomes conventions in `AGENTS.md`. Weight recent patterns more heavily, and flag an abandoned one rather than resurrecting it as a current rule.
 
 ---
 
@@ -89,9 +86,8 @@ Find manifest files and extract details. See [references/detection-tables.md](re
 
 ### 1b–1c. Detect test setup and CI
 
-Standard detection: test runner and commands, CI triggers. One thing that is not standard — **community
-workflows (stale, welcome, labeler) are valid automation, not missing CI.** Do not report a repo as having no
-CI because its only workflow is a stale-bot.
+**Community workflows (stale, welcome, labeler) are valid automation, not missing CI.** Do not report a repo
+as having no CI because its only workflow is a stale-bot.
 
 ### 1d. Check existing AI configuration
 
@@ -122,7 +118,7 @@ against the latest git tag, not the file's date.
 
 Produce a structured findings table combining GitHub context and codebase analysis with file-path evidence. See [references/detection-tables.md](references/detection-tables.md) for the full findings table template.
 
-List which of the 14 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
+List which of the 11 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
 
 ### 1j. Detect monorepo areas
 
@@ -132,7 +128,7 @@ If workspace config found, list areas with name, path glob, and primary stack. F
 
 ## Step 2 — Generate AGENTS.md
 
-If missing, create `AGENTS.md` at the repo root. If it exists, compare against analysis and flag drift. **Do not overwrite.**
+If missing, create `AGENTS.md` at the repo root. If it exists, compare against analysis and flag drift.
 
 `AGENTS.md` is the **canonical entry point** for how this repo works — the one file every tool reads, and the
 one place a given convention is stated. That is not the same as putting everything in it. Read
@@ -164,7 +160,7 @@ line competes with the ones already there.
 - **Conventions that are not inferable** — language, framework, test and style rules a reader could not derive
   from the code and its linter config. If the linter already enforces it, link the config instead of restating
   it.
-- **Conventions Mined from PR Reviews** (Step 0c) — the highest-value content in the file
+- **Conventions Mined from PR Reviews** (Step 0c)
 - **Adding a New [Feature/Module]** — the full registration chain: enums, index re-exports, config
   declarations. Nobody infers a registration chain by reading one file
 - **Common Pitfalls** — what people get wrong here. This is experience, and it is not in the code
@@ -173,9 +169,9 @@ line competes with the ones already there.
   chains, `mod` declarations, `__init__.py` re-exports. Keep it a table; Step 4d turns it into the *procedure*,
   so do not write the procedure here as well.
 
-**Do not generate these unless the repo makes them surprising:** a project overview (the README has one), a
-CI/CD section (the workflow files are right there), a repository structure section, or a tech stack list. Each
-costs attention on every task and tells the agent something it can see.
+**Do not generate these unless the repo makes them surprising:** a project overview, a CI/CD section, a
+repository structure section, or a tech stack list. Each costs attention on every task and tells the agent
+something it can see.
 
 A *Key Patterns and Conventions* heading is usually the conventions bullet above under a second name. Pick one.
 
@@ -191,10 +187,8 @@ advice about a situation the repo doesn't have.
 
 ### Two sections almost no repo has — generate both
 
-Agents now open pull requests faster than anyone reads them. These two sections are what let a repo decide
-which of those changes actually need a person. **Every line in both must be decidable by a machine with nobody
-interpreting it.** A command that exits non-zero on failure passes the test. "Write clean code" does not,
-because two people reading the same diff will disagree about whether it did.
+**Every line in both must be decidable by a machine with nobody interpreting it.** A command that exits
+non-zero on failure passes the test. "Write clean code" does not.
 
 **`## Done means`** — the conditions a change must meet before it is finished, derived from the repo's real
 commands.
@@ -218,11 +212,8 @@ nothing about what it may finish on its own.
 
 ## Step 3 — Generate per-tool pointer files
 
-Different tools look for different filenames. Rather than maintaining the same conventions in several places,
-generate a **short pointer** for each tool the repo targets. One file holds the content; everything else points
-at it.
-
-Generate a pointer for each tool detected in Step 1d, plus `.github/copilot-instructions.md` by default:
+Generate a **short pointer** for each tool detected in Step 1d, plus `.github/copilot-instructions.md` by
+default.
 
 | Tool | File |
 |---|---|
@@ -238,17 +229,13 @@ Pointer content is three lines:
 The conventions for this repository live in [`AGENTS.md`](<relative path>). Read that file first.
 ```
 
-**The link is relative to the pointer file, not to the repo root.** `AGENTS.md` sits at the root, so the path
-depends on where the pointer lives:
+**The link is relative to the pointer file, not to the repo root:**
 
 | Pointer file | Link |
 |---|---|
 | `.github/copilot-instructions.md` | `../AGENTS.md` |
 | `CLAUDE.md`, `.cursorrules` (repo root) | `./AGENTS.md` |
 | `.github/instructions/*.instructions.md` | `../../AGENTS.md` |
-
-Getting this wrong points the reader outside the repository, and it fails quietly — the file still renders, the
-link just goes nowhere.
 
 **Copilot is the one exception worth a little more.** Copilot auto-loads `.github/copilot-instructions.md` into
 context, so anything genuinely Copilot-specific (and *only* that) may follow the pointer line in the same file.
@@ -267,7 +254,7 @@ conventions.
 
 If missing, generate `.mcp.json` at the repo root based on detected dependencies (databases, APIs, cloud platforms, browser automation, DevOps tools). Use `${VAR}` for secrets. Only include servers the project actually needs — do not speculatively add servers.
 
-*Why?*: Copilot CLI no longer supports `.vscode/mcp.json` — the correct location is `.mcp.json` at the repo root. If `.vscode/mcp.json` exists, flag it as "Could Be Better" and suggest migrating to `.mcp.json`.
+If `.vscode/mcp.json` exists, flag it as "Could Be Better" and suggest migrating to `.mcp.json`.
 
 ---
 
@@ -279,28 +266,17 @@ repo, not a rule.** Generate only the ones whose question can come back *no* her
 repo with no tests, skip `blast-radius` where nothing is hard to undo. Say what you skipped and why. Full
 bodies and how to add one are in [references/reviewer-agents.md](references/reviewer-agents.md).
 
-**Each one has a different objective from the author, not a harsher tone.** Ask an agent to "review this pull
-request" and it will find it good — you handed it the author's goal, so it completes the author's work. Each of
-these instead asks a question that can come back *no*, works from the diff alone, has no way to say *ship it*,
-and owns exactly one concern so it cannot trade concerns off against each other. The reference file has all
-four mechanics and the tests for writing a fourth reviewer.
-
 **Tell the user to spread them across models** where their tool supports pinning one. Reviewer agents on a
 single model largely miss the same things; three on one model is one reviewer with three prompts.
 
 `blast-radius` reads the `## Never merges without a human` section written in Step 2, which is what connects
 the boundary to something that actually runs.
 
-**Never overwrite** an existing reviewer. If the repo already has agents covering these concerns, leave them and
-flag drift instead.
+If the repo already has agents covering these concerns, leave them and flag drift instead.
 
 ---
 
 ## Step 4d — Generate a starter skill from the maintenance matrix
-
-The maintenance matrix written in Step 2 already encodes the repo's hardest-won knowledge: *when you touch this,
-you also have to update that.* Today it sits in a document somebody has to read. A skill is the portable
-container for it — named and described, so any agent loads it when it becomes relevant.
 
 Generate `.github/skills/shipping-a-change/SKILL.md` from the matrix plus the *Adding a New [Feature/Module]*
 registration chain:
@@ -331,20 +307,17 @@ description: What to update when you change something in this repo, and what "do
 **Use real paths and real commands.** A skill full of placeholders is worse than no skill — it looks
 authoritative and teaches nothing.
 
-**Why a skill rather than another document:** `AGENTS.md` is read at the start of the work. A skill is loaded
-when its description matches what the agent is about to do. Procedural knowledge belongs in the second kind —
-and unlike an instructions file, a skill travels to any tool that follows the Agent Skills standard.
-
-**Never overwrite** an existing skill. If `.github/skills/` already has one covering this, flag drift instead.
+If `.github/skills/` already has one covering this, flag drift instead.
 If the matrix is thin — fewer than three real cascades — skip generation and say why; a one-row skill is noise.
 
 ---
 
 ## Step 4e — Generate a security skill, only if there is surface
 
-**Do not generate a generic security skill.** "Don't hardcode secrets" is already in every model's weights;
-writing it to a file adds noise and teaches nothing. This step exists to capture the security knowledge that is
-specific to *this* repo and exists nowhere else.
+**Do not generate a generic security skill.** "Don't hardcode secrets" is already in every model's
+weights — a security skill that reads like a blog post is worse than none, because it dilutes the rules that
+actually matter here and people stop reading it. This step exists to capture what is specific to *this* repo
+and exists nowhere else.
 
 Scan for security surface (see [references/detection-tables.md](references/detection-tables.md) § Security
 surface detection). **If none is found, do not generate the skill** — say so in the report in one line, the same
@@ -354,8 +327,7 @@ If surface is found, generate `.github/skills/security-review/SKILL.md`, populat
 has. Sources, in priority order:
 
 1. **Security notes already written down** — a `SECURITY.md`, a checklist inside `AGENTS.md`, comments near the
-   sensitive code. This is the highest-value input and it is usually already there. Move it, don't invent
-   alongside it.
+   sensitive code. It is usually already there — move it, don't invent alongside it.
 2. **The surface itself** — the real handlers, the real trust boundary, named with real paths.
 3. **PR review comments about security** (Step 0c) — a reviewer who keeps asking the same security question has
    written your skill for you.
@@ -364,10 +336,9 @@ The skeleton to fill is in [references/detection-tables.md](references/detection
 surface detection.
 
 **Every line must name something real in this repo.** If a section would only restate general good practice,
-drop the section. A security skill that reads like a blog post is worse than none — it dilutes the rules that
-actually matter here, and people stop reading it.
+drop it.
 
-**Never overwrite** an existing security skill or `SECURITY.md`. Propose the move and let the user decide.
+If a security skill or `SECURITY.md` already exists, propose the move and let the user decide.
 
 ---
 
@@ -413,21 +384,19 @@ Display the report using the format in [references/report-template.md](reference
 
 ### Do No Harm
 
-This skill's first obligation is to leave the repo in a **better state than it found it — never worse**. Every rule below serves this principle.
+This skill's first obligation is to leave the repo in a **better state than it found it — never worse**.
 
 - **NEVER create duplicates** — before creating any file, check ALL known locations (canonical, legacy, and root). If a file exists anywhere, do not create another copy. Consolidate instead.
 - **NEVER push directly to main/master** — always create a feature branch and open a PR for review. The only exception is if the user explicitly asks to commit to the default branch.
-- **NEVER leave an opened PR unattended** — once a PR is open and CI passes, either merge it (small, well-tested, no ambiguous judgment calls) or ask the user which way to go; report the outcome either way. Opening a PR and going quiet is not acceptable. If CI is red or still pending, don't merge — fix it, wait, or report the blocker instead.
-- **Whenever a merge happens, use squash and delete the branch afterward** — both local and remote. Don't leave merged branches lying around.
+- **NEVER leave an opened PR unattended** — once a PR is open and CI passes, either merge it (small, well-tested, no ambiguous judgment calls) or ask the user which way to go; report the outcome either way. If CI is red or still pending, don't merge — fix it, wait, or report the blocker instead.
+- **Whenever a merge happens, use squash and delete the branch afterward** — both local and remote.
 - **NEVER overwrite existing files** — only create missing assets. Flag drift for user review.
 - **NEVER delete files without user approval** — if consolidating duplicates or removing stale files, include the deletion in the PR for review.
 
 ### General Rules
 
 - **NEVER open a pager** — append `| cat` to every `gh`/`git` command. Use `git --no-pager`.
-- **GitHub-native by default** — auto-discover via MCP tools and `gh` CLI. Fall back to local analysis.
-- **Mine PR reviews** — turn repeated review feedback into `AGENTS.md` conventions, where every tool reads them.
-- **ALWAYS display the report at the end** — never skip or abbreviate.
+- **ALWAYS show the full report** — it's the user's view into what was found and changed.
 - **NEVER use markdown headings in user output** — use bold + emojis instead.
 - **ALWAYS mention the AI Ready skill in issue/PR communication** — when posting to an issue or PR (body or comment), include explicit attribution such as `Assisted by [ai-ready](https://github.com/johnpapa/ai-ready)`.
 - **ALWAYS update docs to repo standards** — when generated guidance or workflows change, update the docs and changelog that *this* repo's maintenance matrix names. Do not assume a file exists because another repo has one.

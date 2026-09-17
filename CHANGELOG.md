@@ -6,6 +6,79 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Important Rules restated content Step 0 and Step 11 already say, more completely, at the point where it's
+  actually executed.** "GitHub-native by default" and "Mine PR reviews" both duplicated Step 0's own text —
+  Step 0's versions are fuller (the git-remote fallback mechanic, the recency-weighting nuance). Cut both from
+  General Rules. Two more bullets restated their own label in different words within the same line ("Opening a
+  PR and going quiet is not acceptable" repeating "NEVER leave an opened PR unattended"; "Don't leave merged
+  branches lying around" repeating "delete the branch afterward — both local and remote") — trimmed, keeping
+  each bullet's actual new instruction. "ALWAYS show the full report" is shortened and reframed around why it
+  matters: it's the user's view into what was found and changed, not a bare compliance rule.
+
+### Removed
+
+- **The README Contributing section is out of the scored list.** Tracked assets go from 12 to 11. Same test
+  applied to `dependabot.yml`: does this help an *agent* work in the repo, or is it general repo hygiene? An
+  agent reads `AGENTS.md` for build/test commands and conventions — it doesn't fork, branch, or open a PR the
+  way an external human contributor does, and the section's own content (fork/branch/PR instructions) is
+  human-onboarding material, not agent context.
+
+  Unlike `dependabot.yml`, this one had a real counter-argument: the skill's own stated mission explicitly
+  covers both human and AI contributors. So rather than cutting the step entirely (the `copilot-setup-steps.yml`
+  treatment), it keeps the same treatment as `.mcp.json` — Step 7 still generates the section, because it's
+  useful repo hygiene worth offering, but it no longer counts toward "AI-readiness."
+
+  Medal bands rescale to 🥉 1–3, 🥈 4–6, 🥇 7–9, 🏆 10–11. 📖 Onboarding drops from 3 indicators to 2.
+
+### Added
+
+- **CI now prints a word-count signal next to the enforced line count**, because a real gap surfaced during
+  review: this file writes paragraphs as long unwrapped lines, so trimming a sentence removes real content and
+  real token cost without moving `wc -l` at all. Line count only reacts to whole lines disappearing.
+
+  Sourced rather than invented: Anthropic's own SKILL.md guidance recommends the loaded body stay under
+  roughly 5,000 tokens; community tooling for AGENTS.md/CLAUDE.md-style files reports size as lines, bytes,
+  *and* tokens together, never lines alone, describing a healthy target as "~200 lines / ~10 KB." Converting
+  those to a word-count proxy (~1.3 tokens per English word, no tokenizer dependency needed): `SKILL.md` at
+  ~3,750 words, `AGENTS.md` at ~1,400.
+
+  **The signal never fails the build** — only the line ceiling does. Running it today found the exact gap it
+  was built to catch: `SKILL.md` sits comfortably under its line ceiling at 433/500, but is already over its
+  word signal at 3,793/3,750. Documented in `docs/authoring.md`, including the honest caveat that these exact
+  word numbers are derived conversions, not independently sourced.
+
+### Removed
+
+- **`.mcp.json` and `.github/dependabot.yml` are out of the scored list.** Tracked assets go from 14 to 12.
+  Same reasoning as dropping `copilot-setup-steps.yml` a day earlier: `dependabot.yml` isn't an AI-readiness
+  signal at all — it's dependency-update automation, unrelated to whether an agent can work in the repo, and
+  it should not have been on this list in the first place. `.mcp.json` genuinely is AI Context, but only for
+  repos with a database, API, or other MCP-relevant dependency — scoring every repo on a file that's only
+  sometimes applicable is the same dishonesty the medal prerequisites exist to fix.
+
+  Step 4b keeps generating `.mcp.json` exactly as before, for repos where it applies. Step 1e keeps detecting
+  `dependabot.yml` as part of general repo-config analysis. Neither counts toward the score any more.
+
+  Medal bands rescale to quarters of the new total: 🥉 1–3, 🥈 4–6, 🥇 7–9, 🏆 10–12. 🤖 AI Context drops from 7
+  indicators to 6; 🔧 Dev Workflow from 4 to 3.
+
+### Fixed
+
+- **Two rules restated a global policy that was one section away.** "The skill never overwrites existing files
+  without user approval" appeared six times: once in the mode-selector section, once in `Important Rules → Do
+  No Harm` (the canonical statement), and once per generation step (`AGENTS.md`, reviewer agents, starter
+  skill, security skill). The four step-level instances kept their step-specific "do this instead" (flag
+  drift, propose the move) but dropped the repeated "never overwrite" clause; the mode-selector's restatement
+  was cut outright. One canonical statement remains, in the section literally named for it.
+
+- **Two illustrative examples added nothing an agent needed to act.** "Skipping assets" no longer needs `(e.g.,
+  "skip CI and issue templates")` to say what "mentions skipping specific assets" means — the instruction is
+  already self-contained. Trimmed the Persona's "who has managed high-traffic repos and reviewed thousands of
+  PRs" to "an experienced repo maintainer" for the same reason: specific, unverifiable color that doesn't
+  change what the agent does.
+
+### Fixed
+
 - **"Adversarial reviewers" and "adversarial agents" were two different ideas wearing one name.** The
   generated `.github/agents/` files (Step 4c) are **reviewer agents** — a file this skill writes into the
   repo, assigned to a pull request, that answers one fixed question. That was John's idea from the start; only

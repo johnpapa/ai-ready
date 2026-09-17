@@ -140,24 +140,38 @@ jobs:
       - name: Install test dependencies
         run: pip install --quiet pyyaml
 
-      - name: Check context-file line budgets
+      - name: Check context-file budgets (lines enforced, words signaled)
         run: |
           python3 -c "
           import sys
           # SKILL.md is in context every time the skill triggers; AGENTS.md is in
           # context before every agent task. Sources and reasoning in docs/authoring.md.
-          budgets = {
+          #
+          # Lines are the enforced gate, but a single long unwrapped paragraph can carry
+          # hundreds of words as '1 line' — line count alone missed real content growth
+          # more than once. Word count is printed as a signal (not enforced) because it
+          # tracks token cost more honestly; going over it is a prompt to look, not a
+          # build failure.
+          line_budgets = {
               'skills/ai-ready/SKILL.md': 500,
               'AGENTS.md': 150,
           }
+          word_signals = {
+              'skills/ai-ready/SKILL.md': 3750,  # ~5,000 tokens, Anthropic's SKILL.md body guidance
+              'AGENTS.md': 1400,                 # scaled from the ~200-line/10KB community target
+          }
           errors = []
-          for path, ceiling in budgets.items():
-              n = sum(1 for _ in open(path))
-              status = 'over' if n > ceiling else 'ok'
-              print(f'{path}: {n}/{ceiling} {status}')
-              if n > ceiling:
+          for path, ceiling in line_budgets.items():
+              text = open(path).read()
+              lines = len(text.splitlines())
+              words = len(text.split())
+              signal = word_signals[path]
+              line_status = 'over' if lines > ceiling else 'ok'
+              word_flag = ' (signal: consider trimming)' if words > signal else ''
+              print(f'{path}: {lines}/{ceiling} lines {line_status} | {words}/{signal} words{word_flag}')
+              if lines > ceiling:
                   errors.append(
-                      f'{path} is {n} lines, ceiling is {ceiling}. '
+                      f'{path} is {lines} lines, ceiling is {ceiling}. '
                       f'Move content out rather than deleting something load-bearing '
                       f'— see docs/authoring.md.'
                   )
