@@ -115,17 +115,29 @@ could move. Do not rewrite it unasked — the same Do No Harm rule applies here 
 
 ## Generating the two sections
 
-**`## Done means`** — the conditions a change must meet before it is finished. Derive from the repo's real
-commands and real conventions:
+**`## Done means`** — the conditions a change must meet before it is finished.
+
+**Derive every line from this repo. Do not copy a list.** Only one of these conditions generalizes; the rest
+depend entirely on what the repo has. The example below is a Node web service with a published API — a VS Code
+extension or a static site shares almost none of it:
 
 ```markdown
 ## Done means
 - `npm run verify` exits 0
 - Any behavior change ships with a test that fails without the change
-- Public API changes update `openapi.yaml` in the same pull request
-- No new runtime dependency without a linked issue
-- Generated files are never hand-edited
+- A change to a response shape updates `openapi.yaml` in the same pull request
 ```
+
+Line by line, so you can tell which kind you are writing:
+
+| Line | Where it came from |
+|---|---|
+| `npm run verify` exits 0 | **This repo's actual script.** Read `package.json`. If the repo has no single verify command, name the real ones: `npm test && npm run lint` |
+| A test that fails without the change | **The only line that generalizes.** Include it in every repo that has tests at all |
+| `openapi.yaml` in the same pull request | **Only because this repo publishes a contract.** Omit it entirely when there is none |
+
+Three to five lines is the right size. A longer list is a checklist nobody finishes, and every line still has
+to be decidable by a machine — `npm run verify` exits 0 qualifies, "code is clean" does not.
 
 **`## Never merges without a human`** — the boundary.
 
@@ -171,23 +183,29 @@ reads it. Every generated file must carry the definition directly under the head
 > approving a goal, not this change — so it does not count for anything on this list. Everywhere else it counts
 > fine, which is the point of having a list.
 
-Three objections that sentence answers, all of which are fair:
+Three fair objections, answered:
 
-**"I tell agents to merge when they're done. Is that banned?"** No, and it should not be. Standing approval is
-a reasonable way to work, and drawing this boundary is exactly what makes it *safe* for everything off the
-list. The section enables autonomy rather than withholding it — a repo with no list has to treat every change
-as the risky one.
-
-**"A human did merge it, though."** Someone approving four pull requests in ninety seconds without opening them
-satisfies "a human merged it" and satisfies nothing else. If the bar is a click, the section buys you a record
-of who to blame and no safety at all. The bar is that a person **read the diff**.
-
-**"So who is allowed to merge?"** Not the question. This is about *when the decision is made* — before the
-change exists, or after someone has seen it — not about who holds permissions. Branch protection answers the
-permissions question; this section answers the timing one.
+- **"I tell agents to merge when they're done — is that banned?"** No. The list is what makes standing approval
+  *safe* everywhere off it. A repo with no list has to treat every change as the risky one.
+- **"A human did merge it, though."** Approving four pull requests in ninety seconds satisfies "a human merged
+  it" and nothing else. A click buys a record of who to blame, not safety.
+- **"So who is allowed to merge?"** Wrong question. This is about *when* the decision is made, not who holds
+  permissions. Branch protection answers that one.
 
 ### What this means for the rest of the file
 
 `## Done means` is the other half and is often mistaken for the same thing. `## Done means` is what a change
 must satisfy to be **finished**; `## Never merges without a human` is what it cannot decide **alone**. A change
 can be done and still be on the list.
+
+## Where the untestable-claims rule came from
+
+Provenance for the Step 2 rule about *"this can't be tested"* claims, in case someone asks whether it is real.
+
+`vscode-peacock#757` claimed a `vscode.env.remoteName` feature could not be covered, because the fast mocked
+unit lane's `vscode` stub has no `env.remoteName` to toggle. True for that lane. The slower host lane, with a
+real Extension Host and Sinon, was already stubbing `vscode.env.remoteName` in another test file.
+
+The claim was false once the other lane was checked, and a regression test was added. That is why the rule is
+gated on a repo actually having more than one lane: in a single-lane setup it would be advice about a situation
+the repo does not have.

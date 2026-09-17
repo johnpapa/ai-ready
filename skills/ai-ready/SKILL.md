@@ -88,13 +88,11 @@ Find manifest files and extract details. See [references/detection-tables.md](re
 
 **Course repos** (3+ signals: numbered folders, lesson keywords, no primary app) adapt Steps 2–5. See detection-tables.md for the full signal list and step adaptations.
 
-### 1b. Detect test setup
+### 1b–1c. Detect test setup and CI
 
-Identify test runner, find test directories (`tests/`, `__tests__/`, `spec/`, `e2e/`), extract test commands from scripts.
-
-### 1c. Detect CI/CD
-
-Check `.github/workflows/` for PR triggers. Check for other CI systems. Recognize community workflows (stale, welcome) as valid automation — not missing CI.
+Standard detection: test runner and commands, CI triggers. One thing that is not standard — **community
+workflows (stale, welcome, labeler) are valid automation, not missing CI.** Do not report a repo as having no
+CI because its only workflow is a stale-bot.
 
 ### 1d. Check existing AI configuration
 
@@ -116,17 +114,12 @@ what Step 2 needs to absorb. Do not rewrite the tool file here; propose the move
 
 **copilot-setup-steps.yml** — check ALL known locations: `.github/workflows/copilot-setup-steps.yml` (canonical), `.github/copilot-setup-steps.yml` (legacy), and repo root. If found in a non-canonical location, flag it for consolidation into `.github/workflows/` — do not create a duplicate.
 
-### 1e. Check repo configuration
+### 1e–1h. Check configuration, changelog, docs, and structure
 
-Check for: `CODEOWNERS`, `dependabot.yml`, issue templates, PR template, `LICENSE`, README Contributing section.
-
-### 1f–1g. Evaluate changelog and documentation
-
-Assess changelog health (exists, format, freshness). Assess docs (exists, framework, navigation, deploy pipeline, README linkage).
-
-### 1h. Scan directory structure
-
-List top-level directories and immediate children (skip `node_modules`, `.git`, `dist`, `build`, `target`, `vendor`).
+Detect `CODEOWNERS`, `dependabot.yml`, issue and PR templates, `LICENSE`, a README Contributing section,
+changelog health, and docs setup. Two judgments that are not obvious: a changelog may live in a docs site
+rather than `CHANGELOG.md`, so **follow pointer files before reporting one missing**; and freshness is measured
+against the latest git tag, not the file's date.
 
 ### 1i. Compile findings
 
@@ -167,19 +160,26 @@ proves something is missing. 150 is a ceiling, not a target: past it, move somet
 as it gets longer, because a model follows roughly 150–200 instructions before adherence degrades and every
 line competes with the ones already there.
 
-Sections, when they survive the test above: Project Overview (never hardcode versions — reference manifests),
-Build & Run, Testing, Key Patterns and Conventions, CI/CD, Adding a New [Feature/Module] (trace the full
-registration chain — enums, index re-exports, config declarations), Common Pitfalls.
+**Generate these. They exist nowhere in the code, so they always pass the test:**
 
-Plus, because they exist nowhere in the code and so always pass the test:
-
+- **Build, test and run commands** — buried in tooling config, needed on every task. Never hardcode versions;
+  reference the manifest.
 - **Conventions that are not inferable** — language, framework, test and style rules a reader could not derive
   from the code and its linter config. If the linter already enforces it, link the config instead of restating
   it.
 - **Conventions Mined from PR Reviews** (Step 0c) — the highest-value content in the file
+- **Adding a New [Feature/Module]** — the full registration chain: enums, index re-exports, config
+  declarations. Nobody infers a registration chain by reading one file
+- **Common Pitfalls** — what people get wrong here. This is experience, and it is not in the code
 - **Maintenance Matrix** — what must be updated when each part of the codebase changes. Real file paths; trace
-  import chains and registration patterns rather than stopping at top-level files. Keep it a table; Step 4d
-  turns it into the *procedure*, so do not write the procedure here as well.
+  import chains rather than stopping at top-level files. Keep it a table; Step 4d turns it into the
+  *procedure*, so do not write the procedure here as well.
+
+**Do not generate these unless the repo makes them surprising:** a project overview (the README has one), a
+CI/CD section (the workflow files are right there), a repository structure section, or a tech stack list. Each
+costs attention on every task and tells the agent something it can see.
+
+A *Key Patterns and Conventions* heading is usually the conventions bullet above under a second name. Pick one.
 
 **Test Conventions — untestable claims.** If the repo has more than one test lane — a fast mocked unit lane
 plus a slower one with real framework access, or unit plus integration plus e2e — add a rule telling agents not
@@ -187,10 +187,6 @@ to take a pull request's *"this can't be tested"* at face value. Before agreeing
 existing precedent of stubbing the exact API or state the new code depends on. A claim that is true for one
 lane is often false once another is checked, and "untestable" is the easiest way for a change to arrive with no
 coverage and nobody arguing.
-
-This came out of a real case: `vscode-peacock#757` claimed a `vscode.env.remoteName` feature couldn't be
-covered, because the mocked unit lane's `vscode` stub has no `env.remoteName` to toggle. True for that lane.
-The host lane was already stubbing `vscode.env.remoteName` in another file.
 
 Only generate this rule when multiple lanes actually exist — skip it for a single-lane setup, where it would be
 advice about a situation the repo doesn't have.
@@ -207,10 +203,13 @@ commands.
 **`## Never merges without a human`** — the boundary, seeded from the risk paths actually present in this repo
 and stated as paths or conditions rather than categories.
 
-Templates for both, the mandatory definition line under the boundary heading, and the false-positive check you
-must run before writing any boundary line are in
-[references/agents-md.md](references/agents-md.md) § Generating the two sections. **Read it before generating
-either section** — the false-positive list is the one part of this step with a regression test behind it.
+**Before writing any boundary line, check what you matched against
+[`data/risk-paths.yml`](data/risk-paths.yml) § `false_positives`.** Every entry there is a line this skill got
+wrong in a real repo. A wrong entry is worse than a missing one — it puts a human back into merges that never
+needed one, and the first obviously-wrong line teaches the reader the section is guesswork.
+
+Templates for both sections, and the definition line that must sit under the boundary heading, are in
+[references/agents-md.md](references/agents-md.md) § Generating the two sections.
 
 **Scoring:** `AGENTS.md` counts as **Nailed It** only when both sections are present, every line in them is
 machine-checkable, and `## Never merges without a human` carries its definition line. An `AGENTS.md` without them is **Could Be Better** — it tells an agent how to work, but
@@ -269,7 +268,9 @@ conventions.
 
 Check ALL locations first: `.github/workflows/copilot-setup-steps.yml`, `.github/copilot-setup-steps.yml`, and repo root. If one exists anywhere, do NOT create another — consolidate into `.github/workflows/` if at a legacy location.
 
-If truly missing from all locations, create `.github/workflows/copilot-setup-steps.yml`. Steps: checkout, set up runtime, install dependencies, install test dependencies, build. Derive from existing CI when possible. For .NET multi-target, install all required SDK versions.
+If truly missing from all locations, create `.github/workflows/copilot-setup-steps.yml`, deriving the steps from
+the repo's existing CI. For .NET multi-target, install every required SDK version — a single-SDK setup fails
+silently on the other targets.
 
 ---
 
@@ -443,13 +444,8 @@ This skill's first obligation is to leave the repo in a **better state than it f
 ### General Rules
 
 - **NEVER open a pager** — append `| cat` to every `gh`/`git` command. Use `git --no-pager`.
-- **ALWAYS customize to the repo's actual stack** — never produce generic boilerplate.
-- **Self-consistency** — every generated file must follow the conventions you establish. Cross-check before finalizing.
 - **GitHub-native by default** — auto-discover via MCP tools and `gh` CLI. Fall back to local analysis.
 - **Mine PR reviews** — turn repeated review feedback into `AGENTS.md` conventions, where every tool reads them.
-- **Be specific** — real file paths, real commands, real patterns.
-- **Use `create` to write new files** — never `edit` from scratch.
-- **Run full analysis first (Steps 0–1)** — never guess.
 - **ALWAYS display the report at the end** — never skip or abbreviate.
 - **NEVER use markdown headings in user output** — use bold + emojis instead.
 - **ALWAYS mention the AI Ready skill in issue/PR communication** — when posting to an issue or PR (body or comment), include explicit attribution such as `Assisted by [ai-ready](https://github.com/johnpapa/ai-ready)`.
