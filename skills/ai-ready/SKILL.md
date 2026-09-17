@@ -201,52 +201,16 @@ Agents now open pull requests faster than anyone reads them. These two sections 
 which of those changes actually need a person. **Every line in both must be decidable by a machine with nobody
 interpreting it** — "write clean code" fails that test; `npm run verify` exits 0 passes it.
 
-**`## Done means`** — the conditions a change must meet before it is finished. Derive from the repo's real
-commands and real conventions:
+**`## Done means`** — the conditions a change must meet before it is finished, derived from the repo's real
+commands.
 
-```markdown
-## Done means
-- `npm run verify` exits 0
-- Any behavior change ships with a test that fails without the change
-- Public API changes update `openapi.yaml` in the same pull request
-- No new runtime dependency without a linked issue
-- Generated files are never hand-edited
-```
+**`## Never merges without a human`** — the boundary, seeded from the risk paths actually present in this repo
+and stated as paths or conditions rather than categories.
 
-**`## Never merges without a human`** — the boundary.
-
-**Always write the definition into the generated file**, directly under the heading, exactly as in the template
-below. The phrase is ambiguous alone and it *will* be challenged — "I tell agents to merge when they're done,
-is that banned?" is the first question anyone asks. It is not banned: the definition draws the line at whether
-a person read *this diff*, so standing approval stays fine everywhere off the list. See
-[references/agents-md.md](references/agents-md.md) § Defining for the objections and the answers.
-
-Seed the list from the risk paths actually present in this repo (see [references/detection-tables.md](references/detection-tables.md) § Risk path detection, generated
-from [data/risk-paths.yml](data/risk-paths.yml)), then state each as a path or a condition rather than a
-category.
-
-**Before you write a line, check it against `data/risk-paths.yml` § `false_positives`.** Those are not
-hypothetical — every entry is a line this skill actually got wrong in a real repo. If what you matched appears
-there, answer the row's `confirm` question by opening the file, and drop the line unless the answer holds up.
-That list is the one part of this step with a regression test behind it
-(`tests/fixtures/`), so treat a match as a stop sign rather than a hint:
-
-```markdown
-## Never merges without a human
-
-A person has to have **read this diff** before it lands. Telling an agent "merge it when you're done" is
-approving a goal, not this change — so it does not count for anything on this list. Everywhere else it counts
-fine, which is the point of having a list.
-
-- Anything under `db/migrations/`
-- Anything that changes the shape of an existing API response
-- Anything that sends messages to customers
-- Anything that grants or changes permissions
-```
-
-Only list risk paths this repo actually has — a static site has no migrations, and inventing categories to
-fill the section is the noise this skill exists to avoid. If the analysis finds none, say so explicitly in one
-line rather than omitting the heading.
+Templates for both, the mandatory definition line under the boundary heading, and the false-positive check you
+must run before writing any boundary line are in
+[references/agents-md.md](references/agents-md.md) § Generating the two sections. **Read it before generating
+either section** — the false-positive list is the one part of this step with a regression test behind it.
 
 **Scoring:** `AGENTS.md` counts as **Nailed It** only when both sections are present, every line in them is
 machine-checkable, and `## Never merges without a human` carries its definition line. An `AGENTS.md` without them is **Could Be Better** — it tells an agent how to work, but

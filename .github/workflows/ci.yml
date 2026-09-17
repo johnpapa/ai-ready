@@ -140,6 +140,33 @@ jobs:
       - name: Install test dependencies
         run: pip install --quiet pyyaml
 
+      - name: Check context-file line budgets
+        run: |
+          python3 -c "
+          import sys
+          # SKILL.md is in context every time the skill triggers; AGENTS.md is in
+          # context before every agent task. Sources and reasoning in docs/authoring.md.
+          budgets = {
+              'skills/ai-ready/SKILL.md': 500,
+              'AGENTS.md': 150,
+          }
+          errors = []
+          for path, ceiling in budgets.items():
+              n = sum(1 for _ in open(path))
+              status = 'over' if n > ceiling else 'ok'
+              print(f'{path}: {n}/{ceiling} {status}')
+              if n > ceiling:
+                  errors.append(
+                      f'{path} is {n} lines, ceiling is {ceiling}. '
+                      f'Move content out rather than deleting something load-bearing '
+                      f'— see docs/authoring.md.'
+                  )
+          if errors:
+              print()
+              print('\n'.join(errors))
+              sys.exit(1)
+          "
+
       - name: Check detection tables match their data
         run: python3 tools/gen_detection_tables.py --check
 

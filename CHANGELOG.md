@@ -6,6 +6,24 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **CI now enforces the context-file line budgets** — `SKILL.md` at 500 lines, `AGENTS.md` at 150. Both files
+  are loaded on every invocation, so length costs *adherence*, not only tokens. The note documenting these
+  budgets already existed and had been quietly ignored twice in two days: `SKILL.md` hit 510 when the
+  adversarial framing landed, and 499 after the next change, which is a cliff rather than a budget. #47 made
+  the argument that a matrix row a person can wave off is worth less than one a machine can check; this is that
+  lesson applied to the case that prompted it. The failure message says to move content out rather than delete
+  something load-bearing.
+
+### Changed
+
+- **`SKILL.md` trimmed 499 → 463 lines** by moving the `## Done means` and `## Never merges without a human`
+  templates, the mandatory definition line, and the false-positive check into
+  `references/agents-md.md` § Generating the two sections. That file already owned the `AGENTS.md` policy, so it
+  should have owned the generation detail too. Step 2 keeps what to generate and why, and points at the
+  reference for how.
+
+### Added
+
 - **Adversarial agents, named as the general pattern the three reviewers are one instance of.** An agent
   produces something, and a *different* agent attacks it before anyone trusts it. That applies well beyond a
   diff: a security review, a migration plan, a root-cause analysis. Three properties make the second pass worth
