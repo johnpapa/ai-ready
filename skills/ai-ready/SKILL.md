@@ -279,10 +279,6 @@ If the repo already has agents covering these concerns, leave them and flag drif
 
 ## Step 4d — Generate a starter skill from the maintenance matrix
 
-The maintenance matrix written in Step 2 already encodes the repo's hardest-won knowledge: *when you touch this,
-you also have to update that.* Today it sits in a document somebody has to read. A skill is the portable
-container for it — named and described, so any agent loads it when it becomes relevant.
-
 Generate `.github/skills/shipping-a-change/SKILL.md` from the matrix plus the *Adding a New [Feature/Module]*
 registration chain:
 
@@ -312,10 +308,6 @@ description: What to update when you change something in this repo, and what "do
 **Use real paths and real commands.** A skill full of placeholders is worse than no skill — it looks
 authoritative and teaches nothing.
 
-**Why a skill rather than another document:** `AGENTS.md` is read at the start of the work. A skill is loaded
-when its description matches what the agent is about to do. Procedural knowledge belongs in the second kind —
-and unlike an instructions file, a skill travels to any tool that follows the Agent Skills standard.
-
 If `.github/skills/` already has one covering this, flag drift instead.
 If the matrix is thin — fewer than three real cascades — skip generation and say why; a one-row skill is noise.
 
@@ -323,9 +315,10 @@ If the matrix is thin — fewer than three real cascades — skip generation and
 
 ## Step 4e — Generate a security skill, only if there is surface
 
-**Do not generate a generic security skill.** "Don't hardcode secrets" is already in every model's weights;
-writing it to a file adds noise and teaches nothing. This step exists to capture the security knowledge that is
-specific to *this* repo and exists nowhere else.
+**Do not generate a generic security skill.** "Don't hardcode secrets" is already in every model's
+weights — a security skill that reads like a blog post is worse than none, because it dilutes the rules that
+actually matter here and people stop reading it. This step exists to capture what is specific to *this* repo
+and exists nowhere else.
 
 Scan for security surface (see [references/detection-tables.md](references/detection-tables.md) § Security
 surface detection). **If none is found, do not generate the skill** — say so in the report in one line, the same
@@ -335,8 +328,7 @@ If surface is found, generate `.github/skills/security-review/SKILL.md`, populat
 has. Sources, in priority order:
 
 1. **Security notes already written down** — a `SECURITY.md`, a checklist inside `AGENTS.md`, comments near the
-   sensitive code. This is the highest-value input and it is usually already there. Move it, don't invent
-   alongside it.
+   sensitive code. It is usually already there — move it, don't invent alongside it.
 2. **The surface itself** — the real handlers, the real trust boundary, named with real paths.
 3. **PR review comments about security** (Step 0c) — a reviewer who keeps asking the same security question has
    written your skill for you.
@@ -345,8 +337,7 @@ The skeleton to fill is in [references/detection-tables.md](references/detection
 surface detection.
 
 **Every line must name something real in this repo.** If a section would only restate general good practice,
-drop the section. A security skill that reads like a blog post is worse than none — it dilutes the rules that
-actually matter here, and people stop reading it.
+drop it.
 
 If a security skill or `SECURITY.md` already exists, propose the move and let the user decide.
 
