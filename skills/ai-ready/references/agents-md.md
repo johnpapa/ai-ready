@@ -14,13 +14,28 @@ But solving it by moving *everything* into one file trades a drift problem for a
 context problem is worse because it is invisible. `AGENTS.md` is read **before every agent task**. Every line in
 it is paid for on every run, and every line competes for the model's attention with the actual task.
 
-> Keep AGENTS.md under 150 lines when possible. Agents load files into context windows, and excessive length
-> wastes tokens while burying important information.
->
-> — community guidance, consistent across `agents.md` write-ups
+**The numbers, and they are much smaller than a skill's.** `SKILL.md` targets 500 lines. That number does not
+transfer — `AGENTS.md` is read before *every* task, not only when a skill triggers, so its budget is tighter by
+roughly an order of magnitude:
 
-Addy Osmani puts the failure more sharply: auto-generated context files *"hurt agent performance and inflate
-costs because they duplicate what agents can already discover."*
+| Source | Target |
+|---|---|
+| Anthropic, for `CLAUDE.md` | Under **200 lines**; longer files consume more context and reduce adherence |
+| Community consensus, `agents.md` | Under **150 lines** where possible |
+| **Addy Osmani, starting point** | **20–30 lines**, covering what agents most often get wrong |
+
+Osmani's is the one worth taking seriously, because it changes the default. Start at 20–30 lines and **add
+sections in response to real agent mistakes, not hypothetical ones.** Treat 150 as a ceiling you should rarely
+approach, never as a budget to fill.
+
+There is a mechanism behind the ceiling, not just token cost. Frontier models reliably follow somewhere around
+**150–200 instructions** before adherence degrades, and a coding agent's own system prompt already spends a
+chunk of that before your file is read. Past the limit the model starts summarizing and dropping rules — so an
+over-long `AGENTS.md` does not merely cost more, it makes the rules that matter **less likely to be followed**.
+Every line you add competes with the lines already there.
+
+Osmani names the usual cause: auto-generated context files *"hurt agent performance and inflate costs because
+they duplicate what agents can already discover."*
 
 ## The discoverability test
 
@@ -83,8 +98,11 @@ files exist because tools look for different filenames, not because they have di
 
 ## Length
 
-Treat **~150 lines** as the target for the root file, the same way `SKILL.md` treats 500: a signal to move
-something, never a reason to delete something load-bearing.
+Start at **20–30 lines** and grow only when a real agent mistake proves something is missing. Treat **150** as
+a ceiling rather than a target: past it, move something. Never delete something load-bearing to hit a number.
+
+The difference between a target and a ceiling matters here. A target invites filling. This file gets *worse*
+as it gets longer, because the rules compete with each other for a finite instruction budget.
 
 When it grows past that, work down the placement table above. If a section cannot move because it genuinely
 applies to every task, it stays — and the file is longer than the target, which is fine and worth saying in the

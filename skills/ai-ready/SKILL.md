@@ -162,8 +162,10 @@ area → a **nested `AGENTS.md`** in that directory, which is part of the standa
 scale (closest file wins). Needed only when doing one procedure → a skill (Step 4d). Lookup material → a linked
 doc.
 
-Target **~150 lines** for the root file. Past that, move something — never delete something load-bearing to hit
-a number.
+**Start at 20–30 lines** — what agents most often get wrong in this repo — and grow only when a real mistake
+proves something is missing. 150 is a ceiling, not a target: past it, move something. This file gets *worse*
+as it gets longer, because a model follows roughly 150–200 instructions before adherence degrades and every
+line competes with the ones already there.
 
 Sections, when they survive the test above: Project Overview (never hardcode versions — reference manifests),
 Build & Run, Testing, Key Patterns and Conventions, CI/CD, Adding a New [Feature/Module] (trace the full
@@ -320,6 +322,10 @@ If missing, generate `.mcp.json` at the repo root based on detected dependencies
 If `.github/agents/` is missing or contains no reviewers, generate three **adversarial reviewers** that apply to
 any repository: `spec-conformance`, `test-integrity`, and `blast-radius`. Full bodies, the design rules, and
 how to write a fourth are in [references/reviewer-agents.md](references/reviewer-agents.md).
+
+These are one instance of a general pattern worth naming for the user: **an agent produces something, and a
+different agent attacks it before anyone trusts it** — a code change, a security review, a migration plan
+alike. A clean result is a claim, not a conclusion. See the reference for the full pattern.
 
 **Adversarial means a different objective from the author, not a harsher tone.** Ask an agent to "review this
 pull request" and it will find it good — you handed it the author's goal, so it completes the author's work.

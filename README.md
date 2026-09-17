@@ -245,7 +245,9 @@ The assets this skill generates enable three complementary layers of PR quality 
 
 Together: PRs are validated for **correctness** (CI), reviewed for **quality** (Copilot), and interrogated for **intent** (adversarial reviewers). This skill generates the inputs for all three.
 
-One note on the third layer: **run your adversaries on different models where you can.** A review agent on one model catches things an agent on another walks straight past, on the same diff. Three adversarial reviewers all on one model is one reviewer with three prompts.
+The third layer generalizes past pull requests. **An agent produces something, and a different agent attacks it before you trust it** — a code change, a security review, a migration plan, a root-cause analysis. A clean result is a claim, not a conclusion: *what did that review not look at?* is the question that turns a clean pass into information.
+
+One note on running them: **use different models where you can.** A review agent on one model catches things an agent on another walks straight past, on the same diff. Three adversarial reviewers all on one model is one reviewer with three prompts.
 
 To enable Copilot code review: go to your repo's **Settings → Copilot → Code review** and turn it on. Once enabled, every PR is automatically reviewed against the conventions in `copilot-instructions.md`.
 

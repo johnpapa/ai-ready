@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Adversarial agents, named as the general pattern the three reviewers are one instance of.** An agent
+  produces something, and a *different* agent attacks it before anyone trusts it. That applies well beyond a
+  diff: a security review, a migration plan, a root-cause analysis. Three properties make the second pass worth
+  running — it has to be a different agent (the first one holds the reasoning that produced the output and will
+  defend it), ideally on a different model (two agents on one model share blind spots), and **a clean result is
+  a claim rather than a conclusion**. "The security review found nothing" is itself agent output; *what did it
+  not look at?* is the question that turns a clean pass into information. Which makes the pattern recursive: an
+  adversarial review that comes back clean has not itself been verified.
+
+### Fixed
+
+- **The `AGENTS.md` length guidance was far too generous, and framed as a target rather than a ceiling.** The
+  500-line figure belongs to `SKILL.md` and does not transfer — `AGENTS.md` is read before *every* task, so its
+  budget is tighter by roughly an order of magnitude. Anthropic targets under 200 lines for `CLAUDE.md`;
+  community consensus for `agents.md` lands near 150; **Addy Osmani's starting point is 20–30 lines**, grown
+  only in response to real agent mistakes rather than hypothetical ones.
+
+  The mechanism matters more than the number. Frontier models reliably follow somewhere around **150–200
+  instructions** before adherence degrades, and a coding agent's system prompt already spends part of that
+  before your file is read. Past the limit the model summarizes and drops rules — so an over-long `AGENTS.md`
+  does not merely cost more, it makes the rules that matter **less likely to be followed**. Step 2 now says
+  start at 20–30 lines and treat 150 as a ceiling, because a target invites filling and this file gets worse as
+  it grows.
+
+- **This repo's `AGENTS.md` went from 176 lines to 147**, applying the corrected rule to itself. The packaging
+  model moved to `docs/authoring.md` — it is reference material for shipping the skill, not something needed on
+  every task. Markdown, YAML and JSON style rules that an agent can infer by opening any file in the repo were
+  replaced with the two that genuinely are not inferable: the 120-character wrap and the emphasis convention.
+
 ### Fixed
 
 - **"Everything goes in `AGENTS.md`" was the wrong rule, and this repo was the worst offender.** The
