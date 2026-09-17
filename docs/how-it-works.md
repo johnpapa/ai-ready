@@ -76,19 +76,18 @@ tools without rewriting anything, because the knowledge is in your repo rather t
 
 ---
 
-### .github/agents/ — Adversarial Reviewers You Assign
+### .github/agents/ — Reviewer Agents You Assign
 
-**What it is:** A directory of agent definitions, each an **adversarial reviewer** with one question and an
+**What it is:** A directory of agent definitions, each a **reviewer agent** with one question and an
 instruction to ignore everything else. Generated in Step 4c.
 
-**The pattern:** an agent produces something, and a *different* agent attacks it before anyone trusts it. A
-pull request is the case this directory handles, but the same shape applies to a security review, a migration
-plan, or a root-cause analysis — and a clean result is a claim rather than a conclusion.
+**Not the same thing as [adversarial agents](../README.md#adversarial-agents).** A reviewer agent is generated
+into this repo and assigned to a pull request. Adversarial agents are a broader, manual practice — checking one
+AI tool's output with a genuinely different tool — that reviewer agents can be one small, automated piece of.
 
-**What "adversarial" means here:** a different objective from the author, not a harsher tone. Ask an agent to
-"review this pull request" and it will find it good — you have handed it the author's goal, so it completes the
-author's work. These each ask a question that can come back *no*, start from the diff rather than from the
-reasoning that produced it, and have no way to say *ship it*.
+**Why these work:** ask an agent to "review this pull request" and it will find it good — you have handed it
+the author's goal, so it completes the author's work. These each ask a question that can come back *no*, start
+from the diff rather than from the reasoning that produced it, and have no way to say *ship it*.
 
 **When it's read:** When you assign one to a pull request. This is the only mechanism that runs *after* code
 exists rather than before it.
@@ -123,7 +122,7 @@ prompts.
 | `AGENTS.md` | Whole project context and conventions | Automatic, before any work | Before code |
 | Per-tool pointer files | Nothing of their own — they point at `AGENTS.md` | Automatic, per tool | Before code |
 | `.github/skills/` | Task-specific procedures | When the description matches the task | During the work |
-| `.github/agents/` | One adversarial review question each | When you assign one to a PR | After code exists |
+| `.github/agents/` | One review question each | When you assign one to a PR | After code exists |
 
 Together, they form a layered system:
 
@@ -131,7 +130,7 @@ Together, they form a layered system:
    "done" means, and what never merges without a person.
 2. **Pointer files** make sure every tool finds it, whichever filename that tool happens to look for.
 3. **Skills** provide the playbooks, loaded at the moment the work calls for them.
-4. **Adversarial reviewers** ask the questions afterward that the first three can't — because they need a diff
+4. **Reviewer agents** ask the questions afterward that the first three can't — because they need a diff
    to look at, and because they need an objective that isn't the author's.
 
 ---
@@ -163,9 +162,9 @@ Short files for each tool that looks for its own filename — `.github/copilot-i
 
 MCP server configuration connecting AI agents to your project's databases, APIs, and tools. Generated at the repo root (`.mcp.json`). Uses environment variable placeholders for secrets so the config is safe to commit.
 
-### 4c. Adversarial reviewers (.github/agents/)
+### 4c. Reviewer agents (.github/agents/)
 
-Three adversarial reviewers — `spec-conformance`, `test-integrity`, `blast-radius` — that apply to any repo
+Three reviewer agents — `spec-conformance`, `test-integrity`, `blast-radius` — that apply to any repo
 regardless of stack. Each answers exactly one question, is told to ignore everything else, and is built so the
 answer can come back *no*. Frontmatter is `name` and `description` only; `tools`, `model` and `mcp-servers` are
 left for you to pin, because their accepted values move between tool versions — and pinning a *different* model

@@ -34,7 +34,7 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 | 2 | Per-tool pointer files (`.github/copilot-instructions.md`, `CLAUDE.md`, …) | Step 3 |
 | 3 | Maintenance matrix (in `AGENTS.md`) | Step 2 |
 | 4 | `.mcp.json` | Step 4b |
-| 5 | Adversarial reviewers (`.github/agents/`) | Step 4c |
+| 5 | Reviewer agents (`.github/agents/`) | Step 4c |
 | 6 | Starter skill (`.github/skills/`) | Step 4d |
 | 7 | Security skill (`.github/skills/`, when there is surface) | Step 4e |
 
@@ -271,26 +271,22 @@ If missing, generate `.mcp.json` at the repo root based on detected dependencies
 
 ---
 
-## Step 4c — Generate adversarial reviewers
+## Step 4c — Generate reviewer agents
 
-If `.github/agents/` is missing or contains no reviewers, generate a starting set of **adversarial reviewers**.
+If `.github/agents/` is missing or contains no reviewers, generate a starting set of **reviewer agents**.
 Three cover most repos — `spec-conformance`, `test-integrity`, `blast-radius` — but **the count follows the
 repo, not a rule.** Generate only the ones whose question can come back *no* here: skip `test-integrity` in a
 repo with no tests, skip `blast-radius` where nothing is hard to undo. Say what you skipped and why. Full
 bodies and how to add one are in [references/reviewer-agents.md](references/reviewer-agents.md).
 
-These are one instance of a general pattern worth naming for the user: **an agent produces something, and a
-different agent attacks it before anyone trusts it** — a code change, a security review, a migration plan
-alike. A clean result is a claim, not a conclusion. See the reference for the full pattern.
+**Each one has a different objective from the author, not a harsher tone.** Ask an agent to "review this pull
+request" and it will find it good — you handed it the author's goal, so it completes the author's work. Each of
+these instead asks a question that can come back *no*, works from the diff alone, has no way to say *ship it*,
+and owns exactly one concern so it cannot trade concerns off against each other. The reference file has all
+four mechanics and the tests for writing a fourth reviewer.
 
-**Adversarial means a different objective from the author, not a harsher tone.** Ask an agent to "review this
-pull request" and it will find it good — you handed it the author's goal, so it completes the author's work.
-Each of these instead asks a question that can come back *no*, works from the diff alone, has no way to say
-*ship it*, and owns exactly one concern so it cannot trade concerns off against each other. The reference file
-has all four mechanics and the tests for writing a fourth reviewer.
-
-**Tell the user to spread them across models** where their tool supports pinning one. Adversaries on a single
-model largely miss the same things; three on one model is one adversary with three prompts.
+**Tell the user to spread them across models** where their tool supports pinning one. Reviewer agents on a
+single model largely miss the same things; three on one model is one reviewer with three prompts.
 
 `blast-radius` reads the `## Never merges without a human` section written in Step 2, which is what connects
 the boundary to something that actually runs.

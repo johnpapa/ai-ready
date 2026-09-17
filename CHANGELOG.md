@@ -6,6 +6,24 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **"Adversarial reviewers" and "adversarial agents" were two different ideas wearing one name.** The
+  generated `.github/agents/` files (Step 4c) are **reviewer agents** — a file this skill writes into the
+  repo, assigned to a pull request, that answers one fixed question. That was John's idea from the start; only
+  the label was wrong.
+
+  **Adversarial agents** are something else entirely, and not something this skill generates: a manual
+  practice where a human checks one AI tool's output with a genuinely different tool — writing code with
+  Claude, then having GitHub Copilot review it independently; getting a security review from one tool, then
+  asking a different one what the first missed. It applies to anything you're about to trust, not just pull
+  requests, and it works because two different tools don't share blind spots.
+
+  Renamed throughout: `SKILL.md` Step 4c, the asset table, `references/reviewer-agents.md` (title and body),
+  `README.md`, `docs/how-it-works.md`, `docs/why.md`. README gains a new **Adversarial agents** section
+  describing the practice on its own terms, cross-referenced from the reviewer-agents reference and from
+  `docs/how-it-works.md` so the distinction is visible everywhere the two could be confused.
+
+### Fixed
+
 - **Rules illustrated with one ecosystem's command, inside a skill that runs against any stack.** The
   machine-checkable test for `## Done means` used `npm run verify` as *the* example; a Rust or Python repo
   reader had to guess whether the rule even applied. `AGENTS.md`'s discoverability table used "this is a
