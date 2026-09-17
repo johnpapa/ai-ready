@@ -42,7 +42,7 @@ ai-ready/
 │       └── references/               # Detailed reference material (loaded on demand)
 │           ├── github-discovery.md   # GitHub API tables, PR mining, health gaps
 │           ├── detection-tables.md   # Manifest detection, heuristics; risk table GENERATED
-│           ├── reviewer-agents.md    # The three .github/agents/ reviewers (Step 4c)
+│           ├── reviewer-agents.md    # The three adversarial reviewers, .github/agents/ (Step 4c)
 │           ├── report-template.md    # Report format, HTML spec, badge, PR flow
 │           └── training-repos.md     # Repos used to validate skill heuristics
 ├── tools/

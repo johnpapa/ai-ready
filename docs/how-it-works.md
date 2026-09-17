@@ -70,10 +70,15 @@ tools without rewriting anything, because the knowledge is in your repo rather t
 
 ---
 
-### .github/agents/ — Reviewers You Assign
+### .github/agents/ — Adversarial Reviewers You Assign
 
-**What it is:** A directory of agent definitions, each a reviewer with one question and an instruction to
-ignore everything else. Generated in Step 4c.
+**What it is:** A directory of agent definitions, each an **adversarial reviewer** with one question and an
+instruction to ignore everything else. Generated in Step 4c.
+
+**What "adversarial" means here:** a different objective from the author, not a harsher tone. Ask an agent to
+"review this pull request" and it will find it good — you have handed it the author's goal, so it completes the
+author's work. These each ask a question that can come back *no*, start from the diff rather than from the
+reasoning that produced it, and have no way to say *ship it*.
 
 **When it's read:** When you assign one to a pull request. This is the only mechanism that runs *after* code
 exists rather than before it.
@@ -95,6 +100,10 @@ gets muted.
 wrong thing correctly. And `blast-radius` reads the `## Never merges without a human` section from Step 2,
 which is what turns that boundary from a document into something that runs.
 
+**Spread them across models where your tool allows it.** A review agent on one model catches things an agent on
+another walks straight past, on the same diff. Three adversaries on one model is one adversary with three
+prompts.
+
 ---
 
 ## How the Four Mechanisms Work Together
@@ -104,7 +113,7 @@ which is what turns that boundary from a document into something that runs.
 | `AGENTS.md` | Whole project context and conventions | Automatic, before any work | Before code |
 | Per-tool pointer files | Nothing of their own — they point at `AGENTS.md` | Automatic, per tool | Before code |
 | `.github/skills/` | Task-specific procedures | When the description matches the task | During the work |
-| `.github/agents/` | One review question each | When you assign one to a PR | After code exists |
+| `.github/agents/` | One adversarial review question each | When you assign one to a PR | After code exists |
 
 Together, they form a layered system:
 
@@ -112,8 +121,8 @@ Together, they form a layered system:
    "done" means, and what never merges without a person.
 2. **Pointer files** make sure every tool finds it, whichever filename that tool happens to look for.
 3. **Skills** provide the playbooks, loaded at the moment the work calls for them.
-4. **Reviewer agents** ask the questions afterward that the first three can't — because they need a diff to
-   look at.
+4. **Adversarial reviewers** ask the questions afterward that the first three can't — because they need a diff
+   to look at, and because they need an objective that isn't the author's.
 
 ---
 
@@ -148,12 +157,13 @@ Configuration for the Copilot coding agent's environment. Defines the setup step
 
 MCP server configuration connecting AI agents to your project's databases, APIs, and tools. Generated at the repo root (`.mcp.json`). Uses environment variable placeholders for secrets so the config is safe to commit.
 
-### 4c. Reviewer agents (.github/agents/)
+### 4c. Adversarial reviewers (.github/agents/)
 
-Three reviewers — `spec-conformance`, `test-integrity`, `blast-radius` — that apply to any repo regardless of
-stack. Each answers exactly one question and is told to ignore everything else. Frontmatter is `name` and
-`description` only; `tools`, `model` and `mcp-servers` are left for you to pin, because their accepted values
-move between tool versions.
+Three adversarial reviewers — `spec-conformance`, `test-integrity`, `blast-radius` — that apply to any repo
+regardless of stack. Each answers exactly one question, is told to ignore everything else, and is built so the
+answer can come back *no*. Frontmatter is `name` and `description` only; `tools`, `model` and `mcp-servers` are
+left for you to pin, because their accepted values move between tool versions — and pinning a *different* model
+per agent is worth doing, since adversaries on one model largely miss the same things.
 
 ### 4d. Starter skill (.github/skills/)
 

@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **The three generated reviewers are now called what they are: adversarial reviewers** — and the principle
+  behind them is written down instead of merely implemented. Adversarial does not mean harsh and it is not a
+  tone; it means the reviewer has a **different objective from the author**. Four mechanics produce that, and
+  all four were already design decisions in these agents:
+
+  1. **A question with a wrong answer.** Ask an agent to "review this pull request" and it will find it good —
+     you handed it the author's goal, so it completes the author's work. Each of these asks something that can
+     come back *no*.
+  2. **Fresh context.** An agent that wrote the code and then reviews it is marking its own homework: it still
+     holds the reasoning that produced the change, so it defends the change.
+  3. **No authority to approve.** They find things. None can say the change is fine. A reviewer that can
+     approve will eventually approve to be agreeable.
+  4. **A narrow remit**, so it cannot trade one concern off against another to reach a comfortable overall
+     opinion.
+
+  New guidance in `references/reviewer-agents.md` on **writing a fourth one**, with those four as pass/fail
+  tests, and a note that good candidates come from the questions a maintainer keeps repeating in review threads
+  — which Step 0c already mines.
+
+- **Step 4e's generated-skill skeleton moved into `references/detection-tables.md`**, next to the security
+  surface table it already pointed at. Naming the adversarial principle pushed `SKILL.md` to 510 lines, past
+  the documented 500-line budget; this brings it back to 490. Progressive disclosure is the escape hatch the
+  skill recommends to everyone else, so it is the one this repo uses too.
+
+### Added
+
+- **Guidance to spread adversarial reviewers across models.** Running the same prompt through two models is not
+  redundancy, it is coverage: a review agent on one model catches things an agent on another walks straight
+  past, on the same diff. Three adversaries on one model is one adversary with three prompts. The report now
+  says this. The `model` key is still not generated — its accepted values move between tool versions — so this
+  is a recommendation to the user rather than something written into frontmatter.
+
 ### Fixed
 
 - **The sample report is now labelled as stale instead of quietly misleading.**

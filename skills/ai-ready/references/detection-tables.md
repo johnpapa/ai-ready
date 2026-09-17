@@ -189,6 +189,29 @@ match is a candidate — open it and confirm before writing a rule about it.
 | Crypto | hashing, signing, token generation, random number use | Which primitives are approved here and which are banned |
 | Query construction | string-built SQL, raw query calls, ORM escape hatches | What must be parameterised |
 
+### The skeleton Step 4e fills
+
+```markdown
+---
+name: security-review
+description: The security rules specific to this repo — trust boundaries, what must never be trusted, and what to check before merging. Use when touching <the real surfaces found>.
+---
+
+# Security review
+
+## Trust boundaries in this repo
+<real paths, and what crosses them>
+
+## Never
+<the repo's real invariants — from SECURITY.md, AGENTS.md, or reviewer comments>
+
+## Before merging a change to <real path>
+<the actual checklist>
+```
+
+Every line must name something real in this repo. If a section would only restate general good practice, drop
+the section — a security skill that reads like a blog post dilutes the rules that actually matter here.
+
 **When nothing matches**, say so explicitly rather than generating a placeholder:
 _"No repo-specific security surface detected — skipping the security skill. Generic security advice would add
 noise without adding knowledge."_
