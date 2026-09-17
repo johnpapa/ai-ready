@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Removed
+
+- **`.mcp.json` and `.github/dependabot.yml` are out of the scored list.** Tracked assets go from 14 to 12.
+  Same reasoning as dropping `copilot-setup-steps.yml` a day earlier: `dependabot.yml` isn't an AI-readiness
+  signal at all — it's dependency-update automation, unrelated to whether an agent can work in the repo, and
+  it should not have been on this list in the first place. `.mcp.json` genuinely is AI Context, but only for
+  repos with a database, API, or other MCP-relevant dependency — scoring every repo on a file that's only
+  sometimes applicable is the same dishonesty the medal prerequisites exist to fix.
+
+  Step 4b keeps generating `.mcp.json` exactly as before, for repos where it applies. Step 1e keeps detecting
+  `dependabot.yml` as part of general repo-config analysis. Neither counts toward the score any more.
+
+  Medal bands rescale to quarters of the new total: 🥉 1–3, 🥈 4–6, 🥇 7–9, 🏆 10–12. 🤖 AI Context drops from 7
+  indicators to 6; 🔧 Dev Workflow from 4 to 3.
+
+### Fixed
+
+- **Two rules restated a global policy that was one section away.** "The skill never overwrites existing files
+  without user approval" appeared six times: once in the mode-selector section, once in `Important Rules → Do
+  No Harm` (the canonical statement), and once per generation step (`AGENTS.md`, reviewer agents, starter
+  skill, security skill). The four step-level instances kept their step-specific "do this instead" (flag
+  drift, propose the move) but dropped the repeated "never overwrite" clause; the mode-selector's restatement
+  was cut outright. One canonical statement remains, in the section literally named for it.
+
+- **Two illustrative examples added nothing an agent needed to act.** "Skipping assets" no longer needs `(e.g.,
+  "skip CI and issue templates")` to say what "mentions skipping specific assets" means — the instruction is
+  already self-contained. Trimmed the Persona's "who has managed high-traffic repos and reviewed thousands of
+  PRs" to "an experienced repo maintainer" for the same reason: specific, unverifiable color that doesn't
+  change what the agent does.
+
 ### Fixed
 
 - **"Adversarial reviewers" and "adversarial agents" were two different ideas wearing one name.** The

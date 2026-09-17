@@ -10,19 +10,19 @@ description: "**ANALYSIS SKILL** — Analyze any repository and generate AI-read
 
 ## Persona
 
-Adopt the perspective of an experienced repo maintainer who has managed high-traffic repos and reviewed thousands of PRs. Prioritize what **reduces review burden and contributor friction**. Every file you generate should earn its place — generic boilerplate creates noise.
+Adopt the perspective of an experienced repo maintainer. Prioritize what **reduces review burden and contributor friction**. Every file you generate should earn its place — generic boilerplate creates noise.
 
 ---
 
 Follow these steps in order to analyze the current repository and generate all missing AI-ready configuration assets.
 
-**First run vs. re-run:** On the first run, most assets will be missing — the skill creates them. On re-runs, it **audits** existing assets against the current codebase, checking for drift, stale content, and new conventions from recent PR reviews. The skill **never overwrites existing files without user approval**.
+**First run vs. re-run:** On the first run, most assets will be missing — the skill creates them. On re-runs, it **audits** existing assets against the current codebase, checking for drift, stale content, and new conventions from recent PR reviews.
 
-**Skipping assets:** If the user's prompt mentions skipping specific assets (e.g., "skip CI and issue templates"), respect those exclusions. Still run the full analysis, but skip generation for the excluded assets.
+**Skipping assets:** If the user's prompt mentions skipping specific assets, respect those exclusions. Still run the full analysis, but skip generation for the excluded assets.
 
 **Report-only mode:** If the user asks for a report without generating files (e.g., "how ai-ready is this repo?", "score this repo"), run the full analysis (Steps 0–1) and display the report (Step 11) — but skip all generation steps (Steps 2–10).
 
-### The 14 tracked assets
+### The 12 tracked assets
 
 Assets are grouped into three categories. Count assets with **Nailed It** status for the score.
 
@@ -33,27 +33,25 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 | 1 | `AGENTS.md` | Step 2 |
 | 2 | Per-tool pointer files (`.github/copilot-instructions.md`, `CLAUDE.md`, …) | Step 3 |
 | 3 | Maintenance matrix (in `AGENTS.md`) | Step 2 |
-| 4 | `.mcp.json` | Step 4b |
-| 5 | Reviewer agents (`.github/agents/`) | Step 4c |
-| 6 | Starter skill (`.github/skills/`) | Step 4d |
-| 7 | Security skill (`.github/skills/`, when there is surface) | Step 4e |
+| 4 | Reviewer agents (`.github/agents/`) | Step 4c |
+| 5 | Starter skill (`.github/skills/`) | Step 4d |
+| 6 | Security skill (`.github/skills/`, when there is surface) | Step 4e |
 
 **🔧 Dev Workflow** — what keeps PRs clean and contributors on track
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 8 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
-| 9 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
-| 10 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
-| 11 | `.github/dependabot.yml` | (checked, not generated) |
+| 7 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
+| 8 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
+| 9 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
 
 **📖 Onboarding** — what helps new contributors get started
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 12 | README Contributing section | Step 7 |
-| 13 | Changelog (`CHANGELOG.md`) | Step 9 |
-| 14 | Documentation (or explicit "not needed" note) | Step 10 |
+| 10 | README Contributing section | Step 7 |
+| 11 | Changelog (`CHANGELOG.md`) | Step 9 |
+| 12 | Documentation (or explicit "not needed" note) | Step 10 |
 
 **Scoring:** 🟩 Nailed It (counted) · 🟨 Could Be Better (not counted) · ⬜ Missing (not counted).
 Medals, the two prerequisites that cap them, and what the score may never claim are in
@@ -122,7 +120,7 @@ against the latest git tag, not the file's date.
 
 Produce a structured findings table combining GitHub context and codebase analysis with file-path evidence. See [references/detection-tables.md](references/detection-tables.md) for the full findings table template.
 
-List which of the 14 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
+List which of the 12 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
 
 ### 1j. Detect monorepo areas
 
@@ -132,7 +130,7 @@ If workspace config found, list areas with name, path glob, and primary stack. F
 
 ## Step 2 — Generate AGENTS.md
 
-If missing, create `AGENTS.md` at the repo root. If it exists, compare against analysis and flag drift. **Do not overwrite.**
+If missing, create `AGENTS.md` at the repo root. If it exists, compare against analysis and flag drift.
 
 `AGENTS.md` is the **canonical entry point** for how this repo works — the one file every tool reads, and the
 one place a given convention is stated. That is not the same as putting everything in it. Read
@@ -291,8 +289,7 @@ single model largely miss the same things; three on one model is one reviewer wi
 `blast-radius` reads the `## Never merges without a human` section written in Step 2, which is what connects
 the boundary to something that actually runs.
 
-**Never overwrite** an existing reviewer. If the repo already has agents covering these concerns, leave them and
-flag drift instead.
+If the repo already has agents covering these concerns, leave them and flag drift instead.
 
 ---
 
@@ -335,7 +332,7 @@ authoritative and teaches nothing.
 when its description matches what the agent is about to do. Procedural knowledge belongs in the second kind —
 and unlike an instructions file, a skill travels to any tool that follows the Agent Skills standard.
 
-**Never overwrite** an existing skill. If `.github/skills/` already has one covering this, flag drift instead.
+If `.github/skills/` already has one covering this, flag drift instead.
 If the matrix is thin — fewer than three real cascades — skip generation and say why; a one-row skill is noise.
 
 ---
@@ -367,7 +364,7 @@ surface detection.
 drop the section. A security skill that reads like a blog post is worse than none — it dilutes the rules that
 actually matter here, and people stop reading it.
 
-**Never overwrite** an existing security skill or `SECURITY.md`. Propose the move and let the user decide.
+If a security skill or `SECURITY.md` already exists, propose the move and let the user decide.
 
 ---
 
