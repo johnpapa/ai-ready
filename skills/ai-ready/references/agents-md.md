@@ -2,13 +2,10 @@
 
 What belongs in `AGENTS.md`, what does not, and where the rest goes. Read this in Step 2.
 
-## The discoverability test
+## The discoverability test, worked case by case
 
-Before writing any section, ask:
-
-> **Can the agent find this by reading the code?**
-
-If yes, **do not write it down.** It costs attention on every task and buys nothing.
+SKILL.md states the rule: can the agent find this by reading the code? If yes, don't write it down. Here's how
+that lands on the sections people generate anyway:
 
 | Commonly generated | Verdict |
 |---|---|
@@ -21,10 +18,6 @@ If yes, **do not write it down.** It costs attention on every task and buys noth
 | Conventions mined from PR reviews | **Keep.** Exists nowhere in the code |
 | The maintenance matrix | **Keep.** Cross-file coupling is the hardest thing to infer |
 | `## Done means` / `## Never merges without a human` | **Keep.** Decisions, not facts |
-
-Structure and stack sections are the ones to be ruthless about: generate them only for what is **surprising**,
-and skip them entirely when the layout is conventional. A repo with `src/`, `tests/` and `docs/` needs no
-structure section at all.
 
 ## Two rules with no room for judgment
 
@@ -51,21 +44,9 @@ is the intended way to scale: OpenAI's main repository carries dozens of them.
 So for a monorepo, per-area conventions belong in `packages/<area>/AGENTS.md`, not in a growing root file. The
 root keeps only what is true everywhere.
 
-## Length
-
-Start at **20–30 lines** and grow only when a real agent mistake proves something is missing. Treat **150** as
-a ceiling rather than a target: past it, move something. Never delete something load-bearing to hit a number.
-
-The difference between a target and a ceiling matters here. A target invites filling. This file gets *worse*
-as it gets longer, because the rules compete with each other for a finite instruction budget.
-
-When it grows past that, work down the placement table above. If a section cannot move because it genuinely
-applies to every task, it stays — and the file is longer than the target, which is fine and worth saying in the
-report rather than quietly trimming something useful.
-
 ## Report this honestly
 
-If the repo's existing `AGENTS.md` is well past the target, say so with the number and name the sections that
+If the repo's existing `AGENTS.md` is well past 150 lines, say so with the number and name the sections that
 could move. Do not rewrite it unasked — the same Do No Harm rule applies here as everywhere else.
 
 ## Generating the two sections
@@ -85,12 +66,14 @@ could move. Do not rewrite it unasked — the same Do No Harm rule applies here 
 
 Stop at five. A longer list is a checklist nobody finishes.
 
-**`## Never merges without a human`** — the boundary.
+**`## Never merges without a human`** — the boundary. `## Done means` is the other half and is often mistaken
+for the same thing: `## Done means` is what a change must satisfy to be **finished**; this is what it cannot
+decide **alone**. A change can be done and still be on this list.
 
 **Always write the definition into the generated file**, directly under the heading, exactly as in the template
-below. The phrase is ambiguous alone and it *will* be challenged — "I tell agents to merge when they're done,
-is that banned?" is the first question anyone asks. It is not banned: the definition draws the line at whether
-a person read *this diff*, so standing approval stays fine everywhere off the list. 
+below. The heading alone is ambiguous and *will* be challenged — "I tell agents to merge when they're done, is
+that banned?" is the first question anyone asks. It is not banned: the definition draws the line at whether a
+person read *this diff*, so standing approval stays fine everywhere off the list.
 
 Seed the list from the risk paths actually present in this repo (see [detection-tables.md](detection-tables.md) § Risk path detection, generated
 from [../data/risk-paths.yml](../data/risk-paths.yml)), then state each as a path or a condition rather than a
@@ -118,19 +101,3 @@ fine, which is the point of having a list.
 Only list risk paths this repo actually has — a static site has no migrations, and inventing categories to
 fill the section is the noise this skill exists to avoid. If the analysis finds none, say so explicitly in one
 line rather than omitting the heading.
-
-
-## Defining `## Never merges without a human`
-
-The heading is ambiguous on its own, and it will be challenged the first time someone who works with agents
-reads it. Every generated file must carry the definition directly under the heading:
-
-> A person has to have **read this diff** before it lands. Telling an agent "merge it when you're done" is
-> approving a goal, not this change — so it does not count for anything on this list. Everywhere else it counts
-> fine, which is the point of having a list.
-
-### What this means for the rest of the file
-
-`## Done means` is the other half and is often mistaken for the same thing. `## Done means` is what a change
-must satisfy to be **finished**; `## Never merges without a human` is what it cannot decide **alone**. A change
-can be done and still be on the list.
