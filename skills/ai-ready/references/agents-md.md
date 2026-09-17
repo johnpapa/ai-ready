@@ -13,7 +13,7 @@ If yes, **do not write it down.** It costs attention on every task and buys noth
 | Commonly generated | Verdict |
 |---|---|
 | A directory tree of `src/`, `tests/`, `docs/` | **Cut.** The agent can list the directory |
-| "This is a TypeScript project using React" | **Cut.** It can read `package.json` |
+| A statement of the language or framework | **Cut.** The manifest says so |
 | An architecture summary restating the file layout | **Cut.** Same information, stale within a month |
 | A data-model summary | **Cut.** It can read `schema.prisma` |
 | Build, test and lint **commands** | **Keep.** Often buried in tooling config, and needed every task |
@@ -74,13 +74,14 @@ could move. Do not rewrite it unasked — the same Do No Harm rule applies here 
 
 **There is no template. Derive all three to five lines from this repo**, in this order:
 
-1. **The verify command.** Read `package.json` scripts, the `Makefile`, `pyproject.toml`, the CI workflow —
-   whatever this repo uses. Find the command a maintainer runs before pushing. If there is no single one, name
-   the real ones in sequence. If the repo has no such command, say so and skip the line.
+1. **The verify command.** Find the command a maintainer runs before pushing — in this repo's task runner,
+   script block, or CI workflow, whichever it uses. Name it exactly as it is written there. If the repo runs
+   several, name them in order. If it has none, skip this line rather than inventing one.
 2. **The test condition.** *Any behavior change ships with a test that fails without the change.* This is the
-   only line that applies to every repo with tests, so include it wherever tests exist.
-3. **The contract line, only if this repo publishes a contract.** An OpenAPI spec, a `.proto`, a public type
-   definition — the file that other people depend on. Most repos have none. Omit it rather than inventing one.
+   only line that applies to every repo that has tests, so include it wherever tests exist.
+3. **The contract line, only if this repo publishes something others depend on.** A schema, an interface
+   definition, a public type — whatever this repo's consumers build against. Most repos publish nothing of the
+   kind. Omit rather than invent.
 
 Stop at five. A longer list is a checklist nobody finishes.
 

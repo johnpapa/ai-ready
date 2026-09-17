@@ -193,7 +193,8 @@ advice about a situation the repo doesn't have.
 
 Agents now open pull requests faster than anyone reads them. These two sections are what let a repo decide
 which of those changes actually need a person. **Every line in both must be decidable by a machine with nobody
-interpreting it** — "write clean code" fails that test; `npm run verify` exits 0 passes it.
+interpreting it.** A command that exits non-zero on failure passes the test. "Write clean code" does not,
+because two people reading the same diff will disagree about whether it did.
 
 **`## Done means`** — the conditions a change must meet before it is finished, derived from the repo's real
 commands.
