@@ -6,6 +6,28 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
+- **`copilot-setup-steps.yml` is no longer generated or tracked.** Tracked assets go from 15 to 14, and Step 4
+  is gone.
+
+  Every other AI Context asset makes a repo legible to *any* agent — `AGENTS.md`, the pointer files, the
+  skills, the reviewers, the matrix all work for Copilot, Claude Code, Codex and Cursor alike. This one
+  configured a single vendor's hosted runner, and nothing else read it, inside a list whose entire pitch is
+  portability.
+
+  Three things made it weak where it sat. Its content is derivable from the repo's CI, which the step itself
+  said to derive from. The conditional scoring added a day earlier depended on finding Copilot-authored pull
+  requests, which fails for exactly the team that needs the file — one about to start. And a score containing a
+  usually-N/A asset is the same quiet dishonesty the medal prerequisites were added to fix.
+
+  Medal bands move with the count: 🥇 is now 9–11 and 🏆 is 12–14. The progress bar is 14 squares and the
+  🤖 AI Context row is 7 indicators. Course-repo adaptations, drift detection, the `how-it-works` step list, and
+  the README's generated-assets table all drop their references to it.
+
+  Teams using Copilot's cloud agent still need this file. The skill no longer claims to be the thing that
+  writes it.
+
+### Removed
+
 - **Step 8 was verifying something Step 2 had already generated.** Six steps after the maintenance matrix is
   written, Step 8 told the agent to check that it covers cross-references and change cascades — which is what
   Step 2 already says to do. Its only unique content was the per-language tracing hints (`.csproj`

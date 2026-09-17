@@ -52,14 +52,13 @@ Check for **multiple signals** — no single check is definitive:
 3. **Repo description/topics** — check the GitHub description and topics (from Step 0b) for terms like "beginners", "course", "tutorial", "workshop", "learn", "curriculum", "lessons".
 4. **Lesson structure** — check if numbered folders each contain a `README.md` (lesson content) and optionally `assignment.md`, `solution/`, `code/`, `quiz/`, or `notebook/` subdirectories.
 5. **No primary application** — the repo has no root-level `package.json`, `Cargo.toml`, `go.mod`, or other manifest that would indicate a buildable application (individual lesson folders may have their own manifests for code samples).
-6. **Devcontainer** — check for `.devcontainer/` directory. Common in course repos to provide a ready-to-go development environment. If present, credit it as a form of environment setup (similar to copilot-setup-steps.yml).
+6. **Devcontainer** — check for `.devcontainer/` directory. Common in course repos to provide a ready-to-go development environment.
 
 **A repo is a course if 3+ of these signals are present.** Record it in the findings table as `Repo type: course` with evidence.
 
 ### Course repo adaptations
 
 When a repo is a course, the following steps adapt:
-- **Step 4** (copilot-setup-steps.yml) — skip if a `.devcontainer/` exists (it serves the same purpose for courses). If no devcontainer and no build step, skip entirely.
 - **Step 5** (CI workflow) — skip build/test CI. Suggest markdown validation (link checking, spell check) instead if not already present.
 - **Step 3** (copilot-instructions.md) — include lesson structure conventions: expected folder contents, naming patterns, how to add a new lesson. If lessons have quizzes or assignments, document the expected structure (e.g., each lesson needs `README.md` + `assignment.md` + `solution/`).
 - **Step 2** (AGENTS.md) — "Adding a New Lesson" section instead of "Adding a New Feature". Include the lesson template (what files/folders each lesson should contain).
@@ -116,7 +115,6 @@ For existing AI-ready assets, read their current contents and compare against yo
 |-------|----------------|
 | `AGENTS.md` | Repo structure still accurate? Build/test commands still correct? Tech stack changed? |
 | `copilot-instructions.md` | New conventions from recent PR reviews? Maintenance matrix still covers current file relationships? |
-| `copilot-setup-steps.yml` | Runtime versions match? Install/build commands still correct? New dependencies? |
 | CI workflow | Build/test/lint commands still match the project? New tools added? |
 | Issue templates | Still relevant to the project type? |
 | README Contributing | Links still valid? Commands still correct? |
