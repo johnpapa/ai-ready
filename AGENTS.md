@@ -108,6 +108,10 @@ tags are all visible in any file you open.
 
 ## Skill Writing Conventions
 
+**`references/` holds only what changes agent behavior.** Reasoning goes in [docs/why.md](docs/why.md) — an
+explanation the agent cannot act on still costs attention on every run that loads it.
+
+
 - Each step should be independently actionable — executable without context from other steps
 - Include explicit "check if exists" guards before creating files
 - Use real file paths and real commands, not placeholders
@@ -143,6 +147,4 @@ something load-bearing to get under it. Sources and reasoning: [docs/authoring.m
 
 - **Don't add build/test/runtime dependencies** — this is a markdown-only project. Agents should not invent `npm install`, `pip install`, or any setup commands for this repo
 - **SKILL.md frontmatter is required** — the `name` and `description` fields in the YAML frontmatter are how agents discover and match the skill to user requests. Keep frontmatter to the portable Agent Skills fields (`name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools`); vendor-specific keys break portability
-- **Never duplicate skill content per tool** — every manifest points at the one canonical `skills/ai-ready/`. Copying it would guarantee drift
-- **Bump the version in all five manifests** — `SKILL.md`, `.github/plugin/plugin.json`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json`, and root `plugin.json`. CI fails otherwise
-- **Test on real repos** — the only meaningful test is invoking the skill on different repo types (Node.js, Python, Go, Rust, etc.) and verifying the output
+- **Test on real repos** — the only meaningful test is invoking the skill on different repo types and reading what it generated

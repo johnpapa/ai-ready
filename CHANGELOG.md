@@ -6,6 +6,42 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
+- **Step 8 was verifying something Step 2 had already generated.** Six steps after the maintenance matrix is
+  written, Step 8 told the agent to check that it covers cross-references and change cascades — which is what
+  Step 2 already says to do. Its only unique content was the per-language tracing hints (`.csproj`
+  ProjectReferences, `__init__.py` re-exports), now folded into Step 2 where the matrix is actually built.
+  Asset 3 now credits Step 2.
+
+- **The Training Repos section is out of `SKILL.md`**, and the list moved to `docs/training-repos.md`. It named
+  the repos the skill was validated against, which is a footnote for a reader and changes nothing an agent
+  does. The README still links to it.
+
+### Changed
+
+- **`references/` now holds only what changes agent behavior.** Everything that existed to explain *why* a rule
+  is the way it is moved to a new `docs/why.md`: the argument for `AGENTS.md` being an entry point, the
+  anchoring trap's reasoning, what "never split conventions" actually means, the three objections to
+  `## Never merges without a human`, why adversaries need different models, and the vscode-peacock provenance.
+  Two actionable rules were rescued from inside those passages and kept in the reference as one-liners.
+  `agents-md.md` went from 211 lines to 138. An explanation an agent cannot act on still costs attention on
+  every run that loads it.
+
+- **`## Done means` no longer has a template at all.** The example was three concrete lines with a table
+  explaining which generalized — and it still read like a list to copy, because a filled-in example always
+  does. It is now a derivation procedure: find the repo's real verify command, add the one condition that
+  applies everywhere, and add a contract line only if the repo publishes a contract. Stop at five.
+
+- **Three adversarial reviewers is a starting set, not a rule.** The principle is that each answers one
+  question; the count follows from how many questions the repo actually needs answered. A repo with no tests
+  does not need `test-integrity`; a repo where nothing is hard to undo does not need `blast-radius`. Generate
+  only the ones whose question can come back *no*, and say which were skipped.
+
+- **`copilot-setup-steps.yml` is now scored N/A for repos that do not use Copilot's cloud coding agent.**
+  Nothing else reads that file, so counting it against a repo that never assigns work to that agent was the
+  same dishonesty the medal prerequisites fixed.
+
+### Removed
+
 - **Five instructions that a competent agent already follows.** "Customize to the repo's actual stack" and "be
   specific — real file paths, real commands" both restated the Persona's own last sentence. "Run full analysis
   first, never guess" is what a numbered step list already means. "Use `create` to write new files, never
