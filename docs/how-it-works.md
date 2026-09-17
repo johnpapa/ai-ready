@@ -277,7 +277,7 @@ Maps the layout of the repository:
 
 ### What's Missing
 
-Based on all of the above, the analysis identifies gaps — which of the 12 assets are missing, incomplete, or could be improved.
+Based on all of the above, the analysis identifies gaps — which of the 11 assets are missing, incomplete, or could be improved.
 
 ### Customized Output
 

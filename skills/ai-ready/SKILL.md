@@ -22,7 +22,7 @@ Follow these steps in order to analyze the current repository and generate all m
 
 **Report-only mode:** If the user asks for a report without generating files (e.g., "how ai-ready is this repo?", "score this repo"), run the full analysis (Steps 0–1) and display the report (Step 11) — but skip all generation steps (Steps 2–10).
 
-### The 12 tracked assets
+### The 11 tracked assets
 
 Assets are grouped into three categories. Count assets with **Nailed It** status for the score.
 
@@ -49,9 +49,8 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 10 | README Contributing section | Step 7 |
-| 11 | Changelog (`CHANGELOG.md`) | Step 9 |
-| 12 | Documentation (or explicit "not needed" note) | Step 10 |
+| 10 | Changelog (`CHANGELOG.md`) | Step 9 |
+| 11 | Documentation (or explicit "not needed" note) | Step 10 |
 
 **Scoring:** 🟩 Nailed It (counted) · 🟨 Could Be Better (not counted) · ⬜ Missing (not counted).
 Medals, the two prerequisites that cap them, and what the score may never claim are in
@@ -119,7 +118,7 @@ against the latest git tag, not the file's date.
 
 Produce a structured findings table combining GitHub context and codebase analysis with file-path evidence. See [references/detection-tables.md](references/detection-tables.md) for the full findings table template.
 
-List which of the 12 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
+List which of the 11 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
 
 ### 1j. Detect monorepo areas
 

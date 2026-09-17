@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Removed
+
+- **The README Contributing section is out of the scored list.** Tracked assets go from 12 to 11. Same test
+  applied to `dependabot.yml`: does this help an *agent* work in the repo, or is it general repo hygiene? An
+  agent reads `AGENTS.md` for build/test commands and conventions — it doesn't fork, branch, or open a PR the
+  way an external human contributor does, and the section's own content (fork/branch/PR instructions) is
+  human-onboarding material, not agent context.
+
+  Unlike `dependabot.yml`, this one had a real counter-argument: the skill's own stated mission explicitly
+  covers both human and AI contributors. So rather than cutting the step entirely (the `copilot-setup-steps.yml`
+  treatment), it keeps the same treatment as `.mcp.json` — Step 7 still generates the section, because it's
+  useful repo hygiene worth offering, but it no longer counts toward "AI-readiness."
+
+  Medal bands rescale to 🥉 1–3, 🥈 4–6, 🥇 7–9, 🏆 10–11. 📖 Onboarding drops from 3 indicators to 2.
+
 ### Added
 
 - **CI now prints a word-count signal next to the enforced line count**, because a real gap surfaced during
