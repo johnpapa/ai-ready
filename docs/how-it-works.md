@@ -159,10 +159,6 @@ The project context file for the coding agent. Contains repository structure, bu
 Short files for each tool that looks for its own filename — `.github/copilot-instructions.md`, `CLAUDE.md`,
 `.cursorrules`. Each points at `AGENTS.md` rather than restating it.
 
-### 4. .github/workflows/copilot-setup-steps.yml
-
-Configuration for the Copilot coding agent's environment. Defines the setup steps the agent runs before working on your repo — installing dependencies, building the project, running any required bootstrapping. This ensures the agent's environment matches what a human developer would set up.
-
 ### 4b. .mcp.json
 
 MCP server configuration connecting AI agents to your project's databases, APIs, and tools. Generated at the repo root (`.mcp.json`). Uses environment variable placeholders for secrets so the config is safe to commit.
@@ -270,7 +266,6 @@ Checks what AI-readiness assets already exist:
 - Does `AGENTS.md` already exist? What does it contain?
 - Is there a `.github/copilot-instructions.md`?
 - Are there existing skills in `.github/skills/`?
-- Is `.github/workflows/copilot-setup-steps.yml` configured?
 
 ### Directory Structure
 
@@ -283,7 +278,7 @@ Maps the layout of the repository:
 
 ### What's Missing
 
-Based on all of the above, the analysis identifies gaps — which of the 15 assets are missing, incomplete, or could be improved.
+Based on all of the above, the analysis identifies gaps — which of the 14 assets are missing, incomplete, or could be improved.
 
 ### Customized Output
 
@@ -319,7 +314,7 @@ The maintenance matrix is a structured cross-reference table that explicitly map
 | When this changes...        | Also update...                                    |
 |-----------------------------|---------------------------------------------------|
 | `src/game/scenes/`          | `src/game/game.ts` (scene registry), tests, AGENTS.md |
-| `package.json` dependencies | `.github/workflows/copilot-setup-steps.yml`, CI workflow              |
+| `package.json` dependencies | CI workflow                                                          |
 | API routes                  | OpenAPI spec, API tests, README endpoints list      |
 | Database schema             | Migrations, seed data, model tests                  |
 ```

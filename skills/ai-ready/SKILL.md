@@ -22,7 +22,7 @@ Follow these steps in order to analyze the current repository and generate all m
 
 **Report-only mode:** If the user asks for a report without generating files (e.g., "how ai-ready is this repo?", "score this repo"), run the full analysis (Steps 0–1) and display the report (Step 11) — but skip all generation steps (Steps 2–10).
 
-### The 15 tracked assets
+### The 14 tracked assets
 
 Assets are grouped into three categories. Count assets with **Nailed It** status for the score.
 
@@ -34,27 +34,26 @@ Assets are grouped into three categories. Count assets with **Nailed It** status
 | 2 | Per-tool pointer files (`.github/copilot-instructions.md`, `CLAUDE.md`, …) | Step 3 |
 | 3 | Maintenance matrix (in `AGENTS.md`) | Step 2 |
 | 4 | `.mcp.json` | Step 4b |
-| 5 | `.github/workflows/copilot-setup-steps.yml` (N/A without Copilot cloud agent) | Step 4 |
-| 6 | Adversarial reviewers (`.github/agents/`) | Step 4c |
-| 7 | Starter skill (`.github/skills/`) | Step 4d |
-| 8 | Security skill (`.github/skills/`, when there is surface) | Step 4e |
+| 5 | Adversarial reviewers (`.github/agents/`) | Step 4c |
+| 6 | Starter skill (`.github/skills/`) | Step 4d |
+| 7 | Security skill (`.github/skills/`, when there is surface) | Step 4e |
 
 **🔧 Dev Workflow** — what keeps PRs clean and contributors on track
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 9 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
-| 10 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
-| 11 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
-| 12 | `.github/dependabot.yml` | (checked, not generated) |
+| 8 | CI workflow (`.github/workflows/ci.yml`) | Step 5 |
+| 9 | Issue templates (`.github/ISSUE_TEMPLATE/`) | Step 6 |
+| 10 | PR template (`.github/PULL_REQUEST_TEMPLATE.md`) | Step 6 |
+| 11 | `.github/dependabot.yml` | (checked, not generated) |
 
 **📖 Onboarding** — what helps new contributors get started
 
 | # | Asset | Generated in |
 |---|-------|-------------|
-| 13 | README Contributing section | Step 7 |
-| 14 | Changelog (`CHANGELOG.md`) | Step 9 |
-| 15 | Documentation (or explicit "not needed" note) | Step 10 |
+| 12 | README Contributing section | Step 7 |
+| 13 | Changelog (`CHANGELOG.md`) | Step 9 |
+| 14 | Documentation (or explicit "not needed" note) | Step 10 |
 
 **Scoring:** 🟩 Nailed It (counted) · 🟨 Could Be Better (not counted) · ⬜ Missing (not counted).
 Medals, the two prerequisites that cap them, and what the score may never claim are in
@@ -112,8 +111,6 @@ file should be a short pointer to it.
 For a split, list specifically **which sections exist in the tool file but not in `AGENTS.md`** — those are
 what Step 2 needs to absorb. Do not rewrite the tool file here; propose the move and let the user decide.
 
-**copilot-setup-steps.yml** — check ALL known locations: `.github/workflows/copilot-setup-steps.yml` (canonical), `.github/copilot-setup-steps.yml` (legacy), and repo root. If found in a non-canonical location, flag it for consolidation into `.github/workflows/` — do not create a duplicate.
-
 ### 1e–1h. Check configuration, changelog, docs, and structure
 
 Detect `CODEOWNERS`, `dependabot.yml`, issue and PR templates, `LICENSE`, a README Contributing section,
@@ -125,7 +122,7 @@ against the latest git tag, not the file's date.
 
 Produce a structured findings table combining GitHub context and codebase analysis with file-path evidence. See [references/detection-tables.md](references/detection-tables.md) for the full findings table template.
 
-List which of the 15 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
+List which of the 14 assets are missing. For existing assets, compare against analysis and flag drift as "Could Be Better."
 
 ### 1j. Detect monorepo areas
 
@@ -262,21 +259,6 @@ drift in the report and let the user decide (see *Do No Harm*).
 **Monorepo:** Create `.github/instructions/{area-name}.instructions.md` with `applyTo` patterns for areas with
 different stacks. These may carry real content, since they are scoped to paths rather than duplicating the root
 conventions.
-
----
-
-## Step 4 — Generate copilot-setup-steps.yml
-
-**Only applies to repos that use GitHub Copilot's cloud coding agent.** This file tells that agent how to build
-the repo before it starts work; nothing else reads it. If Step 0 found no Copilot-authored pull requests and the
-file does not already exist, mark the asset **N/A** and say why in one line — do not score the repo down for
-missing a file for a product it does not use.
-
-Check ALL locations first: `.github/workflows/copilot-setup-steps.yml`, `.github/copilot-setup-steps.yml`, and repo root. If one exists anywhere, do NOT create another — consolidate into `.github/workflows/` if at a legacy location.
-
-If truly missing from all locations, create `.github/workflows/copilot-setup-steps.yml`, deriving the steps from
-the repo's existing CI. For .NET multi-target, install every required SDK version — a single-SDK setup fails
-silently on the other targets.
 
 ---
 
