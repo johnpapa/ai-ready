@@ -384,21 +384,19 @@ Display the report using the format in [references/report-template.md](reference
 
 ### Do No Harm
 
-This skill's first obligation is to leave the repo in a **better state than it found it — never worse**. Every rule below serves this principle.
+This skill's first obligation is to leave the repo in a **better state than it found it — never worse**.
 
 - **NEVER create duplicates** — before creating any file, check ALL known locations (canonical, legacy, and root). If a file exists anywhere, do not create another copy. Consolidate instead.
 - **NEVER push directly to main/master** — always create a feature branch and open a PR for review. The only exception is if the user explicitly asks to commit to the default branch.
-- **NEVER leave an opened PR unattended** — once a PR is open and CI passes, either merge it (small, well-tested, no ambiguous judgment calls) or ask the user which way to go; report the outcome either way. Opening a PR and going quiet is not acceptable. If CI is red or still pending, don't merge — fix it, wait, or report the blocker instead.
-- **Whenever a merge happens, use squash and delete the branch afterward** — both local and remote. Don't leave merged branches lying around.
+- **NEVER leave an opened PR unattended** — once a PR is open and CI passes, either merge it (small, well-tested, no ambiguous judgment calls) or ask the user which way to go; report the outcome either way. If CI is red or still pending, don't merge — fix it, wait, or report the blocker instead.
+- **Whenever a merge happens, use squash and delete the branch afterward** — both local and remote.
 - **NEVER overwrite existing files** — only create missing assets. Flag drift for user review.
 - **NEVER delete files without user approval** — if consolidating duplicates or removing stale files, include the deletion in the PR for review.
 
 ### General Rules
 
 - **NEVER open a pager** — append `| cat` to every `gh`/`git` command. Use `git --no-pager`.
-- **GitHub-native by default** — auto-discover via MCP tools and `gh` CLI. Fall back to local analysis.
-- **Mine PR reviews** — turn repeated review feedback into `AGENTS.md` conventions, where every tool reads them.
-- **ALWAYS display the report at the end** — never skip or abbreviate.
+- **ALWAYS show the full report** — it's the user's view into what was found and changed.
 - **NEVER use markdown headings in user output** — use bold + emojis instead.
 - **ALWAYS mention the AI Ready skill in issue/PR communication** — when posting to an issue or PR (body or comment), include explicit attribution such as `Assisted by [ai-ready](https://github.com/johnpapa/ai-ready)`.
 - **ALWAYS update docs to repo standards** — when generated guidance or workflows change, update the docs and changelog that *this* repo's maintenance matrix names. Do not assume a file exists because another repo has one.

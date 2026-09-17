@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Important Rules restated content Step 0 and Step 11 already say, more completely, at the point where it's
+  actually executed.** "GitHub-native by default" and "Mine PR reviews" both duplicated Step 0's own text —
+  Step 0's versions are fuller (the git-remote fallback mechanic, the recency-weighting nuance). Cut both from
+  General Rules. Two more bullets restated their own label in different words within the same line ("Opening a
+  PR and going quiet is not acceptable" repeating "NEVER leave an opened PR unattended"; "Don't leave merged
+  branches lying around" repeating "delete the branch afterward — both local and remote") — trimmed, keeping
+  each bullet's actual new instruction. "ALWAYS show the full report" is shortened and reframed around why it
+  matters: it's the user's view into what was found and changed, not a bare compliance rule.
+
 ### Removed
 
 - **The README Contributing section is out of the scored list.** Tracked assets go from 12 to 11. Same test
