@@ -114,8 +114,9 @@ tags are all visible in any file you open.
 - Prefer structured output (tables) over prose for analysis results
 - Always end with a summary step listing what was created, skipped, and what to do next
 
-`SKILL.md` targets **under 500 lines** and `AGENTS.md` targets **~150** — both because they are loaded on every
-invocation. Why, the sources, and what to do when you hit them: [docs/authoring.md](docs/authoring.md).
+**CI fails the build if `SKILL.md` exceeds 500 lines or this file exceeds 150.** Both are loaded on every
+invocation, so length costs adherence, not just tokens. When you hit a ceiling, move content out — never delete
+something load-bearing to get under it. Sources and reasoning: [docs/authoring.md](docs/authoring.md).
 
 ## Maintenance Matrix
 

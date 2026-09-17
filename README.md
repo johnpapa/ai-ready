@@ -264,7 +264,7 @@ This skill has been validated against a diverse set of repos — courses, applic
 3. Test locally: copy `skills/ai-ready/SKILL.md` to `~/.copilot/skills/ai-ready/SKILL.md`, start `copilot`, then say *"make this repo ai-ready"*
 4. Open a PR — name the repo you tested against in the **Tested On** table
 
-CI will reject a PR for invalid skill frontmatter, unparseable YAML, a version bump that misses one of the five plugin manifests, an Agent Skills spec violation, a skill the `skills` CLI can't discover, a `skills.sh.json` that's out of step with `skills/`, a risk-path glob that stops matching its fixtures, or a generated detection table that has drifted from the data it comes from. What it **can't** catch is a skill instruction that's simply wrong — the packaging validates either way. That's what step 3 is for, and why the PR template asks which repo you ran it on.
+CI will reject a PR for invalid skill frontmatter, unparseable YAML, a version bump that misses one of the five plugin manifests, an Agent Skills spec violation, a skill the `skills` CLI can't discover, a `skills.sh.json` that's out of step with `skills/`, a risk-path glob that stops matching its fixtures, a generated detection table that has drifted from the data it comes from, or a context file over its line budget (`SKILL.md` 500, `AGENTS.md` 150). What it **can't** catch is a skill instruction that's simply wrong — the packaging validates either way. That's what step 3 is for, and why the PR template asks which repo you ran it on.
 
 See [AGENTS.md](AGENTS.md) for the full contributor guide and the complete list of what CI enforces.
 
