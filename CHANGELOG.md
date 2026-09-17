@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **CI now prints a word-count signal next to the enforced line count**, because a real gap surfaced during
+  review: this file writes paragraphs as long unwrapped lines, so trimming a sentence removes real content and
+  real token cost without moving `wc -l` at all. Line count only reacts to whole lines disappearing.
+
+  Sourced rather than invented: Anthropic's own SKILL.md guidance recommends the loaded body stay under
+  roughly 5,000 tokens; community tooling for AGENTS.md/CLAUDE.md-style files reports size as lines, bytes,
+  *and* tokens together, never lines alone, describing a healthy target as "~200 lines / ~10 KB." Converting
+  those to a word-count proxy (~1.3 tokens per English word, no tokenizer dependency needed): `SKILL.md` at
+  ~3,750 words, `AGENTS.md` at ~1,400.
+
+  **The signal never fails the build** — only the line ceiling does. Running it today found the exact gap it
+  was built to catch: `SKILL.md` sits comfortably under its line ceiling at 433/500, but is already over its
+  word signal at 3,793/3,750. Documented in `docs/authoring.md`, including the honest caveat that these exact
+  word numbers are derived conversions, not independently sourced.
+
 ### Removed
 
 - **`.mcp.json` and `.github/dependabot.yml` are out of the scored list.** Tracked assets go from 14 to 12.

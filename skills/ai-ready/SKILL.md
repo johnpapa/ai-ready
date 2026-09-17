@@ -61,7 +61,7 @@ Medals, the two prerequisites that cap them, and what the score may never claim 
 
 ## Step 0 — Detect GitHub context automatically
 
-**Zero user input required.** The skill is GitHub-native — it discovers everything from GitHub's tools.
+The skill is GitHub-native — it discovers everything from GitHub's tools.
 
 ### 0a. Identify the repo
 
@@ -71,7 +71,7 @@ Run `git remote -v` to extract the GitHub `owner/repo`. If not GitHub, fall back
 
 Use GitHub MCP tools or `gh` CLI to auto-discover repo metadata, PR review patterns, and community health gaps. See [references/github-discovery.md](references/github-discovery.md) for the full API table, PR mining technique, and health gap mapping.
 
-Key insight: **PR review mining is the highest-value step.** Repeated reviewer feedback — from humans *and* from review agents — becomes conventions in `AGENTS.md`, weighted so recent patterns count for more and abandoned ones are flagged rather than resurrected.
+Repeated reviewer feedback — from humans *and* from review agents — becomes conventions in `AGENTS.md`. Weight recent patterns more heavily, and flag an abandoned one rather than resurrecting it as a current rule.
 
 ---
 
@@ -87,9 +87,8 @@ Find manifest files and extract details. See [references/detection-tables.md](re
 
 ### 1b–1c. Detect test setup and CI
 
-Standard detection: test runner and commands, CI triggers. One thing that is not standard — **community
-workflows (stale, welcome, labeler) are valid automation, not missing CI.** Do not report a repo as having no
-CI because its only workflow is a stale-bot.
+**Community workflows (stale, welcome, labeler) are valid automation, not missing CI.** Do not report a repo
+as having no CI because its only workflow is a stale-bot.
 
 ### 1d. Check existing AI configuration
 

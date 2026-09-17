@@ -40,6 +40,32 @@ This repo's own `AGENTS.md` was 310 lines when that rule was written into the sk
 `docs/authoring.md` came to exist. The generated guidance is in
 [`skills/ai-ready/references/agents-md.md`](../skills/ai-ready/references/agents-md.md).
 
+### Why lines alone are a weak signal, and what CI checks instead
+
+This file is written as long, unwrapped paragraphs — one markdown line can carry a hundred words. Trimming a
+sentence inside that paragraph removes real content and real token cost, but `wc -l` doesn't move, because the
+paragraph is still one line. Line count only reacts to whole lines disappearing (a cut bullet, a removed table
+row) — it's blind to everything else, which is exactly the gap that let this file carry unnecessary words
+while comfortably under its line ceiling.
+
+The wider ecosystem doesn't rely on lines alone either. Anthropic's own SKILL.md guidance recommends the body
+stay under roughly **5,000 tokens** once loaded — a token figure, not a line figure. Community tooling for
+AGENTS.md/CLAUDE.md-style files (e.g. `agent-md-bench`) reports size as lines **and** bytes **and** tokens
+together, and describes a healthy target as "~200 lines / ~10 KB" — always paired, never lines alone.
+
+CI now prints a **word-count signal** next to the line count, as a cheap proxy for tokens (roughly 1.3 tokens
+per English word) that needs no tokenizer dependency:
+
+| File | Line ceiling (enforced) | Word signal (not enforced) | Source |
+|---|---|---|---|
+| `SKILL.md` | 500 | **~3,750** | Anthropic's ~5,000-token body guidance, converted |
+| `AGENTS.md` | 150 | **~1,400** | Scaled down from the ecosystem's ~200-line/10 KB pairing |
+
+**The word signal never fails the build.** It's a number to notice, not a gate — going over it is a prompt to
+look at the file, not a broken PR. Unlike the line ceiling, there's no established authority for these exact
+word numbers; they're derived by converting the token guidance above, and worth revisiting if a better source
+turns up.
+
 ## Adding a New Skill
 
 1. Create `skills/<skill-name>/SKILL.md` with YAML frontmatter:
