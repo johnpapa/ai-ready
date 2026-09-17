@@ -144,24 +144,40 @@ If workspace config found, list areas with name, path glob, and primary stack. F
 
 If missing, create `AGENTS.md` at the repo root. If it exists, compare against analysis and flag drift. **Do not overwrite.**
 
-`AGENTS.md` is the **single source of truth** for how this repo works. Every other instruction file points at
-it. Never split conventions across files — see Step 3.
+`AGENTS.md` is the **canonical entry point** for how this repo works — the one file every tool reads, and the
+one place a given convention is stated. That is not the same as putting everything in it. Read
+[references/agents-md.md](references/agents-md.md) before generating: what belongs, what does not, and where
+the rest goes.
 
-Sections: Project Overview (never hardcode versions — reference manifests), Repository Structure, Tech Stack,
+Two rules govern everything below.
+
+**1. The discoverability test.** Before writing any section, ask: *can the agent find this by reading the
+code?* If yes, do not write it down. `AGENTS.md` is loaded before **every** task, so every line is paid for on
+every run and competes for attention with the actual work. Directory trees, tech-stack inventories and
+architecture summaries all fail this test — generate them only for what is genuinely **surprising** about this
+repo, and skip them entirely when the layout is conventional.
+
+**2. Put it at the narrowest scope that fits.** Needed on every task → root `AGENTS.md`. Needed only in one
+area → a **nested `AGENTS.md`** in that directory, which is part of the standard and how monorepos are meant to
+scale (closest file wins). Needed only when doing one procedure → a skill (Step 4d). Lookup material → a linked
+doc.
+
+Target **~150 lines** for the root file. Past that, move something — never delete something load-bearing to hit
+a number.
+
+Sections, when they survive the test above: Project Overview (never hardcode versions — reference manifests),
 Build & Run, Testing, Key Patterns and Conventions, CI/CD, Adding a New [Feature/Module] (trace the full
-registration chain — enums, index re-exports, config declarations), Screen Size / Responsive Rules (UI projects
-only), Common Pitfalls.
+registration chain — enums, index re-exports, config declarations), Common Pitfalls.
 
-Also include, moved here from the old Copilot-only file so every tool reads them:
+Plus, because they exist nowhere in the code and so always pass the test:
 
-- **Language-Specific Conventions** (separate subsections for multi-language repos)
-- **Notebook Conventions** (if `.ipynb` detected) and **Course/Lesson Conventions** (if a course repo)
-- **Framework Patterns**, **Test Conventions**, **Code Style Notes** (reference linter configs)
-- **Conventions Mined from PR Reviews** (Step 0c)
-- **Asset/Content Rules** (if assets detected)
-- **Maintenance Matrix** — what must be updated when each part of the codebase changes. Populate with real file
-  paths; trace import chains and registration patterns rather than stopping at top-level files. This is the
-  most valuable section in the file.
+- **Conventions that are not inferable** — language, framework, test and style rules a reader could not derive
+  from the code and its linter config. If the linter already enforces it, link the config instead of restating
+  it.
+- **Conventions Mined from PR Reviews** (Step 0c) — the highest-value content in the file
+- **Maintenance Matrix** — what must be updated when each part of the codebase changes. Real file paths; trace
+  import chains and registration patterns rather than stopping at top-level files. Keep it a table; Step 4d
+  turns it into the *procedure*, so do not write the procedure here as well.
 
 **Test Conventions — untestable claims.** If the repo has more than one test lane — a fast mocked unit lane
 plus a slower one with real framework access, or unit plus integration plus e2e — add a rule telling agents not
@@ -195,8 +211,15 @@ commands and real conventions:
 - Generated files are never hand-edited
 ```
 
-**`## Never merges without a human`** — the boundary. Seed it from the risk paths actually present in this
-repo (see [references/detection-tables.md](references/detection-tables.md) § Risk path detection, generated
+**`## Never merges without a human`** — the boundary.
+
+**Always write the definition into the generated file**, directly under the heading, exactly as in the template
+below. The phrase is ambiguous alone and it *will* be challenged — "I tell agents to merge when they're done,
+is that banned?" is the first question anyone asks. It is not banned: the definition draws the line at whether
+a person read *this diff*, so standing approval stays fine everywhere off the list. See
+[references/agents-md.md](references/agents-md.md) § Defining for the objections and the answers.
+
+Seed the list from the risk paths actually present in this repo (see [references/detection-tables.md](references/detection-tables.md) § Risk path detection, generated
 from [data/risk-paths.yml](data/risk-paths.yml)), then state each as a path or a condition rather than a
 category.
 
@@ -208,6 +231,11 @@ That list is the one part of this step with a regression test behind it
 
 ```markdown
 ## Never merges without a human
+
+A person has to have **read this diff** before it lands. Telling an agent "merge it when you're done" is
+approving a goal, not this change — so it does not count for anything on this list. Everywhere else it counts
+fine, which is the point of having a list.
+
 - Anything under `db/migrations/`
 - Anything that changes the shape of an existing API response
 - Anything that sends messages to customers
@@ -218,8 +246,8 @@ Only list risk paths this repo actually has — a static site has no migrations,
 fill the section is the noise this skill exists to avoid. If the analysis finds none, say so explicitly in one
 line rather than omitting the heading.
 
-**Scoring:** `AGENTS.md` counts as **Nailed It** only when both sections are present and every line in them is
-machine-checkable. An `AGENTS.md` without them is **Could Be Better** — it tells an agent how to work, but
+**Scoring:** `AGENTS.md` counts as **Nailed It** only when both sections are present, every line in them is
+machine-checkable, and `## Never merges without a human` carries its definition line. An `AGENTS.md` without them is **Could Be Better** — it tells an agent how to work, but
 nothing about what it may finish on its own.
 
 ---
