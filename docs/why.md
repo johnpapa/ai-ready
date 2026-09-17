@@ -90,3 +90,28 @@ one model catches things an agent on another model walks straight past, and the 
 
 So where the tool supports pinning a model per agent, **spread them**. Three adversarial reviewers on one model
 is one reviewer with three prompts. Say this in the report; do not generate the `model` key (see *Frontmatter*).
+
+## Why adding to SKILL.md requires naming a cut
+
+`SKILL.md` sat within ten lines of its 500-line ceiling for three days. Not because the ceiling is too low —
+because every trim was followed by a new rule going back in. Cut five instructions, add a new step. Move a
+template to `references/`, write a new policy section.
+
+The CI budget check catches the symptom. It does not stop the cause, which is that adding always feels
+justified in the moment and removing never does. Requiring a change to name what it removes forces the
+comparison that otherwise never happens: is this new rule worth more than the one it displaces?
+
+## Why detection tables may name tools but rules may not
+
+These look like the same thing and are opposites.
+
+A table listing `package-lock.json`, `Cargo.lock`, `go.sum`, `poetry.lock` is **coverage**. Naming many
+ecosystems is how the agent recognizes any repo it lands in. Cutting that list would make the skill worse.
+
+A rule that says *"every line must be machine-checkable — `npm run verify` exits 0 passes the test"* is a
+**defect**. The rule is universal but the illustration is not, and an agent reading it in a Rust repo has to
+decide whether the rule applies at all. Worse, it may write `npm run verify` into a file for a repo that has
+no such command.
+
+The test: if the tool name were removed, would the sentence still say what to do? In a detection table, no —
+the names *are* the content. In a rule, yes — the names are decoration that narrows it.

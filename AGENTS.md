@@ -66,35 +66,26 @@ Use `npx skills add ./ --list` to confirm the skill is discoverable without inst
 
 ## Testing
 
-Run these before you push — they are what CI runs:
+Run before you push — see [docs/authoring.md](docs/authoring.md) for the full CI check list:
 
 ```bash
 pip install pyyaml
 python3 tests/test_detection.py                  # risk-path globs against tests/fixtures/
 python3 tools/gen_detection_tables.py --check    # generated tables match their data
-npx -y skills@latest add ./ --list               # the skill is discoverable
 ```
 
-CI additionally checks `SKILL.md` frontmatter, YAML syntax across `.github/`, version parity across the six
-files above, Agent Skills spec compliance, and `skills.sh.json` parity. Full table in
-[docs/authoring.md](docs/authoring.md).
+`skills/ai-ready/data/risk-paths.yml` is the **source of truth** for detection; edit it, regenerate, commit
+both, and add a fixture case when you fix a bad detection.
 
-`skills/ai-ready/data/risk-paths.yml` is the **source of truth** for detection; the table in
-`references/detection-tables.md` is generated from it and CI fails on drift. Edit the YAML, run the generator,
-commit both. When you fix a bad detection, add the case to a fixture in the same PR.
-
-**CI validates packaging and detection data — not the skill's judgment.** Every check passes on a `SKILL.md`
-whose instructions are wrong. That gap is what [`evals/`](evals/) is for, and why the PR template asks which
-repo you ran against. See [docs/authoring.md](docs/authoring.md) before changing skill behavior.
+**CI validates packaging, not judgment** — a `SKILL.md` with wrong instructions still passes. That's what
+[`evals/`](evals/) is for; see [docs/authoring.md](docs/authoring.md) before changing skill behavior.
 
 ## Key Patterns and Conventions
 
-- **Skills live in `skills/<name>/SKILL.md`** — each skill is a markdown file with YAML frontmatter (`name`, `description`) and step-by-step instructions
-- **The skill is self-sufficient** — it uses Copilot's built-in tools (glob, grep, view, create) to analyze repos and generate files. No custom extensions or code required
-- **Never overwrite existing files** — the skill checks for existing assets before generating
-- **Issue/PR provenance is required** — issue and PR communication produced by this skill must explicitly mention AI Ready (for example: `Assisted by [ai-ready](https://github.com/johnpapa/ai-ready)`)
-- **Docs must stay in sync** — when skill behavior changes, update `README.md`, `docs/how-it-works.md`, and `CHANGELOG.md` to match repo standards
-- **PR conflicts must be addressed** — when opening PRs, attempt conflict resolution first; if unresolved, ask for user direction
+- **Skills live in `skills/<name>/SKILL.md`** — markdown with YAML frontmatter (`name`, `description`) and steps
+- **The skill needs no code** — it uses the agent's built-in file tools. No extensions, no runtime
+- **Issue and PR text must say it came from AI Ready** — e.g. `Assisted by [ai-ready](https://github.com/johnpapa/ai-ready)`
+- **Docs stay in sync** — see the Maintenance Matrix below
 
 ## Writing Conventions
 
@@ -107,6 +98,12 @@ tags are all visible in any file you open.
 - Quote YAML strings containing special characters
 
 ## Skill Writing Conventions
+
+**Adding lines to `SKILL.md` means naming which lines come out**, in the pull request — or putting the new
+content in `references/` instead.
+
+**Detection tables may name tools. Rules may not.** A rule illustrated with one ecosystem's command teaches the
+agent the rule is about that ecosystem.
 
 **`references/` holds only what changes agent behavior.** Reasoning goes in [docs/why.md](docs/why.md) — an
 explanation the agent cannot act on still costs attention on every run that loads it.

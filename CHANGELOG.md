@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Rules illustrated with one ecosystem's command, inside a skill that runs against any stack.** The
+  machine-checkable test for `## Done means` used `npm run verify` as *the* example; a Rust or Python repo
+  reader had to guess whether the rule even applied. `AGENTS.md`'s discoverability table used "this is a
+  TypeScript project using React" as its throwaway example of an inferable fact. Both are now stated with no
+  ecosystem attached — a command that exits non-zero on failure, a statement of language or framework — because
+  a universal rule illustrated with one stack's syntax teaches the agent the rule is about that stack.
+
+  New line in `AGENTS.md`: **detection tables may name tools, rules may not.** A table listing every lockfile
+  is coverage — the names *are* the content, and removing them breaks it. A rule naming one tool as its example
+  is a defect — the rule still works with the name removed, so the name was never load-bearing, only narrowing.
+  Reasoning for both in `docs/why.md`.
+
+### Added
+
+- **A rule against the exact failure that kept happening: `SKILL.md` sitting within ten lines of its ceiling.**
+  Five PRs in three days each trimmed lines and then added new ones back — cut five instructions, add a step;
+  move a template out, write a new policy section. The CI budget check caught the symptom every time and never
+  stopped the cause, because adding always feels justified in the moment and removing never does. `AGENTS.md`
+  now says a change adding lines to `SKILL.md` must name what it removes, or put the new content in
+  `references/` instead — which forces the comparison that otherwise never happens.
+
 ### Removed
 
 - **`copilot-setup-steps.yml` is no longer generated or tracked.** Tracked assets go from 15 to 14, and Step 4
