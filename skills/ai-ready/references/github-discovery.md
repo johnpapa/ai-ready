@@ -14,7 +14,7 @@ Use the GitHub MCP tools (if available) or `gh` CLI to pull rich context the use
 | Contributors | `gh api repos/{owner}/{repo}/contributors --jq '.[].login' | cat` (bash) | Team size, contribution patterns |
 | Open issues | `github-mcp-server-list_issues` or `gh issue list | cat` | Active problems, what the project cares about |
 | Recent merged PRs | `gh pr list --state merged --limit 10 --json title,body,files | cat` (bash) | Contribution patterns — what files get touched together, what a typical PR looks like |
-| PR review comments | `github-mcp-server-pull_request_read` on recent PRs | **Repeated review feedback = conventions that should be in copilot-instructions.md** |
+| PR review comments | `github-mcp-server-pull_request_read` on recent PRs | **Repeated review feedback = conventions that should be in `AGENTS.md`** |
 | Releases | `gh release list --limit 5 | cat` (bash) | Release cadence, versioning scheme |
 | GitHub Actions workflows | `github-mcp-server-actions_list` or read `.github/workflows/` | CI/CD setup, what runs on PRs |
 | Branch protection | `github-mcp-server-list_branches` | Default branch, protection rules |
@@ -22,9 +22,8 @@ Use the GitHub MCP tools (if available) or `gh` CLI to pull rich context the use
 
 ## 0c. PR review mining details
 
-This is the **highest-value** GitHub-native insight. Look at the 5-10 most recent merged PRs.
-
-*Why?*: If a maintainer leaves the same review comment on 5 different PRs, that's a convention waiting to be documented. Mining PR reviews turns reviewer fatigue into automated guidance.
+Look at the 5-10 most recent merged PRs. If a maintainer leaves the same review comment on multiple PRs,
+that's a convention waiting to be documented.
 
 **Mine agent review comments too, not just human ones.** Review threads are no longer only humans correcting
 humans. Coding agents open pull requests and review agents comment on them, and both are part of how this
@@ -53,7 +52,7 @@ signal than a human repeating themselves.
 
 **If few or no review comments are found** (e.g., PRs are self-merged or auto-merged), expand the search to up to 20 merged PRs. If there are still no review patterns, note this in the findings: _"No PR review patterns found — consider adding conventions as the team grows."_ Never silently skip this section.
 
-These mined conventions go into `AGENTS.md`, where every tool reads them — turning repeated review feedback, from humans and agents alike, into guidance that applies before the next pull request is written instead of after.
+These mined conventions go into `AGENTS.md`, where every tool reads them.
 
 ## 0d. Community health gap mapping
 

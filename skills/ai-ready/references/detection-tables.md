@@ -18,8 +18,6 @@ Also check for:
 - **Lockfiles** — `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `bun.lockb`, `Cargo.lock`, `go.sum`, `poetry.lock`, `Pipfile.lock`
 - **Runtime version files** — `.nvmrc`, `.node-version`, `.python-version`, `.tool-versions`, `.ruby-version`, `rust-toolchain.toml`
 - **Monorepo markers** — `pnpm-workspace.yaml`, `lerna.json`, `nx.json`, `turbo.json`, Cargo workspace, Go workspace. Also check for **large library monorepos**: Maven aggregator (`pom.xml` with `<modules>`), Python multi-package (`libs/` directory with multiple `pyproject.toml`), or Turborepo + Changesets (`turbo.json` + `.changeset/`).
-
-  *Why?*: Large open-source libraries like LangChain organize code as multi-package monorepos — dozens of independently published packages under one repo. Treating them as a single package misses cross-package dependencies, per-package build commands, and module-specific conventions.
 - **Notebooks** — `*.ipynb` files. If found, note the count and locations. Notebooks are common in course repos, data science projects, and tutorials.
 
 ## VS Code extension detection
@@ -29,13 +27,12 @@ Check for `contributes` in root `package.json` (commands, themes, snippets, view
 - **Theme extensions** — JSON theme files, no runtime code, published via `vsce`
 - **Snippet extensions** — JSON snippet definitions, language-scoped, content-driven not logic-driven
 
-*Why?*: VS Code extensions look like npm packages but have completely different conventions. The `package.json` IS the product spec — commands, menus, settings, keybindings. Treating them like a web app misses what matters.
-
 ## Multi-app collection detection
 
 Multiple independent apps in subdirectories (e.g., `angular/`, `react/`, `svelte/`), each with its own `package.json`, but **no workspace config** tying them together. This is different from a monorepo — there's no shared build or dependency graph. Each app builds and runs independently.
 
-*Why?*: Not every repo with multiple folders is a monorepo. Some are "collections" — the same concept implemented in different frameworks for comparison or learning. Don't invent workspace tooling where none exists.
+Not every repo with multiple folders is a monorepo — some are "collections," the same concept implemented in
+different frameworks for comparison. Don't invent workspace tooling where none exists.
 
 ## Demo app pattern detection
 
@@ -43,9 +40,8 @@ A frontend app + mock backend (`json-server`, `db.json`) + proxy config (`proxy.
 
 ## Course/tutorial repo detection
 
-*Why?*: Course repos are fundamentally different from application repos. The "product" is markdown lessons and code samples — not a running application. Generating CI, setup steps, or a build pipeline for a course repo misses the point. Detecting this early shapes every later step.
-
-Check for **multiple signals** — no single check is definitive:
+A course repo's "product" is markdown lessons and code samples, not a running application — generating CI, setup
+steps, or a build pipeline for one misses the point. Check for **multiple signals** — no single check is definitive:
 
 1. **Numbered folders** — glob for top-level directories matching `NN-*` (e.g., `00-intro`, `01-setup`, `05-advanced`), `N-topic` (e.g., `1-Introduction`, `6-Data-Science-In-Wild`), `Chapter N`, `Module N`, or `Unit N`. 3+ matches is a strong signal.
 2. **README content** — scan the root README for course/tutorial language: "lesson", "chapter", "module", "unit", "what you'll learn", "prerequisites", "course structure", "hands-on", "assignment", "quiz", "curriculum", "week". Multiple matches strengthen the signal.
@@ -113,8 +109,8 @@ For existing AI-ready assets, read their current contents and compare against yo
 
 | Asset | What to compare |
 |-------|----------------|
-| `AGENTS.md` | Repo structure still accurate? Build/test commands still correct? Tech stack changed? |
-| `copilot-instructions.md` | New conventions from recent PR reviews? Maintenance matrix still covers current file relationships? |
+| `AGENTS.md` | Repo structure still accurate? Build/test commands still correct? Tech stack changed? New conventions from recent PR reviews? Maintenance matrix still covers current file relationships? |
+| `copilot-instructions.md` | Still a short pointer to `AGENTS.md`, or has it drifted into its own copy of the conventions (the duplication failure mode from Step 1d)? |
 | CI workflow | Build/test/lint commands still match the project? New tools added? |
 | Issue templates | Still relevant to the project type? |
 | README Contributing | Links still valid? Commands still correct? |
