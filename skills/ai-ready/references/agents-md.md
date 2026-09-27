@@ -46,8 +46,11 @@ root keeps only what is true everywhere.
 
 ## Report this honestly
 
-If the repo's existing `AGENTS.md` is well past 150 lines, say so with the number and name the sections that
-could move. Do not rewrite it unasked — the same Do No Harm rule applies here as everywhere else.
+If the repo's existing `AGENTS.md` is well past the 20–30 line target, say so with the number and name the
+sections that could move. Do not rewrite it unasked — the same Do No Harm rule applies here as everywhere else.
+
+Never delete something load-bearing to hit a number. If a section can't move because it genuinely applies to
+every task, it stays — say so in the report rather than quietly trimming something useful.
 
 ## Generating the two sections
 
