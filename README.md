@@ -1,6 +1,6 @@
 # AI Ready
 
-[![AI Ready](https://img.shields.io/badge/AI--Ready-yes-brightgreen?style=flat)](https://github.com/johnpapa/ai-ready) [![Version](https://img.shields.io/github/v/release/johnpapa/ai-ready?label=version)](https://github.com/johnpapa/ai-ready/releases/latest)
+[![AI Ready](https://img.shields.io/badge/AI--Ready-yes-brightgreen?style=flat)](https://github.com/johnpapa/ai-ready) [![Version](https://img.shields.io/github/v/release/johnpapa/ai-ready?label=version)](https://github.com/johnpapa/ai-ready/releases/latest) [![Install with AIPM](https://www.aipm-registry.com/install-with-aipm.svg)](https://www.aipm-registry.com/skills/johnpapa/ai-ready/1.0.0?utm_source=github&utm_medium=readme&utm_campaign=package_badge)
 
 An [Agent Skill](https://agentskills.io) that analyzes your repository and generates the configuration files AI agents need to contribute correctly. **GitHub-native** — it auto-discovers your repo's context, community health, and PR review patterns without you explaining anything.
 
